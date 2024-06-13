@@ -64,29 +64,15 @@ jobs:
         run: |
           mvn -B release:update-versions
           git commit -am "Next development version set"
-          git push origin main    
+          git push origin main
 
-      - name: Create GitHub release
-        id: create_release
-        uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e # v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload released assets
+        uses: softprops/action-gh-release@69320dbe05506a9a39fc8ae11030b214ec2d1f87 # v2
         with:
+          name: v${{ env.VERSION }}
           tag_name: v${{ env.VERSION }}
-          release_name: Release v${{ env.VERSION }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
           prerelease: false
-
-      - name: Install GitHub CLI
-        run: sudo apt-get install gh
-
-      - name: Upload release assets
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          for file in target/dt-tool*; do
-            if [ -f "$file" ]; then
-              echo "Uploading $file..."
-              gh release upload v${{ env.VERSION }} "$file" --clobber
-            fi
-          done
+          files: |
+            target/dt-tool-*.*           

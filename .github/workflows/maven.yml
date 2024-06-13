@@ -51,7 +51,7 @@ jobs:
           name: v${{ env.VERSION }}
           tag_name: v${{ env.VERSION }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          draft: true
-          prerelease: false
+          draft: false
+          prerelease: true
           files: |
             target/dt-tool-*.*
