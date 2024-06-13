@@ -45,7 +45,7 @@ public class ProjectCare {
 
         ZonedDateTime notBefore = ZonedDateTime.now().minusDays(olderThenDays);
 
-        LOGGER.info("Fetching projects which not older then {} days", notBefore);
+        LOGGER.info("Fetching projects which not older then {} days", olderThenDays);
 
         List<Project> projects = new ArrayList<>();
         int size;
@@ -73,6 +73,7 @@ public class ProjectCare {
                 .filter(p -> p.getVersion().matches(regExMatch))
                 .toList();
 
+        oldProjects.forEach(p -> LOGGER.warn("{}\t {}\t Created {}", p.getName(), p.getVersion(), p.getLastBomImport()));
         LOGGER.info("{} of {} projects matched ", oldProjects.size(), projects.size());
 
         return oldProjects.stream();
