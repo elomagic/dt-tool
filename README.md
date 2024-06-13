@@ -1,4 +1,4 @@
-# BOM License Patcher
+# DT Tool
 
 A tool that helps you to manage Dependency Track content better.
 
