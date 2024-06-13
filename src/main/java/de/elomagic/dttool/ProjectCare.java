@@ -33,10 +33,10 @@ public class ProjectCare {
     private static final Logger LOGGER = LogManager.getLogger(ProjectCare.class);
     private final DTrackClient client = new DTrackClient();
 
-    public void care(@NotNull String regExMatch, int olderThenDays) {
+    public void care() {
 
-        fetchProject(regExMatch, olderThenDays)
-                .filter(p -> !Configuration.INSTANCE.isOnlyValidate())
+        fetchProject(Configuration.INSTANCE.getVersionMatch(), Configuration.INSTANCE.getOlderThenDays())
+                .filter(p -> Configuration.INSTANCE.isDelete())
                 .forEach(p -> client.deleteProject(p.getUuid()));
 
     }
@@ -45,6 +45,7 @@ public class ProjectCare {
 
         ZonedDateTime notBefore = ZonedDateTime.now().minusDays(olderThenDays);
 
+        LOGGER.info("Version match: {}", Configuration.INSTANCE.getVersionMatch());
         LOGGER.info("Fetching projects which not older then {} days", olderThenDays);
 
         List<Project> projects = new ArrayList<>();

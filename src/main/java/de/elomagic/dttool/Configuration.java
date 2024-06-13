@@ -97,12 +97,28 @@ public class Configuration {
         properties.setProperty("apiKey", apiKey);
     }
 
-    public boolean isOnlyValidate() {
-        return Boolean.parseBoolean(properties.getProperty("onlyValidate", "false"));
+    public boolean isDelete() {
+        return Boolean.parseBoolean(properties.getProperty("delete", "false"));
     }
 
-    public void setOnlyValidate(boolean value) {
-        properties.setProperty("onlyValidate", Boolean.toString(value));
+    public void setDelete(boolean value) {
+        properties.setProperty("delete", Boolean.toString(value));
+    }
+
+    public String getVersionMatch() {
+        return properties.getProperty("versionMatch");
+    }
+
+    public void setVersionMatch(String value) {
+        properties.setProperty("versionMatch", value);
+    }
+
+    public int getOlderThenDays() {
+        return Integer.parseInt(properties.getProperty("olderThenDays", "90"));
+    }
+
+    public void setOlderThenDays(int value) {
+        properties.setProperty("olderThenDays", Integer.toString(value));
     }
 
 }

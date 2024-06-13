@@ -36,8 +36,8 @@ public class App {
     private static final Option COMMAND_CREATE_CONFIG = new Option("cc", "createConfig", false, "Create configuration template");
     private static final Option COMMAND_HELP = new Option("h", "help", false, "Print this message");
 
-    private static final Option OPTION_PROJECT_REGEX = new Option("pr", "projectRegex", true, "RegEx to match");
-    private static final Option OPTION_VALIDATE = new Option("v", "validate", false, "Validate source BOM file");
+    private static final Option OPTION_VERSION_MATCH = new Option("vm", "versionMatch", true, "RegEx to match");
+    private static final Option OPTION_DELETE = new Option("d", "delete", false, "Delete findings");
     private static final Option OPTION_OLDER_THEN = new Option("otd", "OlderThenDays", true, "Older then days");
     private static final Option OPTION_BASE_URL = new Option("b", "baseUrl", true, "Dependency Track base URL");
     private static final Option OPTION_API_KEY = new Option("k", "apiKey", true, "Dependency Track REST API key");
@@ -51,9 +51,9 @@ public class App {
         options.addOption(COMMAND_CREATE_CONFIG);
         options.addOption(COMMAND_HELP);
 
-        options.addOption(OPTION_PROJECT_REGEX);
+        options.addOption(OPTION_VERSION_MATCH);
         options.addOption(OPTION_OLDER_THEN);
-        options.addOption(OPTION_VALIDATE);
+        options.addOption(OPTION_DELETE);
         options.addOption(OPTION_CONFIG_FILE);
         options.addOption(OPTION_BASE_URL);
         options.addOption(OPTION_API_KEY);
@@ -65,8 +65,8 @@ public class App {
             if (cmd.hasOption(OPTION_CONFIG_FILE)) {
                 Configuration.INSTANCE.loadAlternative(Path.of(cmd.getOptionValue(OPTION_CONFIG_FILE)));
             }
-            if (cmd.hasOption(OPTION_VALIDATE)) {
-                Configuration.INSTANCE.setOnlyValidate(true);
+            if (cmd.hasOption(OPTION_DELETE)) {
+                Configuration.INSTANCE.setDelete(true);
             }
             if (cmd.hasOption(OPTION_BASE_URL)) {
                 Configuration.INSTANCE.setBaseUrl(cmd.getOptionValue(OPTION_BASE_URL));
@@ -74,9 +74,13 @@ public class App {
             if (cmd.hasOption(OPTION_API_KEY)) {
                 Configuration.INSTANCE.setApiKey(cmd.getOptionValue(OPTION_API_KEY));
             }
+            if (cmd.hasOption(OPTION_VERSION_MATCH)) {
+                Configuration.INSTANCE.setVersionMatch(cmd.getOptionValue(OPTION_VERSION_MATCH));
+            }
 
             if (cmd.hasOption(COMMAND_PROJECT_CARE)) {
-
+                ProjectCare projectCare = new ProjectCare();
+                projectCare.care();
             } else if (cmd.hasOption(COMMAND_HELP)) {
                 printHelp(options);
             } else if (cmd.hasOption(COMMAND_CREATE_CONFIG)) {

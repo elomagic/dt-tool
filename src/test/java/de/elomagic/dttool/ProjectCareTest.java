@@ -17,54 +17,12 @@ class ProjectCareTest {
 
     @Test
     void testCare(MockServerClient client) throws Exception {
+        MockTool.mockServer(client);
 
-        int port = client.getPort();
-        String apiKey = "abcdefghijklmnopqrstuvwxyz1234567890";
-        String licenses = IOUtils.resourceToString("projects.json", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
-
-        // When download projects
-        client.when(
-                        request()
-                                .withMethod("GET")
-                                .withQueryStringParameter("page", "1")
-                                .withPath("/api/v1/project")
-                                .withHeader("X-Api-Key", apiKey)
-                )
-                .respond(
-                        response()
-                                .withStatusCode(200)
-                                .withBody(licenses)
-                );
-        client.when(
-                        request()
-                                .withMethod("GET")
-                                .withQueryStringParameter("page", "2")
-                                .withPath("/api/v1/project")
-                                .withHeader("X-Api-Key", apiKey)
-                )
-                .respond(
-                        response()
-                                .withStatusCode(200)
-                                .withBody("[]")
-                );
-
-        // When delete project
-        client.when(
-                        request()
-                                .withMethod("DELETE")
-                                .withPath("/api/v1/project/01d558ae-5075-4cbb-94ea-73ce6ae23999")
-                                .withHeader("X-Api-Key", apiKey)
-                )
-                .respond(
-                        response()
-                                .withStatusCode(204)
-                );
-
-        Configuration.INSTANCE.setApiKey(apiKey);
-        Configuration.INSTANCE.setBaseUrl("http://localhost:%s".formatted(port));
+        Configuration.INSTANCE.setVersionMatch("\\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT");
+        Configuration.INSTANCE.setOlderThenDays(90);
 
         ProjectCare pc = new ProjectCare();
-        pc.care("\\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT", 90);
-
+        pc.care();
     }
 }
