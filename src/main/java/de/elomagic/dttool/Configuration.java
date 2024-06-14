@@ -27,7 +27,6 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Optional;
 import java.util.Properties;
 
 public class Configuration {
@@ -115,7 +114,7 @@ public class Configuration {
     }
 
     public int getOlderThenDays() {
-        return Integer.parseInt(properties.getProperty("olderThenDays", "90"));
+        return Integer.parseInt(properties.getProperty("olderThenDays", "30"));
     }
 
     public void setOlderThenDays(int value) {

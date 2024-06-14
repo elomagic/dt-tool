@@ -12,7 +12,9 @@ import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.jupiter.MockServerExtension;
 
 import java.nio.charset.StandardCharsets;
+import java.time.chrono.ChronoZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockserver.model.HttpRequest.request;
@@ -57,7 +59,7 @@ class DTrackClientTest {
         List<Project> projects = dtClient.fetchProjects(10, 1);
         assertEquals(2, projects.size());
 
-        assertEquals(2719792685L, projects.get(0).getLastBomImport().toEpochSecond());
+        assertEquals(1517598568L, Optional.ofNullable(projects.getFirst().getLastBomImport()).map(ChronoZonedDateTime::toEpochSecond).orElse(0L));
     }
 
 }

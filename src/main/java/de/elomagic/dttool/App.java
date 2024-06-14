@@ -36,9 +36,9 @@ public class App {
     private static final Option COMMAND_CREATE_CONFIG = new Option("cc", "createConfig", false, "Create configuration template");
     private static final Option COMMAND_HELP = new Option("h", "help", false, "Print this message");
 
-    private static final Option OPTION_VERSION_MATCH = new Option("vm", "versionMatch", true, "RegEx to match");
+    private static final Option OPTION_VERSION_MATCH = new Option("vm", "versionMatch", true, "RegEx to match. Default \\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT");
     private static final Option OPTION_DELETE = new Option("d", "delete", false, "Delete findings");
-    private static final Option OPTION_OLDER_THEN = new Option("otd", "OlderThenDays", true, "Older then days");
+    private static final Option OPTION_OLDER_THEN = new Option("otd", "OlderThenDays", true, "Older then days. Default 30 days");
     private static final Option OPTION_BASE_URL = new Option("b", "baseUrl", true, "Dependency Track base URL");
     private static final Option OPTION_API_KEY = new Option("k", "apiKey", true, "Dependency Track REST API key");
 

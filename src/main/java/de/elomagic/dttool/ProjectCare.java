@@ -60,14 +60,12 @@ public class ProjectCare {
 
             projects.addAll(pageResult
                     .stream()
-                    .filter(p -> p.getLastBomImport() == null || notBefore.isBefore(p.getLastBomImport()))
+                    .filter(p -> p.getLastBomImport() != null && notBefore.isAfter(p.getLastBomImport()))
                     .toList()
             );
 
             size = pageResult.size();
         } while (size > 0);
-
-        LOGGER.info("Found {} projects to patch", projects.size());
 
         List<Project> oldProjects = projects
                 .stream()

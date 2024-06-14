@@ -3,12 +3,12 @@
         "name": "TestProject",
         "version": "1.0.0.1",
         "uuid": "01d558ae-5075-4cbb-94ea-73ce6ae23532",
-        "lastBomImport": "2719792685000"
+        "lastBomImport": "1517598568503"
     },
     {
         "name": "TestProjectOld",
         "version": "1.0.0.1-SNAPSHOT",
         "uuid": "01d558ae-5075-4cbb-94ea-73ce6ae23999",
-        "lastBomImport": "2119792685000"
+        "lastBomImport": "1517198568503"
     }
 ]

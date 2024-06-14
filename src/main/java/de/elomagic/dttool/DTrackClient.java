@@ -44,17 +44,6 @@ public class DTrackClient extends AbstractRestClient {
     private static final Logger LOGGER = LogManager.getLogger(DTrackClient.class);
 
     private final String baseURL = Configuration.INSTANCE.getBaseUrl();
-    private final String apiKey = Configuration.INSTANCE.getApiKey();
-
-    /*
-    protected HttpRequest createDefaultGET(@NotNull URI uri) {
-        return createDefaultGET(uri, "X-Api-Key", apiKey);
-    }
-
-    protected HttpRequest createDefaultPUT(@NotNull URI uri, @NotNull HttpRequest.BodyPublisher publisher) {
-        return createDefaultPUT(uri, publisher, "X-Api-Key", apiKey);
-    }
-    */
 
     // https://[HOSTNAME]/api/swagger.json
 

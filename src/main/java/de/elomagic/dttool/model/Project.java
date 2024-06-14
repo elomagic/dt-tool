@@ -17,6 +17,8 @@
  */
 package de.elomagic.dttool.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
@@ -25,33 +27,25 @@ import java.time.ZonedDateTime;
 
 public class Project {
 
-    private String name;
-    private String version;
+    @JsonProperty
     private String uuid;
+    @JsonProperty
+    private String name;
+    @JsonProperty
+    private String version;
+    @JsonProperty
     private String lastBomImport;
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
     public String getUuid() {
         return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     @Nullable
@@ -61,7 +55,7 @@ public class Project {
         }
 
         // Do of a bug in the REST API of DT, w e have to differ between epoch time and zoned date time
-        if (lastBomImport.matches("[0-9]+")) {
+        if (lastBomImport.matches("[\\d]+")) {
             Instant instant = Instant.ofEpochMilli(Long.parseLong(lastBomImport));
             return ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
         } else {
