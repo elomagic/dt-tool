@@ -35,6 +35,10 @@ public class Configuration {
             System.getProperty("user.home"),
             ".license-patcher",
             "configuration.properties");
+
+    public static final String DEFAULT_PROJECT_VERSION_MATCH = "\\d+\\.\\d+\\.\\d+\\.\\d+(-.*)?-SNAPSHOT";
+    public static final int DEFAULT_OLDER_THEN_DAYS = 30;
+
     private static final Logger LOGGER = LogManager.getLogger(Configuration.class);
     private final Properties properties = new Properties();
 
@@ -106,7 +110,7 @@ public class Configuration {
     }
 
     public String getVersionMatch() {
-        return properties.getProperty("versionMatch", "\\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT");
+        return properties.getProperty("versionMatch", DEFAULT_PROJECT_VERSION_MATCH);
     }
 
     public void setVersionMatch(String value) {
@@ -114,7 +118,7 @@ public class Configuration {
     }
 
     public int getOlderThenDays() {
-        return Integer.parseInt(properties.getProperty("olderThenDays", "30"));
+        return Integer.parseInt(properties.getProperty("olderThenDays", Integer.toString(DEFAULT_OLDER_THEN_DAYS)));
     }
 
     public void setOlderThenDays(int value) {
