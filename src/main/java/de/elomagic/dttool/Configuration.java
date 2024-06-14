@@ -27,6 +27,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 import java.util.Properties;
 
 public class Configuration {
@@ -106,7 +107,7 @@ public class Configuration {
     }
 
     public String getVersionMatch() {
-        return properties.getProperty("versionMatch");
+        return properties.getProperty("versionMatch", "\\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT");
     }
 
     public void setVersionMatch(String value) {
