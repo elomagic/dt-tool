@@ -139,7 +139,7 @@ public class DTrackClient extends AbstractRestClient {
 
     public void deleteProject(@NotNull String uuid) {
         try {
-            LOGGER.info("Delete project #{}", uuid);
+            LOGGER.info("Delete project {}", uuid);
             URI uri = URI.create("%s/api/v1/project/%s".formatted(baseURL, uuid));
             HttpRequest request = createDefaultDELETE(uri);
 

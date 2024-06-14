@@ -4,6 +4,7 @@ A tool that helps you to manage Dependency Track content better.
 
 ---
 
+[![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/apache/maven.svg?label=License)][license]
 [![build workflow](https://github.com/elomagic/dt-tool/actions/workflows/maven.yml/badge.svg)](https://github.com/elomagic/dt-tool/actions)
 [![GitHub issues](https://img.shields.io/github/issues-raw/elomagic/dt-tool)](https://github.com/elomagic/dt-tool/issues)
 [![Latest](https://img.shields.io/github/release/elomagic/dt-tool.svg)](https://github.com/elomagic/dt-tool/releases)
@@ -39,10 +40,10 @@ Execute following line to see all supported options
 java -jar <LATEST_RELEASED_JAR> -help
 ```
 
-#### Example 1
+#### Example 1 - Print outdated SNAPSHOTS (30 days and older)
 
 ```
-java -jar <LATEST_RELEASED_JAR>
+java -jar <LATEST_RELEASED_JAR> -cp
 ```
 
 ## Contributing
@@ -55,4 +56,6 @@ Versioning follows the semantic of [Semantic Versioning 2.0.0](https://semver.or
 
 ## License
 
-The dt-tool is distributed under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+The dt-tool is distributed under [Apache License, Version 2.0][license]
+
+[license]: https://www.apache.org/licenses/LICENSE-2.0
