@@ -33,6 +33,7 @@ jobs:
           servers: |
             [{
               "id": "nvd",
+              "username": "",
               "password": "${{ secrets.NVD_KEY }}"
             }]          
 
