@@ -32,7 +32,7 @@ import java.util.Properties;
 
 public class App {
 
-    private static final Option COMMAND_PROJECT_CARE = new Option("pc", "projectCare", false, "Deletes projects which older then x days");
+    private static final Option COMMAND_PROJECT_CARE = new Option("pc", "projectCare", false, "List projects which older then x days");
     private static final Option COMMAND_CREATE_CONFIG = new Option("cc", "createConfig", false, "Create configuration template");
     private static final Option COMMAND_HELP = new Option("h", "help", false, "Print this message");
 
