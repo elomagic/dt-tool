@@ -39,8 +39,9 @@ public class App {
     private static final Option OPTION_VERSION_MATCH = new Option("vm", "versionMatch", true, "RegEx to match. Default " + Configuration.DEFAULT_PROJECT_VERSION_MATCH);
     private static final Option OPTION_DELETE = new Option("d", "delete", false, "Delete findings");
     private static final Option OPTION_OLDER_THEN = new Option("otd", "OlderThenDays", true, "Older then days. Default " + Configuration.DEFAULT_OLDER_THEN_DAYS + " days");
-    private static final Option OPTION_BASE_URL = new Option("b", "baseUrl", true, "Dependency Track base URL");
+    private static final Option OPTION_BASE_URL = new Option("u", "baseUrl", true, "Dependency Track base URL");
     private static final Option OPTION_API_KEY = new Option("k", "apiKey", true, "Dependency Track REST API key");
+    private static final Option OPTION_BATCH_MODE = new Option("b", "batchMode", false, "in non-interactive (batch)");
 
     private static final Option OPTION_CONFIG_FILE = new Option("cf", "configFile", true, "Loads alternative configuration file");
 
@@ -57,6 +58,7 @@ public class App {
         options.addOption(OPTION_CONFIG_FILE);
         options.addOption(OPTION_BASE_URL);
         options.addOption(OPTION_API_KEY);
+        options.addOption(OPTION_BATCH_MODE);
 
         CommandLineParser parser = new DefaultParser();
         try {
@@ -76,6 +78,9 @@ public class App {
             }
             if (cmd.hasOption(OPTION_VERSION_MATCH)) {
                 Configuration.INSTANCE.setVersionMatch(cmd.getOptionValue(OPTION_VERSION_MATCH));
+            }
+            if (cmd.hasOption(OPTION_BATCH_MODE)) {
+                Configuration.INSTANCE.setBatchMode(true);
             }
 
             if (cmd.hasOption(COMMAND_PROJECT_CARE)) {

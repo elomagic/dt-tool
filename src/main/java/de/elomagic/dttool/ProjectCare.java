@@ -23,6 +23,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Console;
+import java.io.PrintWriter;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +37,28 @@ public class ProjectCare {
 
     public void care() {
 
-        fetchProject(Configuration.INSTANCE.getVersionMatch(), Configuration.INSTANCE.getOlderThenDays())
-                .filter(p -> Configuration.INSTANCE.isDelete())
-                .forEach(p -> client.deleteProject(p.getUuid()));
+        List<Project> projects = fetchProject(Configuration.INSTANCE.getVersionMatch(), Configuration.INSTANCE.getOlderThenDays()).toList();
 
+        if (projects.isEmpty()) {
+            return;
+        }
+
+        boolean confirm = Configuration.INSTANCE.isBatchMode() || confirmByUser("Delete projects (Y/N)", "Y");
+
+        if (confirm) {
+            projects.stream()
+                    .filter(p -> Configuration.INSTANCE.isDelete())
+                    .forEach(p -> client.deleteProject(p.getUuid()));
+        }
+    }
+
+    private boolean confirmByUser(@NotNull String confirmationText, @NotNull String confirmText) {
+        Console console = System.console();
+        try (PrintWriter w = console.writer()) {
+            w.printf("%n%s: ", confirmationText);
+            w.flush();
+            return confirmText.equalsIgnoreCase(console.readLine());
+        }
     }
 
     private Stream<Project> fetchProject(@NotNull String regExMatch, int olderThenDays) {

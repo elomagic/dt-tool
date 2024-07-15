@@ -22,7 +22,7 @@ class AppTest {
         Configuration.INSTANCE.setVersionMatch("\\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT");
         Configuration.INSTANCE.setOlderThenDays(90);
 
-        App.main(new String[] { "-pc" });
+        App.main(new String[] { "-pc", "-b" });
 
 //        String content = Files.readString(Path.of("./junit.log"), StandardCharsets.UTF_8);
 //        assertTrue(content.contains("Patching pkg:maven/org.glassfish.jersey.core/jersey-client@2.41"), "At least one licence are not patched");
