@@ -33,7 +33,7 @@ public class Configuration {
 
     private static final Path CONFIG_FILE = Path.of(
             System.getProperty("user.home"),
-            ".license-patcher",
+            ".dt-tool",
             "configuration.properties");
 
     public static final String DEFAULT_PROJECT_VERSION_MATCH = "\\d+\\.\\d+\\.\\d+\\.\\d+(-.*)?-SNAPSHOT";
@@ -123,6 +123,14 @@ public class Configuration {
 
     public void setOlderThenDays(int value) {
         properties.setProperty("olderThenDays", Integer.toString(value));
+    }
+
+    public boolean isBatchMode() {
+        return Boolean.parseBoolean(properties.getProperty("batchMode", "false"));
+    }
+
+    public void setBatchMode(boolean value) {
+        properties.setProperty("batchMode", Boolean.toString(value));
     }
 
 }

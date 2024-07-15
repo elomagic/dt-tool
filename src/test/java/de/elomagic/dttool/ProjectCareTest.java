@@ -15,6 +15,7 @@ class ProjectCareTest {
 
         Configuration.INSTANCE.setVersionMatch("\\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT");
         Configuration.INSTANCE.setOlderThenDays(30);
+        Configuration.INSTANCE.setBatchMode(true);
 
         ProjectCare pc = new ProjectCare();
         pc.care();
