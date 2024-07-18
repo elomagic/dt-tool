@@ -24,15 +24,6 @@ import static org.mockserver.model.HttpResponse.response;
 class DTrackClientTest {
 
     @Test
-    @EnabledIfEnvironmentVariable(named = "testRemote", matches = "true")
-    void testFetchComponents() {
-        DTrackClient client = new DTrackClient();
-        List<Violation> violationList = client.fetchViolations();
-
-        assertTrue(violationList.size() > 10);
-    }
-
-    @Test
     void testGetProjects(MockServerClient client) throws Exception {
         int port = client.getPort();
         String apiKey = "abcdefghijklmnopqrstuvwxyz1234567890";
@@ -57,7 +48,7 @@ class DTrackClientTest {
         // Execute the text
         DTrackClient dtClient = new DTrackClient();
         List<Project> projects = dtClient.fetchProjects(10, 1);
-        assertEquals(2, projects.size());
+        assertEquals(6, projects.size());
 
         assertEquals(1517598568L, Optional.ofNullable(projects.getFirst().getLastBomImport()).map(ChronoZonedDateTime::toEpochSecond).orElse(0L));
     }

@@ -10,5 +10,30 @@
         "version": "1.0.0.1-SNAPSHOT",
         "uuid": "01d558ae-5075-4cbb-94ea-73ce6ae23999",
         "lastBomImport": "1517198568503"
+    },
+
+    {
+        "name": "TestLatestVersion1",
+        "version": "1.0.0.1",
+        "uuid": "85b0f240-b405-4d61-a10a-42f54b6ad59e",
+        "lastBomImport": "1517198568503"
+    },
+    {
+        "name": "TestLatestVersion1",
+        "version": "1.0.0.1-SNAPSHOT",
+        "uuid": "0571fd6e-f746-4f7f-b9e0-3a2badeda85b",
+        "lastBomImport": "1517198568503"
+    },
+    {
+        "name": "TestLatestVersion1",
+        "version": "1.0.0.1-RC",
+        "uuid": "def0622a-b76c-4d1e-a7a4-cc26cbb2958a",
+        "lastBomImport": "1517198568503"
+    },
+    {
+        "name": "TestLatestVersion1",
+        "version": "1.0.0.0",
+        "uuid": "895425a3-6c1d-465a-9fda-6e21ea7a2035",
+        "lastBomImport": "1517198568503"
     }
 ]

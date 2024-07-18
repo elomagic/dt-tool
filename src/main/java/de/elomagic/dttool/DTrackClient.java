@@ -76,6 +76,32 @@ public class DTrackClient extends AbstractRestClient {
         }
     }
 
+    /**
+     * Fetch all active projects by name.
+     *
+     * @param name Name of the project to fetch
+     * @param limit Limit count of projects in the response
+     * @param page Starts from 1
+     * @return List of projects
+     */
+    public List<Project> fetchProjectsByName(@NotNull String name, int limit, int page) {
+        try {
+            URI uri = URI.create(
+                    "%s/api/v1/project?name=%s&excludeInactive=false&limit=%s&page=%s".formatted(
+                            baseURL,
+                            name,
+                            limit,
+                            page
+                    )
+            );
+            HttpRequest request = createDefaultGET(uri);
+
+            return List.of(executeRequest(request, Project[].class));
+        } catch (IOException | InterruptedException ex) {
+            throw new DtToolException(ex.getMessage(), ex);
+        }
+    }
+
     public Component fetchComponent(@NotNull String uuid) {
         try {
             LOGGER.info("Fetching component #{}", uuid);

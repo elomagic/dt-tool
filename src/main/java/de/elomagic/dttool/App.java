@@ -24,6 +24,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
@@ -32,8 +33,11 @@ import java.util.Properties;
 
 public class App {
 
+    private static final Logger LOGGER = LogManager.getLogger(App.class);
+
     private static final Option COMMAND_PROJECT_CARE = new Option("pc", "projectCare", false, "List projects which older then x days");
     private static final Option COMMAND_CREATE_CONFIG = new Option("cc", "createConfig", false, "Create configuration template");
+    private static final Option COMMAND_LATEST_VERSION = new Option("lv", "latestVersion", false, "Find latest active version of project");
     private static final Option COMMAND_HELP = new Option("h", "help", false, "Print this message");
 
     private static final Option OPTION_VERSION_MATCH = new Option("vm", "versionMatch", true, "RegEx to match. Default " + Configuration.DEFAULT_PROJECT_VERSION_MATCH);
@@ -42,6 +46,7 @@ public class App {
     private static final Option OPTION_BASE_URL = new Option("u", "baseUrl", true, "Dependency Track base URL");
     private static final Option OPTION_API_KEY = new Option("k", "apiKey", true, "Dependency Track REST API key");
     private static final Option OPTION_BATCH_MODE = new Option("b", "batchMode", false, "in non-interactive (batch)");
+    private static final Option OPTION_PROJECT_NAME = new Option("pn", "projectName", true, "Project name");
 
     private static final Option OPTION_CONFIG_FILE = new Option("cf", "configFile", true, "Loads alternative configuration file");
 
@@ -50,6 +55,7 @@ public class App {
         Options options = new Options();
         options.addOption(COMMAND_PROJECT_CARE);
         options.addOption(COMMAND_CREATE_CONFIG);
+        options.addOption(COMMAND_LATEST_VERSION);
         options.addOption(COMMAND_HELP);
 
         options.addOption(OPTION_VERSION_MATCH);
@@ -59,6 +65,7 @@ public class App {
         options.addOption(OPTION_BASE_URL);
         options.addOption(OPTION_API_KEY);
         options.addOption(OPTION_BATCH_MODE);
+        options.addOption(OPTION_PROJECT_NAME);
 
         CommandLineParser parser = new DefaultParser();
         try {
@@ -86,6 +93,10 @@ public class App {
             if (cmd.hasOption(COMMAND_PROJECT_CARE)) {
                 ProjectCare projectCare = new ProjectCare();
                 projectCare.care();
+            } else if (cmd.hasOption(COMMAND_LATEST_VERSION)) {
+                LatestVersion lv = new LatestVersion();
+                lv.getLatestVersion(cmd.getOptionValue(OPTION_PROJECT_NAME))
+                        .ifPresent(v -> LOGGER.always().log("Latest version: {}", v));
             } else if (cmd.hasOption(COMMAND_HELP)) {
                 printHelp(options);
             } else if (cmd.hasOption(COMMAND_CREATE_CONFIG)) {
