@@ -10,28 +10,32 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockServerExtension.class)
 class AppTest {
 
     @Test
-    void testHelp() {
+    void testHelp() throws IOException {
         App.main(new String[] { "-help" });
+
+        String content = readLog();
+
+        assertThat(content)
+                .doesNotContain("v{project.version}")
+                .contains("Dependency Track Tool v");
     }
 
     @Test
     void testProjectCare(MockServerClient client) throws IOException {
         MockTool.mockServer(client);
 
-        Configuration.INSTANCE.setVersionMatch("\\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT");
+        Configuration.INSTANCE.setVersionMatch(Configuration.DEFAULT_PROJECT_VERSION_MATCH);
         Configuration.INSTANCE.setOlderThenDays(90);
 
-        App.main(new String[] { "-pc", "-b" });
+        App.main(new String[] { "-pc", "-b", "-v" });
 
-//        String content = Files.readString(Path.of("./junit.log"), StandardCharsets.UTF_8);
-//        assertTrue(content.contains("Patching pkg:maven/org.glassfish.jersey.core/jersey-client@2.41"), "At least one licence are not patched");
-//        assertFalse(content.contains("\"expression\""), "Some or all expressions not patched");
+        assertThat(readLog()).contains("TestLatestVersion1\t 1.0.0.1-SNAPSHOT\t Created 2018-01-29T05:02:48.503");
     }
 
     @Test
@@ -40,9 +44,13 @@ class AppTest {
 
         App.main(new String[] { "-l", "-pn", "TestLatestVersion1", "-rp", "VERSION" });
 
-        String content = Files.readString(Path.of("./junit.log"), StandardCharsets.UTF_8);
+        assertThat(readLog()).contains("1.0.0.1\n");
+    }
 
-        assertTrue(content.contains("1.0.0.1"));
+    private String readLog() throws IOException {
+        return Files
+                .readString(Path.of("./junit.log"), StandardCharsets.UTF_8)
+                .replace("\r\n", "\n");
     }
 
 }

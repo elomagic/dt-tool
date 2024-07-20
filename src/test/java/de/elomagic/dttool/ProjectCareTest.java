@@ -12,7 +12,7 @@ class ProjectCareTest {
     void testCare(MockServerClient client) throws Exception {
         MockTool.mockServer(client);
 
-        Configuration.INSTANCE.setVersionMatch("\\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT");
+        Configuration.INSTANCE.setVersionMatch(Configuration.DEFAULT_PROJECT_VERSION_MATCH);
         Configuration.INSTANCE.setOlderThenDays(30);
         Configuration.INSTANCE.setBatchMode(true);
 
