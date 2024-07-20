@@ -25,7 +25,10 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Properties;
 
@@ -127,7 +130,7 @@ public class App {
 
     private static void printHelp(@NotNull Options options) {
         String version = "unknown";
-        try (InputStream in = App.class.getResourceAsStream("/META-INF/maven/de.elomagic/dt-tool/pom.properties")) {
+        try (InputStream in = App.class.getResourceAsStream("/de/elomagic/dttool/meta.properties")) {
             Properties properties = new Properties();
             properties.load(in);
             version = properties.getProperty("version");
@@ -136,7 +139,20 @@ public class App {
         }
 
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("BOM License Patcher v%s".formatted(version), options);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        // formatter.printHelp("BOM License Patcher v%s".formatted(version), options);
+        formatter.printHelp(
+                new PrintWriter(out, true),
+                formatter.getWidth(),
+                "Dependency Track Tool v%s".formatted(version),
+                null,
+                options,
+                formatter.getLeftPadding(),
+                formatter.getDescPadding(),
+                null
+        );
+
+        LOGGER.always(out.toString(StandardCharsets.UTF_8));
     }
 
 }
