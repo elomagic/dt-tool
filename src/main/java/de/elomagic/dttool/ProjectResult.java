@@ -17,17 +17,10 @@
  */
 package de.elomagic.dttool;
 
-/**
- * Common base class for all exceptions in DT-Tool.
- */
-public class DtToolException extends RuntimeException {
+public enum ProjectResult {
 
-    public DtToolException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public DtToolException(String message) {
-        super(message);
-    }
+    JSON,
+    UUID,
+    VERSION
 
 }

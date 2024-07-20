@@ -17,17 +17,18 @@
  */
 package de.elomagic.dttool;
 
-/**
- * Common base class for all exceptions in DT-Tool.
- */
-public class DtToolException extends RuntimeException {
+import de.elomagic.dttool.model.Project;
 
-    public DtToolException(String message, Throwable cause) {
-        super(message, cause);
-    }
+import org.apache.maven.artifact.versioning.ComparableVersion;
 
-    public DtToolException(String message) {
-        super(message);
+import java.util.Comparator;
+
+public final class ComparatorFactory {
+
+    private ComparatorFactory() {}
+
+    public static Comparator<Project> create() {
+        return Comparator.comparing((Project o) -> new ComparableVersion(o.getVersion())).reversed();
     }
 
 }

@@ -17,6 +17,7 @@
  */
 package de.elomagic.dttool.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.jetbrains.annotations.Nullable;
@@ -48,6 +49,7 @@ public class Project {
         return uuid;
     }
 
+    @JsonIgnore
     @Nullable
     public ZonedDateTime getLastBomImport() {
         if (lastBomImport == null || lastBomImport.isBlank()) {

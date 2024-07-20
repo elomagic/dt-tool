@@ -37,6 +37,7 @@ public class Configuration {
             "configuration.properties");
 
     public static final String DEFAULT_PROJECT_VERSION_MATCH = "\\d+\\.\\d+\\.\\d+\\.\\d+(-.*)?-SNAPSHOT";
+    public static final String DEFAULT_PROJECT_LATEST_VERSION_MATCH = "\\d+\\.\\d+\\.\\d+\\.\\d+$";
     public static final int DEFAULT_OLDER_THEN_DAYS = 30;
 
     private static final Logger LOGGER = LogManager.getLogger(Configuration.class);
@@ -132,5 +133,22 @@ public class Configuration {
     public void setBatchMode(boolean value) {
         properties.setProperty("batchMode", Boolean.toString(value));
     }
+
+    public ProjectResult getReturnProperty() {
+        return ProjectResult.valueOf(properties.getProperty("projectResult", "JSON"));
+    }
+
+    public void setReturnProperty(@NotNull ProjectResult value) {
+        properties.setProperty("projectResult", value.name());
+    }
+
+    public String getLatestVersionMatch() {
+        return properties.getProperty("versionLatestMatch", DEFAULT_PROJECT_LATEST_VERSION_MATCH);
+    }
+
+    public void setLatestVersionMatch(String value) {
+        properties.setProperty("versionLatestMatch", value);
+    }
+
 
 }
