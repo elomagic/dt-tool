@@ -34,8 +34,8 @@ public final class Configuration {
             ".dt-tool",
             "configuration.properties");
 
-    public static final String DEFAULT_PROJECT_VERSION_MATCH = "\\d+\\.\\d+\\.\\d+\\.\\d+(-.*)?-SNAPSHOT";
-    public static final String DEFAULT_PROJECT_LATEST_VERSION_MATCH = "\\d+\\.\\d+\\.\\d+\\.\\d+$";
+    public static final String DEFAULT_PROJECT_VERSION_MATCH = "^\\d+(\\.\\d+)*(-.*)?-SNAPSHOT$";
+    public static final String DEFAULT_PROJECT_LATEST_VERSION_MATCH = "^\\d+(\\.\\d+)*(\\-Final)?$";
     public static final int DEFAULT_OLDER_THEN_DAYS = 30;
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
