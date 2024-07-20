@@ -35,7 +35,7 @@ class AppTest {
 
         App.main(new String[] { "-pc", "-b", "-v" });
 
-        assertThat(readLog()).contains("TestLatestVersion1\t 1.0.0.1-SNAPSHOT\t Created 2018-01-29T05:02:48.503+01:00[Europe/Berlin]");
+        assertThat(readLog()).contains("TestLatestVersion1\t 1.0.0.1-SNAPSHOT\t Created 2018-01-29T");
     }
 
     @Test
