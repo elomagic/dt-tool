@@ -281,29 +281,6 @@
             </plugin>
 
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
-                <artifactId>download-maven-plugin</artifactId>
-                <version>1.9.0</version>
-                <executions>
-                    <execution>
-                        <id>download-latest-spdx</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <failOnError>false</failOnError>
-                    <overwrite>true</overwrite>
-                    <url>https://github.com/spdx/license-list-data/raw/main/json/licenses.json</url>
-                    <unpack>false</unpack>
-                    <outputDirectory>${project.basedir}/target/classes</outputDirectory>
-                    <outputFileName>Spdx-licenses.json</outputFileName>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.3.1</version>

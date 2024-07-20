@@ -19,8 +19,6 @@ package de.elomagic.dttool;
 
 import de.elomagic.dttool.model.Project;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Console;
@@ -32,7 +30,7 @@ import java.util.stream.Stream;
 
 public class ProjectCare {
 
-    private static final Logger LOGGER = LogManager.getLogger(ProjectCare.class);
+    private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
     private final DTrackClient client = new DTrackClient();
 
     public void care() {
@@ -92,7 +90,7 @@ public class ProjectCare {
                 .filter(p -> p.getVersion().matches(regExMatch))
                 .toList();
 
-        oldProjects.forEach(p -> LOGGER.warn("{}\t {}\t Created {}", p.getName(), p.getVersion(), p.getLastBomImport()));
+        oldProjects.forEach(p -> LOGGER.info("{}\t {}\t Created {}", p.getName(), p.getVersion(), p.getLastBomImport()));
         LOGGER.info("{} of {} projects matched ", oldProjects.size(), projects.size());
 
         return oldProjects.stream();

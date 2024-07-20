@@ -17,8 +17,6 @@
  */
 package de.elomagic.dttool;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -29,7 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 
-public class Configuration {
+public final class Configuration {
 
     private static final Path CONFIG_FILE = Path.of(
             System.getProperty("user.home"),
@@ -40,7 +38,7 @@ public class Configuration {
     public static final String DEFAULT_PROJECT_LATEST_VERSION_MATCH = "\\d+\\.\\d+\\.\\d+\\.\\d+$";
     public static final int DEFAULT_OLDER_THEN_DAYS = 30;
 
-    private static final Logger LOGGER = LogManager.getLogger(Configuration.class);
+    private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
     private final Properties properties = new Properties();
 
     public static final Configuration INSTANCE = new Configuration();
@@ -56,6 +54,8 @@ public class Configuration {
         try (Reader reader = Files.newBufferedReader(CONFIG_FILE)) {
             properties.load(reader);
 
+            LOGGER.setVerbose(isVerbose());
+
             properties.forEach((key, value) -> LOGGER.debug("Configuration: {}={}", key, key.equals("apiKey") ? "???" : value + ""));
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
@@ -64,7 +64,7 @@ public class Configuration {
 
     public void createTemplate() throws IOException {
         if (Files.exists(CONFIG_FILE)) {
-            LOGGER.warn("Configuration file '{}' already exists.", CONFIG_FILE);
+            LOGGER.error("Configuration file '{}' already exists.", CONFIG_FILE);
             return;
         }
 
@@ -150,5 +150,12 @@ public class Configuration {
         properties.setProperty("versionLatestMatch", value);
     }
 
+    public boolean isVerbose() {
+        return Boolean.parseBoolean(properties.getProperty("verbose", "false"));
+    }
+
+    public void setVerbose(boolean value) {
+        properties.setProperty("verbose", Boolean.toString(value));
+    }
 
 }
