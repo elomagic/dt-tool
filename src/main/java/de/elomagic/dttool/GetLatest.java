@@ -17,6 +17,8 @@
  */
 package de.elomagic.dttool;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import de.elomagic.dttool.model.Project;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,20 +30,33 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class LatestVersion {
+public class GetLatest {
 
-    private static final Logger LOGGER = LogManager.getLogger(LatestVersion.class);
+    private static final Logger LOGGER = LogManager.getLogger(GetLatest.class);
     private final DTrackClient client = new DTrackClient();
 
     @NotNull
-    public Optional<String> getLatestVersion(@NotNull String projectName) {
-        return fetchProjectByName(projectName)
+    public Optional<String> getLatest(@NotNull String projectName) {
+        return fetchProjectByName(projectName, Configuration.INSTANCE.getLatestVersionMatch())
                 .sorted(ComparatorFactory.create())
-                .map(Project::getVersion)
+                .map(p -> mapToString(p, Configuration.INSTANCE.getReturnProperty()))
                 .findFirst();
     }
 
-    private Stream<Project> fetchProjectByName(@NotNull String projectName) {
+    @NotNull
+    private String mapToString(@NotNull Project project, @NotNull ProjectResult result) {
+        try {
+            return switch (result) {
+                case JSON -> JsonMapperFactory.create().writeValueAsString(project);
+                case UUID -> project.getUuid();
+                case VERSION -> project.getVersion();
+            };
+        } catch (JsonProcessingException ex) {
+            throw new DtToolException(ex.getMessage(), ex);
+        }
+    }
+
+    private Stream<Project> fetchProjectByName(@NotNull String projectName, @NotNull String regExVersionMatch) {
 
         LOGGER.info("Fetching projects with name {}", projectName);
 
@@ -58,6 +73,7 @@ public class LatestVersion {
             projects.addAll(pageResult
                     .stream()
                     .filter(p -> p.getName().equals(projectName))
+                    .filter(p -> p.getVersion().matches(regExVersionMatch))
                     .toList()
             );
 

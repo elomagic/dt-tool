@@ -33,7 +33,7 @@ class AppTest {
     void testLatestVersion(MockServerClient client) throws IOException {
         MockTool.mockServer(client);
 
-        App.main(new String[] { "-lv", "-pn", "TestLatestVersion1" });
+        App.main(new String[] { "-l", "-pn", "TestLatestVersion1" });
 
 //        String content = Files.readString(Path.of("./junit.log"), StandardCharsets.UTF_8);
 //        assertTrue(content.contains("Patching pkg:maven/org.glassfish.jersey.core/jersey-client@2.41"), "At least one licence are not patched");

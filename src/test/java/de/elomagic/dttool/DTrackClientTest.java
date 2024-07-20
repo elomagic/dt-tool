@@ -48,7 +48,7 @@ class DTrackClientTest {
         // Execute the text
         DTrackClient dtClient = new DTrackClient();
         List<Project> projects = dtClient.fetchProjects(10, 1);
-        assertEquals(6, projects.size());
+        assertEquals(7, projects.size());
 
         assertEquals(1517598568L, Optional.ofNullable(projects.getFirst().getLastBomImport()).map(ChronoZonedDateTime::toEpochSecond).orElse(0L));
     }
