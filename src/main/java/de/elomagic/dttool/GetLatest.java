@@ -21,8 +21,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import de.elomagic.dttool.model.Project;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ import java.util.stream.Stream;
 
 public class GetLatest {
 
-    private static final Logger LOGGER = LogManager.getLogger(GetLatest.class);
+    private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
     private final DTrackClient client = new DTrackClient();
 
     @NotNull

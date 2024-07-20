@@ -2,10 +2,10 @@
 <Configuration status="INFO">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %msg%n" />
+            <PatternLayout pattern="%msg%n" />
         </Console>
-        <File name="MyFile" fileName="./junit.log" immediateFlush="false" append="false">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %msg%n"/>
+        <File name="MyFile" fileName="./junit.log" immediateFlush="true" append="false">
+            <PatternLayout pattern="%msg%n" />
         </File>
     </Appenders>
     <Loggers>

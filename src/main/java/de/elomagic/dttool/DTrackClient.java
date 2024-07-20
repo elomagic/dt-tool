@@ -27,8 +27,6 @@ import de.elomagic.dttool.model.License;
 import de.elomagic.dttool.model.Project;
 import de.elomagic.dttool.model.Violation;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -41,7 +39,7 @@ import java.util.List;
 
 public class DTrackClient extends AbstractRestClient {
 
-    private static final Logger LOGGER = LogManager.getLogger(DTrackClient.class);
+    private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
 
     private final String baseURL = Configuration.INSTANCE.getBaseUrl();
 
