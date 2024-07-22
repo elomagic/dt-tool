@@ -44,8 +44,7 @@ public class ProjectCare {
         boolean confirm = Configuration.INSTANCE.isBatchMode() || confirmByUser("Delete projects (Y/N)", "Y");
 
         if (confirm) {
-            projects.stream()
-                    .forEach(p -> client.deleteProject(p.getUuid()));
+            projects.forEach(p -> client.deleteProject(p.getUuid()));
         }
     }
 
