@@ -37,7 +37,7 @@ public class ProjectCare {
 
         List<Project> projects = fetchProject(Configuration.INSTANCE.getVersionMatch(), Configuration.INSTANCE.getOlderThenDays()).toList();
 
-        if (projects.isEmpty()) {
+        if (projects.isEmpty() || !Configuration.INSTANCE.isDelete()) {
             return;
         }
 
@@ -45,7 +45,6 @@ public class ProjectCare {
 
         if (confirm) {
             projects.stream()
-                    .filter(p -> Configuration.INSTANCE.isDelete())
                     .forEach(p -> client.deleteProject(p.getUuid()));
         }
     }
