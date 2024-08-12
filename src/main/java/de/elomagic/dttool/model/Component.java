@@ -17,9 +17,11 @@
  */
 package de.elomagic.dttool.model;
 
+import java.util.UUID;
+
 public class Component {
 
-    private String uuid;
+    private UUID uuid;
     private String group;
     private String name;
     private String version;
@@ -27,11 +29,11 @@ public class Component {
     private String licenseUrl;
     private License resolvedLicense;
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 

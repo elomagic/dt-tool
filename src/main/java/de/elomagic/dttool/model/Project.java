@@ -25,11 +25,12 @@ import org.jetbrains.annotations.Nullable;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 public class Project {
 
     @JsonProperty
-    private String uuid;
+    private UUID uuid;
     @JsonProperty
     private String name;
     @JsonProperty
@@ -45,7 +46,7 @@ public class Project {
         return version;
     }
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 

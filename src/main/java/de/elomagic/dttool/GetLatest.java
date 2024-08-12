@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public class GetLatest {
@@ -46,7 +47,7 @@ public class GetLatest {
         try {
             return switch (result) {
                 case JSON -> JsonMapperFactory.create().writeValueAsString(project);
-                case UUID -> project.getUuid();
+                case UUID -> Optional.ofNullable(project.getUuid()).map(UUID::toString).orElse("");
                 case VERSION -> project.getVersion();
             };
         } catch (JsonProcessingException ex) {

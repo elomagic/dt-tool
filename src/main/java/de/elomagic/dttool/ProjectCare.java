@@ -37,16 +37,14 @@ public class ProjectCare {
 
         List<Project> projects = fetchProject(Configuration.INSTANCE.getVersionMatch(), Configuration.INSTANCE.getOlderThenDays()).toList();
 
-        if (projects.isEmpty()) {
+        if (projects.isEmpty() || !Configuration.INSTANCE.isDelete()) {
             return;
         }
 
         boolean confirm = Configuration.INSTANCE.isBatchMode() || confirmByUser("Delete projects (Y/N)", "Y");
 
         if (confirm) {
-            projects.stream()
-                    .filter(p -> Configuration.INSTANCE.isDelete())
-                    .forEach(p -> client.deleteProject(p.getUuid()));
+            projects.forEach(p -> client.deleteProject(p.getUuid()));
         }
     }
 
