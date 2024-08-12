@@ -17,6 +17,8 @@
  */
 package de.elomagic.dttool.model;
 
+import java.util.UUID;
+
 /**
  * Example:
  * "resolvedLicense": {
@@ -31,7 +33,7 @@ package de.elomagic.dttool.model;
  */
 public class License {
 
-    private String uuid;
+    private UUID uuid;
     private String name;
     private String licenseId;
     private boolean isOsiApproved;
@@ -39,11 +41,11 @@ public class License {
     private boolean isDeprecatedLicenseId;
     private boolean isCustomLicense;
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 

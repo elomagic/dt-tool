@@ -36,6 +36,7 @@ import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 public class DTrackClient extends AbstractRestClient {
 
@@ -161,7 +162,7 @@ public class DTrackClient extends AbstractRestClient {
         }
     }
 
-    public void deleteProject(@NotNull String uuid) {
+    public void deleteProject(@NotNull UUID uuid) {
         try {
             LOGGER.info("Delete project {}", uuid);
             URI uri = URI.create("%s/api/v1/project/%s".formatted(baseURL, uuid));
