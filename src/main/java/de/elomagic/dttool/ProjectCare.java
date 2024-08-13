@@ -17,6 +17,7 @@
  */
 package de.elomagic.dttool;
 
+import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.model.Project;
 
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Console;
 import java.io.PrintWriter;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -64,24 +64,11 @@ public class ProjectCare {
         LOGGER.info("Version match: {}", Configuration.INSTANCE.getVersionMatch());
         LOGGER.info("Fetching projects which not older then {} days", olderThenDays);
 
-        List<Project> projects = new ArrayList<>();
-        int size;
-        int page = 0;
-        int limit = 1000;
-
-        do {
-            page++;
-
-            List<Project> pageResult = client.fetchProjects(limit, page);
-
-            projects.addAll(pageResult
-                    .stream()
-                    .filter(p -> p.getLastBomImport() != null && notBefore.isAfter(p.getLastBomImport()))
-                    .toList()
-            );
-
-            size = pageResult.size();
-        } while (size > 0);
+        List<Project> projects = client
+                .fetchAllProjects()
+                .stream()
+                .filter(p -> p.getLastBomImport() != null && notBefore.isAfter(p.getLastBomImport()))
+                .toList();
 
         List<Project> oldProjects = projects
                 .stream()
@@ -92,6 +79,7 @@ public class ProjectCare {
         LOGGER.info("{} of {} projects matched ", oldProjects.size(), projects.size());
 
         return oldProjects.stream();
+
     }
 
 }

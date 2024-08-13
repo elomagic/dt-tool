@@ -15,12 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool;
+package de.elomagic.dttool.model;
 
-public enum ProjectResult {
+import java.util.ArrayList;
+import java.util.List;
 
-    JSON,
-    UUID,
-    VERSION
+public class SpdxLicenses {
+
+    private String licenseListVersion;
+    private List<SpdxLicense> licenses = new ArrayList<>();
+
+    public String getLicenseListVersion() {
+        return licenseListVersion;
+    }
+
+    public void setLicenseListVersion(String licenseListVersion) {
+        this.licenseListVersion = licenseListVersion;
+    }
+
+    public List<SpdxLicense> getLicenses() {
+        return licenses;
+    }
+
+    public void setLicenses(List<SpdxLicense> licenses) {
+        this.licenses = licenses;
+    }
 
 }

@@ -22,11 +22,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.model.Component;
 import de.elomagic.dttool.model.License;
 import de.elomagic.dttool.model.Project;
 import de.elomagic.dttool.model.Violation;
 
+import org.cyclonedx.exception.ParseException;
+import org.cyclonedx.model.Bom;
+import org.cyclonedx.parsers.BomParserFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -34,6 +38,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -73,6 +78,27 @@ public class DTrackClient extends AbstractRestClient {
         } catch (IOException | InterruptedException ex) {
             throw new DtToolException(ex.getMessage(), ex);
         }
+    }
+
+    /**
+     * Fetch all active project by internal pagination of {@link this#fetchProjects(int, int)}
+     *
+     * @return Returns a stream
+     */
+    public List<Project> fetchAllProjects() {
+        List<Project> projects = new ArrayList<>();
+        int size;
+        int page = 0;
+        int limit = 1000;
+
+        do {
+            page++;
+            List<Project> pageResult = fetchProjects(limit, page);
+            projects.addAll(pageResult);
+            size = pageResult.size();
+        } while (size > 0);
+
+        return projects;
     }
 
     /**
@@ -125,14 +151,17 @@ public class DTrackClient extends AbstractRestClient {
         }
     }
 
-    public String fetchProjectBom(@NotNull String projectUid) {
+    public Bom fetchProjectBom(@NotNull UUID projectUid) {
         try {
             LOGGER.info("Fetching BOM of project '{}'", projectUid);
-            URI uri = URI.create("%s/api/v1/bom/cyclonedx/project/%s?download=false".formatted(baseURL, URLEncoder.encode(projectUid, StandardCharsets.UTF_8)));
+            URI uri = URI.create("%s/api/v1/bom/cyclonedx/project/%s?download=false".formatted(baseURL, URLEncoder.encode(projectUid.toString(), StandardCharsets.UTF_8)));
             HttpRequest request = createDefaultGET(uri);
 
-            return executeRequest(request);
-        } catch (IOException | InterruptedException ex) {
+            String content = executeRequest(request);
+            byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
+
+            return BomParserFactory.createParser(bytes).parse(bytes);
+        } catch (IOException | InterruptedException | ParseException ex) {
             throw new DtToolException(ex.getMessage(), ex);
         }
     }
