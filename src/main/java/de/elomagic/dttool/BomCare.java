@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -41,21 +42,24 @@ public class BomCare {
     private final Pattern expressionOrPattern = Pattern.compile("^\\((?<id1>.*) OR (?<id2>.*)\\)$");
     private final DTrackClient client = new DTrackClient();
 
+    private final Map<Project, Set<String>> results = new HashMap<>();
+
     public void care() {
 
-        Map<Project, Set<String>> invalid = fetchProjectsWithInvalidLicenseId(Configuration.INSTANCE.getOlderThenDays());
+        results.clear();
 
-        if (invalid.isEmpty() || !Configuration.INSTANCE.isDelete()) {
-            return;
+        fetchProjectsWithInvalidLicenseId(Configuration.INSTANCE.getOlderThenDays());
+
+        LOGGER.always("Found " + results.size() + " projects with invalid license IDs");
+
+    }
+
+    private void addToResults(@NotNull Project p, @NotNull Set<String> ids) {
+        if (results.containsKey(p)) {
+            results.get(p).addAll(ids);
+        } else {
+            results.put(p, new HashSet<>(ids));
         }
-
-        /*
-        boolean confirm = Configuration.INSTANCE.isBatchMode() || confirmByUser("Delete projects (Y/N)", "Y");
-
-        if (confirm) {
-            projects.forEach(p -> client.deleteProject(p.getUuid()));
-        }
-        */
     }
 
     @NotNull
@@ -95,6 +99,8 @@ public class BomCare {
                     project.getVersion()
             );
 
+            addToResults(project, Set.of());
+
             return false;
         }
 
@@ -107,6 +113,9 @@ public class BomCare {
                     project.getVersion()
 
             );
+
+            addToResults(project, Set.of(c.getLicenses().getExpression().getValue()));
+
             return false;
         }
 
@@ -124,7 +133,7 @@ public class BomCare {
                 .noneMatch(purl::matches);
     }
 
-    private Map<Project, Set<String>> fetchProjectsWithInvalidLicenseId(int olderThenDays) {
+    private void fetchProjectsWithInvalidLicenseId(int olderThenDays) {
 
         LOGGER.info("Init SPDX database");
         SpdxLicenseManager spdx = SpdxLicenseManager
@@ -143,8 +152,6 @@ public class BomCare {
 
         LOGGER.info("Checking {} project version since {}", projects.size(), notBefore);
 
-        Map<Project, Set<String>> invalidProjectLicenseIds = new HashMap<>();
-
         for (Project project : projects) {
             Optional.of(project)
                 .map(p -> client.fetchProjectBom(p.getUuid()))
@@ -159,7 +166,7 @@ public class BomCare {
                     .filter(l -> l.getId() != null)
                     .filter(l -> !spdx.matchIdOrName(l.getId(), l.getName()))
                     .forEach(l -> {
-                        invalidProjectLicenseIds.put(project, Set.of(l.getId()));
+                        addToResults(project, Set.of(l.getId()));
                         LOGGER.always(
                                 "Component {} version '{}' of project {} version {} has invalid license ID '{}' set",
                                 "?",
@@ -170,8 +177,6 @@ public class BomCare {
                         );
                     });
         }
-
-        return invalidProjectLicenseIds;
     }
 
 }
