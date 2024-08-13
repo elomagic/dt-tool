@@ -37,6 +37,8 @@ public class Project {
     private String version;
     @JsonProperty
     private String lastBomImport;
+    @JsonProperty
+    private String purl;
 
     public String getName() {
         return name;
@@ -64,6 +66,10 @@ public class Project {
         } else {
             return ZonedDateTime.parse(lastBomImport);
         }
+    }
+
+    public String getPurl() {
+        return purl;
     }
 
 }

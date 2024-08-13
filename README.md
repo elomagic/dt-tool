@@ -46,6 +46,12 @@ java -jar <LATEST_RELEASED_JAR> -help
 java -jar <LATEST_RELEASED_JAR> -cp
 ```
 
+#### Example 1 - Print invalid license IDs
+
+```
+java -jar <LATEST_RELEASED_JAR> -lic -v
+```
+
 ## Contributing
 
 Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](../../issues/new).

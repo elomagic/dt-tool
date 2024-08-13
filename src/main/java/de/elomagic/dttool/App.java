@@ -38,12 +38,14 @@ public class App {
 
     private static final Option COMMAND_PROJECT_CARE = new Option("pc", "projectCare", false, "List projects which older then x days");
     private static final Option COMMAND_LATEST_VERSION = new Option("l", "latest", false, "Find latest active of projects");
+    private static final Option COMMAND_LICENSE_CHECK = new Option("lic", "license", false, "Check SBOM on valid SPDX ID");
     private static final Option COMMAND_CREATE_CONFIG = new Option("cc", "createConfig", false, "Create configuration template");
     private static final Option COMMAND_HELP = new Option("h", "help", false, "Print this message");
 
     private static final Option OPTION_API_KEY = new Option("k", "apiKey", true, "Dependency Track REST API key");
     private static final Option OPTION_BASE_URL = new Option("u", "baseUrl", true, "Dependency Track base URL");
     private static final Option OPTION_BATCH_MODE = new Option("b", "batchMode", false, "in non-interactive (batch)");
+    private static final Option OPTION_DEBUG = new Option("de", "debug", false, "Debug mode");
     private static final Option OPTION_DELETE = new Option("d", "delete", false, "Delete findings");
     private static final Option OPTION_LATEST_VERSION_MATCH = new Option("lvm", "latestVersionMatch", true, "RegEx to match when using --latest. Default " + Configuration.DEFAULT_PROJECT_LATEST_VERSION_MATCH);
     private static final Option OPTION_OLDER_THEN = new Option("otd", "OlderThenDays", true, "Older then days. Default " + Configuration.DEFAULT_OLDER_THEN_DAYS + " days");
@@ -59,6 +61,7 @@ public class App {
         Options options = new Options();
         options.addOption(COMMAND_PROJECT_CARE);
         options.addOption(COMMAND_LATEST_VERSION);
+        options.addOption(COMMAND_LICENSE_CHECK);
         options.addOption(COMMAND_CREATE_CONFIG);
         options.addOption(COMMAND_HELP);
 
@@ -66,6 +69,7 @@ public class App {
         options.addOption(OPTION_BASE_URL);
         options.addOption(OPTION_BATCH_MODE);
         options.addOption(OPTION_CONFIG_FILE);
+        options.addOption(OPTION_DEBUG);
         options.addOption(OPTION_DELETE);
         options.addOption(OPTION_LATEST_VERSION_MATCH);
         options.addOption(OPTION_OLDER_THEN);
@@ -81,6 +85,11 @@ public class App {
             if (cmd.hasOption(OPTION_VERBOSE)) {
                 Configuration.INSTANCE.setVerbose(true);
                 ConsolePrinter.INSTANCE.setVerbose(true);
+            }
+
+            if (cmd.hasOption(OPTION_DEBUG)) {
+                Configuration.INSTANCE.setDebug(true);
+                ConsolePrinter.INSTANCE.setDebug(true);
             }
 
             if (cmd.hasOption(OPTION_CONFIG_FILE)) {
@@ -111,6 +120,9 @@ public class App {
             if (cmd.hasOption(COMMAND_PROJECT_CARE)) {
                 ProjectCare projectCare = new ProjectCare();
                 projectCare.care();
+            } else if (cmd.hasOption(COMMAND_LICENSE_CHECK)) {
+                BomCare bomCare = new BomCare();
+                bomCare.care();
             } else if (cmd.hasOption(COMMAND_LATEST_VERSION)) {
                 GetLatest lv = new GetLatest();
                 lv.getLatest(cmd.getOptionValue(OPTION_PROJECT_NAME))

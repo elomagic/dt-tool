@@ -25,6 +25,7 @@ public final class ConsolePrinter {
 
     private static final Logger LOGGER = LogManager.getLogger(ConsolePrinter.class);
     private boolean verbose = false;
+    private boolean debug = false;
 
     public static final ConsolePrinter INSTANCE = new ConsolePrinter();
 
@@ -34,20 +35,24 @@ public final class ConsolePrinter {
         this.verbose = verbose;
     }
 
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
     public void trace(@NotNull String message, Object ...args) {
-        if (verbose) {
+        if (debug) {
             LOGGER.trace(message, args);
         }
     }
 
     public void debug(@NotNull String message, Object ...args) {
-        if (verbose) {
+        if (debug) {
             LOGGER.debug(message, args);
         }
     }
 
     public void info(@NotNull String message, Object ...args) {
-        if (verbose) {
+        if (debug || verbose) {
             LOGGER.info(message, args);
         }
     }

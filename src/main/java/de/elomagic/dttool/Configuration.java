@@ -44,6 +44,15 @@ public final class Configuration {
     public static final Configuration INSTANCE = new Configuration();
 
     private Configuration() {
+        load();
+    }
+
+    /**
+     * Reset and load try to load the configuration if exists.
+     */
+    public void load() {
+        properties.clear();
+
         if (Files.notExists(CONFIG_FILE)) {
             LOGGER.info("Configuration file '{}' not found.", CONFIG_FILE);
             LOGGER.info("Tip. Create configuration template by using option '--createConfig'.");
@@ -54,7 +63,7 @@ public final class Configuration {
         try (Reader reader = Files.newBufferedReader(CONFIG_FILE)) {
             properties.load(reader);
 
-            LOGGER.setVerbose(isVerbose());
+            // LOGGER.setVerbose(isVerbose());
 
             properties.forEach((key, value) -> LOGGER.debug("Configuration: {}={}", key, key.equals("apiKey") ? "???" : value + ""));
         } catch (Exception ex) {
@@ -156,6 +165,10 @@ public final class Configuration {
 
     public void setVerbose(boolean value) {
         properties.setProperty("verbose", Boolean.toString(value));
+    }
+
+    public void setDebug(boolean value) {
+        properties.setProperty("debug", Boolean.toString(value));
     }
 
 }
