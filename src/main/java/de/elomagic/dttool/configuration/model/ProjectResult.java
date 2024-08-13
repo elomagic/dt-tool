@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool;
+package de.elomagic.dttool.configuration.model;
 
 public enum ProjectResult {
 

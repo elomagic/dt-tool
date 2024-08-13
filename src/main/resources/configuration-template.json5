@@ -1,0 +1,11 @@
+{
+    // Base URL of Dependency Track. Required to upload or download BOM to DT instance.
+    baseUrl: "https://dependencytrackapi.local",
+    // Api key to access Dependency Track REST API
+    apiKey: "odt_abcde",
+    // Project version regular expression matcher
+    "versionMatch": "\\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT",
+    // Array of PURL in RegEx syntax which will be ignored during license check
+    "ignorePurl": [
+    ]
+}

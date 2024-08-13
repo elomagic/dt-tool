@@ -1,5 +1,6 @@
 package de.elomagic.dttool;
 
+import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.model.Project;
 
 import org.apache.commons.io.IOUtils;

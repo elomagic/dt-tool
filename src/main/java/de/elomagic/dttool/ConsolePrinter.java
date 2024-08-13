@@ -57,6 +57,10 @@ public final class ConsolePrinter {
         }
     }
 
+    public void warn(@NotNull String message, Object ...args) {
+        LOGGER.warn(message, args);
+    }
+
     public void error(@NotNull String message, Object ...args) {
         LOGGER.error(message, args);
     }

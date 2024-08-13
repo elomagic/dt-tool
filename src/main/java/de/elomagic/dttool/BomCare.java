@@ -17,10 +17,12 @@
  */
 package de.elomagic.dttool;
 
+import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.model.Project;
 
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.License;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.ZonedDateTime;
@@ -30,10 +32,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BomCare {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
+    private final Pattern expressionOrPattern = Pattern.compile("^\\((?<id1>.*) OR (?<id2>.*)\\)$");
     private final DTrackClient client = new DTrackClient();
 
     public void care() {
@@ -51,6 +56,33 @@ public class BomCare {
             projects.forEach(p -> client.deleteProject(p.getUuid()));
         }
         */
+    }
+
+    @NotNull
+    private Component resolveLicenseExpression(@NotNull Component c) {
+        if (c.getLicenses() == null || c.getLicenses().getExpression() == null){
+            return c;
+        }
+
+        String expression = c.getLicenses().getExpression().getValue();
+        Matcher matcher = expressionOrPattern.matcher(expression);
+
+        if (matcher.find()) {
+            // Create 1
+            License l1 = new License();
+            l1.setId(matcher.group("id1"));
+
+            // Create 2
+            License l2 = new License();
+            l2.setId(matcher.group("id2"));
+
+            c.getLicenses().setExpression(null);
+            c.getLicenses().setLicenses(List.of(l1, l2));
+        } else {
+            LOGGER.warn("Expressions like '{}' currently not supported.", expression);
+        }
+
+        return c;
     }
 
     private boolean checkPresentLicenses(@NotNull Project project, @NotNull Component c) {
@@ -76,6 +108,17 @@ public class BomCare {
         }
 
         return true;
+    }
+
+    private boolean filterOnIgnoreConf(Component c) {
+        String purl = c.getPurl();
+
+        return Configuration
+                .INSTANCE
+                .getConf()
+                .getIgnorePurl()
+                .stream()
+                .noneMatch(purl::matches);
     }
 
     private Map<Project, Set<String>> fetchProjectsWithInvalidLicenseId(int olderThenDays) {
@@ -105,6 +148,8 @@ public class BomCare {
                 .map(Bom::getComponents)
                     .orElse(List.of())
                     .stream()
+                    .filter(this::filterOnIgnoreConf)
+                    .map(this::resolveLicenseExpression)
                     .filter(c -> checkPresentLicenses(project, c))
                     .flatMap(lc -> lc.getLicenses().getLicenses().stream())
                     .filter(Objects::nonNull)

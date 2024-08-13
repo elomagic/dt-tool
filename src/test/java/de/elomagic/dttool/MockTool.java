@@ -1,5 +1,7 @@
 package de.elomagic.dttool;
 
+import de.elomagic.dttool.configuration.Configuration;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.function.Executable;
 import org.mockserver.client.MockServerClient;

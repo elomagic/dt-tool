@@ -19,6 +19,8 @@ package de.elomagic.dttool;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import de.elomagic.dttool.configuration.Configuration;
+import de.elomagic.dttool.configuration.model.ProjectResult;
 import de.elomagic.dttool.model.Project;
 
 import org.jetbrains.annotations.NotNull;

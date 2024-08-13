@@ -1,7 +1,8 @@
 package de.elomagic.dttool;
 
+import de.elomagic.dttool.configuration.Configuration;
+
 import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 

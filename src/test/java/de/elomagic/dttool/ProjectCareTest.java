@@ -1,5 +1,7 @@
 package de.elomagic.dttool;
 
+import de.elomagic.dttool.configuration.Configuration;
+
 import org.junit.jupiter.api.Test;
 
 class ProjectCareTest extends AbstractMockedServer {

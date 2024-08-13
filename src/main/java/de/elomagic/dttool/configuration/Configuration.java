@@ -15,33 +15,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool;
+package de.elomagic.dttool.configuration;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import de.elomagic.dttool.ConsolePrinter;
+import de.elomagic.dttool.JsonMapperFactory;
+import de.elomagic.dttool.configuration.model.ProjectResult;
+import de.elomagic.dttool.configuration.model.Root;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Properties;
 
 public final class Configuration {
 
     private static final Path CONFIG_FILE = Path.of(
             System.getProperty("user.home"),
             ".dt-tool",
-            "configuration.properties");
+            "configuration.json5");
 
     public static final String DEFAULT_PROJECT_VERSION_MATCH = "^\\d+(\\.\\d+)*(-.*)?-SNAPSHOT$";
     public static final String DEFAULT_PROJECT_LATEST_VERSION_MATCH = "^\\d+(\\.\\d+)*(\\-Final)?$";
     public static final int DEFAULT_OLDER_THEN_DAYS = 30;
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
-    private final Properties properties = new Properties();
 
     public static final Configuration INSTANCE = new Configuration();
+    private Root conf = new Root();
 
     private Configuration() {
         load();
@@ -51,7 +56,7 @@ public final class Configuration {
      * Reset and load try to load the configuration if exists.
      */
     public void load() {
-        properties.clear();
+        conf = new Root();
 
         if (Files.notExists(CONFIG_FILE)) {
             LOGGER.info("Configuration file '{}' not found.", CONFIG_FILE);
@@ -60,12 +65,10 @@ public final class Configuration {
         }
 
         LOGGER.debug("Loading configuration from '{}'.", CONFIG_FILE);
-        try (Reader reader = Files.newBufferedReader(CONFIG_FILE)) {
-            properties.load(reader);
-
-            // LOGGER.setVerbose(isVerbose());
-
-            properties.forEach((key, value) -> LOGGER.debug("Configuration: {}={}", key, key.equals("apiKey") ? "???" : value + ""));
+        try {
+            ObjectMapper objectMapper = JsonMapperFactory.create();
+            conf = objectMapper.readValue(CONFIG_FILE.toFile(), Root.class);
+            // TODO properties.forEach((key, value) -> LOGGER.debug("Configuration: {}={}", key, key.equals("apiKey") ? "???" : value + ""));
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
@@ -79,7 +82,7 @@ public final class Configuration {
 
         Files.createDirectories(CONFIG_FILE.getParent());
 
-        try (InputStream in = Configuration.class.getResourceAsStream("/configuration-template.properties")) {
+        try (InputStream in = Configuration.class.getResourceAsStream("/configuration-template.json5")) {
             Files.copy(in, CONFIG_FILE, StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
@@ -88,87 +91,93 @@ public final class Configuration {
 
     public void loadAlternative(@NotNull Path file) {
         LOGGER.info("Loading alternative configuration from '{}'.", file);
-        try (Reader reader = Files.newBufferedReader(file)) {
-            properties.load(reader);
+        ObjectMapper objectMapper = JsonMapperFactory.create();
+        try {
+            conf = objectMapper.readValue(CONFIG_FILE.toFile(), Root.class);
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
     }
 
+    @NotNull
+    public Root getConf() {
+        return conf;
+    }
+
     public String getBaseUrl() {
-        return properties.getProperty("baseUrl");
+        return conf.getBaseUrl();
     }
 
     public void setBaseUrl(String baseUrl) {
-        properties.setProperty("baseUrl", baseUrl);
+        conf.setBaseUrl(baseUrl);
     }
 
     public String getApiKey() {
-        return properties.getProperty("apiKey");
+        return conf.getApiKey();
     }
 
     public void setApiKey(String apiKey) {
-        properties.setProperty("apiKey", apiKey);
+        conf.setApiKey(apiKey);
     }
 
     public boolean isDelete() {
-        return Boolean.parseBoolean(properties.getProperty("delete", "false"));
+        return conf.isDelete();
     }
 
     public void setDelete(boolean value) {
-        properties.setProperty("delete", Boolean.toString(value));
+        conf.setDelete(value);
     }
 
     public String getVersionMatch() {
-        return properties.getProperty("versionMatch", DEFAULT_PROJECT_VERSION_MATCH);
+        return conf.getVersionMatch();
     }
 
     public void setVersionMatch(String value) {
-        properties.setProperty("versionMatch", value);
+        conf.setVersionMatch(value);
     }
 
     public int getOlderThenDays() {
-        return Integer.parseInt(properties.getProperty("olderThenDays", Integer.toString(DEFAULT_OLDER_THEN_DAYS)));
+        return conf.getOlderThenDays() == null ? DEFAULT_OLDER_THEN_DAYS : conf.getOlderThenDays();
     }
 
     public void setOlderThenDays(int value) {
-        properties.setProperty("olderThenDays", Integer.toString(value));
+        conf.setOlderThenDays(value);
     }
 
     public boolean isBatchMode() {
-        return Boolean.parseBoolean(properties.getProperty("batchMode", "false"));
+        return conf.isBatchMode();
     }
 
     public void setBatchMode(boolean value) {
-        properties.setProperty("batchMode", Boolean.toString(value));
+        conf.setBatchMode(value);
     }
 
     public ProjectResult getReturnProperty() {
-        return ProjectResult.valueOf(properties.getProperty("projectResult", "JSON"));
+        return conf.getProjectResult() == null ? ProjectResult.JSON : conf.getProjectResult();
     }
 
     public void setReturnProperty(@NotNull ProjectResult value) {
-        properties.setProperty("projectResult", value.name());
+        conf.setProjectResult(value);
     }
 
     public String getLatestVersionMatch() {
-        return properties.getProperty("versionLatestMatch", DEFAULT_PROJECT_LATEST_VERSION_MATCH);
+        return conf.getVersionMatch() == null ? DEFAULT_PROJECT_LATEST_VERSION_MATCH : conf.getVersionLatestMatch();
     }
 
     public void setLatestVersionMatch(String value) {
-        properties.setProperty("versionLatestMatch", value);
+        conf.setVersionLatestMatch(value);
     }
 
     public boolean isVerbose() {
-        return Boolean.parseBoolean(properties.getProperty("verbose", "false"));
+        return conf.isVerbose();
     }
 
     public void setVerbose(boolean value) {
-        properties.setProperty("verbose", Boolean.toString(value));
+        conf.setVerbose(value);
     }
 
     public void setDebug(boolean value) {
-        properties.setProperty("debug", Boolean.toString(value));
+        conf.setDebug(value);
     }
 
 }

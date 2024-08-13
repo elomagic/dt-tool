@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.model.Component;
 import de.elomagic.dttool.model.License;
 import de.elomagic.dttool.model.Project;

@@ -1,5 +1,8 @@
 package de.elomagic.dttool;
 
+import de.elomagic.dttool.configuration.Configuration;
+import de.elomagic.dttool.configuration.model.ProjectResult;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

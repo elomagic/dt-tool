@@ -19,6 +19,8 @@ package de.elomagic.dttool;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.elomagic.dttool.configuration.Configuration;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
