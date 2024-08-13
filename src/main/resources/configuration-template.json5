@@ -7,5 +7,7 @@
     "versionMatch": "\\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT",
     // Array of PURL in RegEx syntax which will be ignored during license check
     "ignorePurl": [
+        "^pkg:maven/org\\.apache.*$",
+        "^pkg:maven/com\\.amazon/corretto.*$"
     ]
 }

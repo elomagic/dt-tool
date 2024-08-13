@@ -89,9 +89,10 @@ public class BomCare {
         if (c.getLicenses() == null
                 || (c.getLicenses().getExpression() == null && c.getLicenses().getLicenses().isEmpty())) {
             LOGGER.always(
-                    "Component '{}' of project '{}' has no license information set",
+                    "Component '{}' of project '{} {}' has no license information set",
                     c.getPurl(),
-                    project.getPurl()
+                    project.getName(),
+                    project.getVersion()
             );
 
             return false;
@@ -99,10 +100,12 @@ public class BomCare {
 
         if (c.getLicenses().getExpression() != null) {
             LOGGER.always(
-                    "License expression '{}' of component '{}' of project '{}' currently not supported.",
+                    "License expression '{}' of component '{}' of project '{} {}' currently not supported.",
                     c.getLicenses().getExpression().getValue(),
                     c.getPurl(),
-                    project.getPurl()
+                    project.getName(),
+                    project.getVersion()
+
             );
             return false;
         }
