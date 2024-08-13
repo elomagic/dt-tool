@@ -40,13 +40,13 @@ Execute following line to see all supported options
 java -jar <LATEST_RELEASED_JAR> -help
 ```
 
-#### Example 1 - Print outdated SNAPSHOTS (30 days and older)
+#### Example - Print outdated SNAPSHOTS (30 days and older)
 
 ```
 java -jar <LATEST_RELEASED_JAR> -cp
 ```
 
-#### Example 1 - Print invalid license IDs
+#### Example - Print invalid license IDs
 
 ```
 java -jar <LATEST_RELEASED_JAR> -lic -v

@@ -129,7 +129,7 @@ public final class Configuration {
     }
 
     public String getVersionMatch() {
-        return conf.getVersionMatch();
+        return conf.getVersionMatch() == null ? DEFAULT_PROJECT_VERSION_MATCH : conf.getVersionMatch();
     }
 
     public void setVersionMatch(String value) {
