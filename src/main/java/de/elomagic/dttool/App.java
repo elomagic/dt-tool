@@ -52,6 +52,8 @@ public class App {
     private static final Option OPTION_DELETE = new Option("d", "delete", false, "Delete findings");
     private static final Option OPTION_LATEST_VERSION_MATCH = new Option("lvm", "latestVersionMatch", true, "RegEx to match when using --latest. Default " + Configuration.DEFAULT_PROJECT_LATEST_VERSION_MATCH);
     private static final Option OPTION_OLDER_THEN = new Option("otd", "OlderThenDays", true, "Older then days. Default " + Configuration.DEFAULT_OLDER_THEN_DAYS + " days");
+    private static final Option OPTION_PATCH = new Option("p", "patch", false, "Patch unset licenses");
+    private static final Option OPTION_PROJECT_FILTER = new Option("pf", "projectFilter", true, "Project name or UUID filter");
     private static final Option OPTION_PROJECT_NAME = new Option("pn", "projectName", true, "Project name");
     private static final Option OPTION_RETURN_PROPERTY = new Option("rp", "returnProperty", true, "Which property will be returned when using --latest. Supported values are: JSON, VERSION, UUID");
     private static final Option OPTION_VERBOSE = new Option("v", "verbose", false, "Verbose mode");
@@ -76,6 +78,8 @@ public class App {
         options.addOption(OPTION_DELETE);
         options.addOption(OPTION_LATEST_VERSION_MATCH);
         options.addOption(OPTION_OLDER_THEN);
+        options.addOption(OPTION_PATCH);
+        options.addOption(OPTION_PROJECT_FILTER);
         options.addOption(OPTION_PROJECT_NAME);
         options.addOption(OPTION_RETURN_PROPERTY);
         options.addOption(OPTION_VERBOSE);
@@ -113,6 +117,12 @@ public class App {
             if (cmd.hasOption(OPTION_BATCH_MODE)) {
                 Configuration.INSTANCE.setBatchMode(true);
             }
+            if (cmd.hasOption(OPTION_PATCH)) {
+                Configuration.setPatchMode(true);
+            }
+            if (cmd.hasOption(OPTION_PROJECT_FILTER)) {
+                Configuration.setProjectFilter(cmd.getOptionValue(OPTION_PROJECT_FILTER));
+            }
             if (cmd.hasOption(OPTION_RETURN_PROPERTY)) {
                 Configuration.INSTANCE.setReturnProperty(ProjectResult.valueOf(cmd.getOptionValue(OPTION_RETURN_PROPERTY)));
             }
@@ -124,8 +134,8 @@ public class App {
                 ProjectCare projectCare = new ProjectCare();
                 projectCare.care();
             } else if (cmd.hasOption(COMMAND_LICENSE_CHECK)) {
-                BomCare bomCare = new BomCare();
-                bomCare.care();
+                ComponentCare componentCare = new ComponentCare();
+                componentCare.care();
             } else if (cmd.hasOption(COMMAND_LATEST_VERSION)) {
                 GetLatest lv = new GetLatest();
                 lv.getLatest(cmd.getOptionValue(OPTION_PROJECT_NAME))

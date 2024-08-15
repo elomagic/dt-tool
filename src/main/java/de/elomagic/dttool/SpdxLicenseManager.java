@@ -78,12 +78,15 @@ public class SpdxLicenseManager {
         return this;
     }
 
-    public boolean matchIdOrName(@Nullable String id, @Nullable String name) {
+    public boolean containsIdOrName(@Nullable String id, @Nullable String name) {
         return (id != null && idMap.containsKey(id))
                 || (id != null && nameMap.containsKey(id))
                 || (name != null && idMap.containsKey(id))
                 || (name != null && nameMap.containsKey(id));
     }
 
+    public boolean containsId(@Nullable String id) {
+        return id != null && idMap.containsKey(id);
+    }
 
 }

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.JsonMapperFactory;
+import de.elomagic.dttool.configuration.model.PatchRule;
 import de.elomagic.dttool.configuration.model.ProjectResult;
 import de.elomagic.dttool.configuration.model.Root;
 
@@ -177,5 +178,25 @@ public final class Configuration {
     }
 
     public Set<String> getIgnorePurl() { return conf.getIgnorePurl(); }
+
+    public static Set<PatchRule> getPatchRules() {
+            return INSTANCE.conf.getPatchRules() == null ? Set.of() : INSTANCE.conf.getPatchRules();
+    }
+
+    public static boolean isPatchMode() {
+        return INSTANCE.conf.isPatchMode();
+    }
+
+    public static void setPatchMode(boolean value) {
+        INSTANCE.conf.setPatchMode(value);
+    }
+
+    public static String getProjectFilter() {
+        return INSTANCE.conf.getProjectFilter();
+    }
+
+    public static void setProjectFilter(String projectFilter) {
+        INSTANCE.conf.setProjectFilter(projectFilter);
+    }
 
 }

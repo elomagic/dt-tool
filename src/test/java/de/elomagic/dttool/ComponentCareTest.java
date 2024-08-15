@@ -13,14 +13,13 @@ import java.util.UUID;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-class BomCareTest extends AbstractMockedServer {
+class ComponentCareTest extends AbstractMockedServer {
 
     @Test
     void care() throws IOException {
         // ConsolePrinter.INSTANCE.setDebug(true);
         String projects = IOUtils.resourceToString("projects.json", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
-        String sbom1 = IOUtils.resourceToString("test-sbom-invalid-license-ids.json", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
-        String sbom2 = IOUtils.resourceToString("test-sbom-02.json", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
+        String comp1 = IOUtils.resourceToString("component-01.json", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
         String apiKey = UUID.randomUUID().toString();
 
         try (MockServerClient client = new MockServerClient("localhost", getPort())) {
@@ -53,31 +52,48 @@ class BomCareTest extends AbstractMockedServer {
             client.when(
                             request()
                                     .withMethod("GET")
-                                    .withPath("/api/v1/bom/cyclonedx/project/01d558ae-5075-4cbb-94ea-73ce6ae23532")
+                                    .withPath("/api/v1/component/project/01d558ae-5075-4cbb-94ea-73ce6ae23532")
+                                    .withQueryStringParameter("page", "1")
                                     .withHeader("X-Api-Key", apiKey)
                     )
                     .respond(
                             response()
                                     .withStatusCode(200)
-                                    .withBody(sbom1)
+                                    .withBody(comp1)
                     );
             client.when(
                             request()
                                     .withMethod("GET")
-                                    .withPath("/api/v1/bom/cyclonedx/project/.*")//01d558ae-5075-4cbb-94ea-73ce6ae23532")
+                                    .withPath("/api/v1/component/project/01d558ae-5075-4cbb-94ea-73ce6ae23532")
+                                    .withQueryStringParameter("page", "2")
                                     .withHeader("X-Api-Key", apiKey)
                     )
                     .respond(
                             response()
                                     .withStatusCode(200)
-                                    .withBody(sbom2)
+                                    .withBody("[]")
+                    );
+
+            client.when(
+                            request()
+                                    .withMethod("GET")
+                                    .withPath("/api/v1/component/project/.*")//01d558ae-5075-4cbb-94ea-73ce6ae23532")
+                                    .withHeader("X-Api-Key", apiKey)
+                    )
+                    .respond(
+                            response()
+                                    .withStatusCode(200)
+                                    .withBody("[]")
                     );
 
             Configuration.INSTANCE.setApiKey(apiKey);
             Configuration.INSTANCE.setBaseUrl("http://localhost:%s".formatted(getPort()));
+            Configuration.INSTANCE.setBatchMode(true);
+            Configuration.setPatchMode(true);
+            // Configuration.setProjectFilter("TestLatestVersion1");
 
             // Execute the text
-            BomCare care = new BomCare();
+            ComponentCare care = new ComponentCare();
             care.care();
 
         }

@@ -15,25 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool;
+package de.elomagic.dttool.configuration.model;
 
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Common base class for all exceptions in DT-Tool.
- */
-public class DtToolException extends RuntimeException {
+public class PatchRule {
 
-    public DtToolException(@NotNull Throwable cause) {
-        super(cause.getMessage(), cause);
+    private String matchPurl;
+    private String licenseId;
+
+    public PatchRule() {
     }
 
-    public DtToolException(String message, Throwable cause) {
-        super(message, cause);
+    public PatchRule(@NotNull String matchPurl, @NotNull String licenseId) {
+        this.matchPurl = matchPurl;
+        this.licenseId = licenseId;
     }
 
-    public DtToolException(String message) {
-        super(message);
+    public String getMatchPurl() {
+        return matchPurl;
+    }
+
+    public String getLicenseId() {
+        return licenseId;
     }
 
 }

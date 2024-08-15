@@ -36,6 +36,7 @@ public abstract class AbstractRestClient {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
     private final String apiKey = Configuration.INSTANCE.getApiKey();
+    private final ObjectMapper objectMapper = JsonMapperFactory.create();
 
     private HttpRequest.Builder createDefaultRequest(@NotNull URI uri) {
         return HttpRequest
@@ -81,6 +82,18 @@ public abstract class AbstractRestClient {
                 .build();
     }
 
+    protected HttpRequest createDefaultPOST(@NotNull URI uri, @NotNull HttpRequest.BodyPublisher publisher, @NotNull String... headers) {
+        HttpRequest.Builder builder = createDefaultRequest(uri).header("Content-Type", "application/json");
+
+        if (headers.length != 0) {
+            builder = builder.headers(headers);
+        }
+
+        return builder
+                .POST(publisher)
+                .build();
+    }
+
     protected String executeRequest(@NotNull HttpRequest request) throws IOException, InterruptedException {
         try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build()) {
             LOGGER.debug("Executing HTTP {} to {}", request.method(), request.uri());
@@ -95,13 +108,12 @@ public abstract class AbstractRestClient {
         }
     }
 
-    protected <T> T executeRequest(@NotNull HttpRequest request, Class<T> classType) throws IOException, InterruptedException {
+    protected <T> T executeRequest(@NotNull HttpRequest request, Class<? extends T> classType) throws IOException, InterruptedException {
         try {
             String content = executeRequest(request);
 
             LOGGER.trace("HTTP response body={}", content);
 
-            ObjectMapper objectMapper = JsonMapperFactory.create();
             return objectMapper.readValue(content, classType);
         } catch (Exception ex) {
             LOGGER.error("Error on url request '{}' occurred.", request.uri());
