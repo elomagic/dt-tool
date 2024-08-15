@@ -39,7 +39,7 @@ public final class Configuration {
             ".dt-tool",
             "configuration.json5");
 
-    public static final String DEFAULT_PROJECT_VERSION_MATCH = "^\\d+(\\.\\d+)*(-.*)?-SNAPSHOT$";
+    public static final String DEFAULT_PROJECT_VERSION_MATCH = "^\\d+(\\.\\d+)*(-.*)?-(SNAPSHOT|(b\\d{4}))$";
     public static final String DEFAULT_PROJECT_LATEST_VERSION_MATCH = "^\\d+(\\.\\d+)*(\\-Final)?$";
     public static final int DEFAULT_OLDER_THEN_DAYS = 30;
 
