@@ -46,6 +46,10 @@ public class Project {
         return version;
     }
 
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
     public UUID getUuid() {
         return uuid;
     }

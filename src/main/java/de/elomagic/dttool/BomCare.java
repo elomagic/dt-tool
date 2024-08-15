@@ -127,7 +127,6 @@ public class BomCare {
 
         return Configuration
                 .INSTANCE
-                .getConf()
                 .getIgnorePurl()
                 .stream()
                 .noneMatch(purl::matches);

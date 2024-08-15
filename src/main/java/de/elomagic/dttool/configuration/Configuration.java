@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Set;
 
 public final class Configuration {
 
@@ -97,11 +98,6 @@ public final class Configuration {
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
-    }
-
-    @NotNull
-    public Root getConf() {
-        return conf;
     }
 
     public String getBaseUrl() {
@@ -179,5 +175,7 @@ public final class Configuration {
     public void setDebug(boolean value) {
         conf.setDebug(value);
     }
+
+    public Set<String> getIgnorePurl() { return conf.getIgnorePurl(); }
 
 }
