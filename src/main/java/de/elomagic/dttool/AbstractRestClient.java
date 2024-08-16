@@ -98,6 +98,7 @@ public abstract class AbstractRestClient {
         try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build()) {
             LOGGER.debug("Executing HTTP {} to {}", request.method(), request.uri());
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+            LOGGER.debug("Responses HTTP status {}", response.statusCode());
             if (!List.of(200, 204, 302).contains(response.statusCode())) {
                 throw new DtToolException("Unexpected HTTP status code %s: Body=%s".formatted(response.statusCode(), response.body()));
             }

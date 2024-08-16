@@ -89,7 +89,7 @@ public class ComponentCare {
 
     private void patchComponent(@NotNull Component component, @NotNull String licenseId) {
 
-        LOGGER.always("Try to patch component '{}'", component.getPurl());
+        LOGGER.always("Try to patch component '{}' with license ID '{}'", component.getPurl(), licenseId);
         try {
             // Patch original JSON string
             ObjectNode root = (ObjectNode) client.fetchComponentAsJson(component.getUuid());
@@ -110,7 +110,7 @@ public class ComponentCare {
                 .create()
                 .loadDefaults();
 
-        LOGGER.info("Validate {} patch rules", Configuration.getPatchRules());
+        LOGGER.info("Validate license ids in {} patch rules", Configuration.getPatchRules());
         Configuration
                 .getPatchRules()
                 .stream()

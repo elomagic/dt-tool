@@ -79,10 +79,10 @@
         "sha1": "c33dd31ce9589b99c40c16e3f2f4faab5877848a",
         "sha256": "3970bb25c8b382ee8ec6c0e5f579417c9a3c946a0ed199aca86fd2cd501bbc47",
         "sha512": "8d33382e47c25a36ecb700af427e06dde5e6ca5bcf421004e714aabb177a82e51ac87b94a8e25b89fe6f255667fd0b5517d15e2ab91c3b830440405d536c9522",
-        "purl": "pkg:maven/org.glassfish.hk2.external/aopalliance-repackaged@2.3.0-b05?type=jar",
+        "purl": "pkg:maven/org.apache.test/test-packaged@2.3.0-b05?type=jar",
         "purlCoordinates": "pkg:maven/org.glassfish.hk2.external/aopalliance-repackaged@2.3.0-b05",
         "description": "Generic Modules subsystem",
-        "licenseExpression": "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
+        // "licenseExpression": "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
         "externalReferences": [
             {
                 "type": "website",

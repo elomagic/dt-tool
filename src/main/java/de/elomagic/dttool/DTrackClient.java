@@ -177,13 +177,12 @@ public class DTrackClient extends AbstractRestClient {
 
     public void updateComponent(@NotNull ObjectNode root) {
         try {
-            LOGGER.info("Update component");
             URI uri = URI.create("%s/api/v1/component".formatted(baseURL));
 
             ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
             String payload = writer.writeValueAsString(root);
 
-            LOGGER.trace("Update component > HTTP POST body={}", payload);
+            LOGGER.trace("Updating component > HTTP POST body={}", payload);
 
             HttpRequest request = createDefaultPOST(uri, HttpRequest.BodyPublishers.ofString(payload));
 
