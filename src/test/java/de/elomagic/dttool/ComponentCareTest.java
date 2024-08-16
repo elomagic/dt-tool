@@ -112,6 +112,7 @@ class ComponentCareTest extends AbstractMockedServer {
                     .respond(
                             response()
                                     .withStatusCode(200)
+                                    .withBody(comp)
                     );
 
             client.when(

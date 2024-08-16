@@ -34,6 +34,7 @@ import java.util.List;
 
 public abstract class AbstractRestClient {
 
+    private static final String APPLICATION_JSON = "application/json";
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
     private final String apiKey = Configuration.INSTANCE.getApiKey();
     private final ObjectMapper objectMapper = JsonMapperFactory.create();
@@ -60,7 +61,6 @@ public abstract class AbstractRestClient {
     protected HttpRequest createDefaultDELETE(@NotNull URI uri, @NotNull String... headers) {
         HttpRequest.Builder builder = createDefaultRequest(uri);
 
-
         if (headers.length != 0) {
             builder = builder.headers(headers);
         }
@@ -71,7 +71,7 @@ public abstract class AbstractRestClient {
     }
 
     protected HttpRequest createDefaultPUT(@NotNull URI uri, @NotNull HttpRequest.BodyPublisher publisher, @NotNull String... headers) {
-        HttpRequest.Builder builder = createDefaultRequest(uri).header("Content-Type", "application/json");
+        HttpRequest.Builder builder = createDefaultRequest(uri).header("Content-Type", APPLICATION_JSON);
 
         if (headers.length != 0) {
             builder = builder.headers(headers);
@@ -83,7 +83,9 @@ public abstract class AbstractRestClient {
     }
 
     protected HttpRequest createDefaultPOST(@NotNull URI uri, @NotNull HttpRequest.BodyPublisher publisher, @NotNull String... headers) {
-        HttpRequest.Builder builder = createDefaultRequest(uri).header("Content-Type", "application/json");
+        HttpRequest.Builder builder = createDefaultRequest(uri)
+                .header("Content-Type", APPLICATION_JSON)
+                .header("Accept",APPLICATION_JSON);
 
         if (headers.length != 0) {
             builder = builder.headers(headers);

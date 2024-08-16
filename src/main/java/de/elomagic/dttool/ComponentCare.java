@@ -27,8 +27,6 @@ import de.elomagic.dttool.model.Project;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Console;
-import java.io.PrintWriter;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -40,6 +38,7 @@ public class ComponentCare {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
     private final DTrackClient client = new DTrackClient();
+    private final SpdxLicenseManager spdx = SpdxLicenseManager.create();
 
     public void care() {
 
@@ -61,21 +60,15 @@ public class ComponentCare {
             return;
         }
 
-        boolean confirm = Configuration.INSTANCE.isBatchMode() || confirmByUser("Patch component license ID (Y/N)", "Y");
+        boolean confirm = Configuration.INSTANCE.isBatchMode() || ConsoleUtils.confirmByUser("Patch component license ID (Y/N)", "Y");
 
         if (confirm) {
+            LOGGER.info("Init SPDX database");
+            spdx.loadDefaults();
+
             patchComponents(unset);
         }
 
-    }
-
-    private boolean confirmByUser(@NotNull String confirmationText, @NotNull String confirmText) {
-        Console console = System.console();
-        try (PrintWriter w = console.writer()) {
-            w.printf("%n%s: ", confirmationText);
-            w.flush();
-            return confirmText.equalsIgnoreCase(console.readLine());
-        }
     }
 
     @NotNull
@@ -89,7 +82,7 @@ public class ComponentCare {
 
     private void patchComponent(@NotNull Component component, @NotNull String licenseId) {
 
-        LOGGER.always("Try to patch component '{}' with license ID '{}'", component.getPurl(), licenseId);
+        LOGGER.always("Patching component '{}' with license ID '{}'", component.getPurl(), licenseId);
         try {
             // Patch original JSON string
             ObjectNode root = (ObjectNode) client.fetchComponentAsJson(component.getUuid());
@@ -97,7 +90,12 @@ public class ComponentCare {
             root.set("resolvedLicense", license);
 
             // Post patched JSON
-            client.updateComponent(root);
+            LOGGER.info("Updating component '{}'", component.getPurl());
+            Component c = client.updateComponent(root);
+
+            if (c.getResolvedLicense() == null) {
+                LOGGER.warn("Failed to update license ID of component '{}'", component.getPurl());
+            }
         } catch (Exception ex) {
             throw new DtToolException(ex);
         }
@@ -105,12 +103,7 @@ public class ComponentCare {
     }
 
     private void patchComponents(@NotNull Set<Component> components) {
-        LOGGER.info("Init SPDX database");
-        SpdxLicenseManager spdx = SpdxLicenseManager
-                .create()
-                .loadDefaults();
-
-        LOGGER.info("Validate license ids in {} patch rules", Configuration.getPatchRules());
+        LOGGER.info("Validating license IDs in {} patch rules", Configuration.getPatchRules().size());
         Configuration
                 .getPatchRules()
                 .stream()
@@ -164,6 +157,7 @@ public class ComponentCare {
         }
 
         return unsetComponents;
+
     }
 
 }

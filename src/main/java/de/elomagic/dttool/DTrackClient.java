@@ -60,7 +60,7 @@ public class DTrackClient extends AbstractRestClient {
 
             return List.of(executeRequest(request, Violation[].class));
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
@@ -78,7 +78,7 @@ public class DTrackClient extends AbstractRestClient {
 
             return List.of(executeRequest(request, Project[].class));
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
@@ -125,7 +125,7 @@ public class DTrackClient extends AbstractRestClient {
 
             return List.of(executeRequest(request, Project[].class));
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
@@ -158,7 +158,7 @@ public class DTrackClient extends AbstractRestClient {
 
             return List.of(executeRequest(request, Component[].class));
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
@@ -171,11 +171,11 @@ public class DTrackClient extends AbstractRestClient {
 
             return mapper.readTree(executeRequest(request));
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
-    public void updateComponent(@NotNull ObjectNode root) {
+    public Component updateComponent(@NotNull ObjectNode root) {
         try {
             URI uri = URI.create("%s/api/v1/component".formatted(baseURL));
 
@@ -186,22 +186,22 @@ public class DTrackClient extends AbstractRestClient {
 
             HttpRequest request = createDefaultPOST(uri, HttpRequest.BodyPublishers.ofString(payload));
 
-            executeRequest(request);
+            return executeRequest(request, Component.class);
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
     @NotNull
     public JsonNode fetchLicenseAsJson(@NotNull String licenseId) {
         try {
-            LOGGER.info("Fetching license {}", licenseId);
+            LOGGER.info("Fetching license '{}'", licenseId);
             URI uri = URI.create("%s/api/v1/license/%s".formatted(baseURL, URLEncoder.encode(licenseId, StandardCharsets.UTF_8)));
             HttpRequest request = createDefaultGET(uri);
 
             return mapper.readTree(executeRequest(request));
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
@@ -216,7 +216,7 @@ public class DTrackClient extends AbstractRestClient {
 
             return BomParserFactory.createParser(bytes).parse(bytes);
         } catch (IOException | InterruptedException | ParseException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
@@ -240,7 +240,7 @@ public class DTrackClient extends AbstractRestClient {
 
             executeRequest(request);
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
@@ -252,7 +252,7 @@ public class DTrackClient extends AbstractRestClient {
 
             executeRequest(request);
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
 
     }

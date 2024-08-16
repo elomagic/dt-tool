@@ -44,7 +44,7 @@ public class SpdxLicenseManager {
     }
 
     private void load(@NotNull SpdxLicenses licenses) {
-        LOGGER.info("Using SPDX license version {}", licenses.getLicenseListVersion());
+        LOGGER.info("Using {} SPDX licenses from version {}", licenses.getLicenses().size(), licenses.getLicenseListVersion());
 
         idMap.putAll(licenses
                 .getLicenses()
