@@ -54,7 +54,7 @@ public class ComponentCare {
                 c.getProject() == null ? "???" : c.getProject().getVersion()
             ));
 
-        LOGGER.always("Found " + unset.size() + " components with unset license IDs");
+        LOGGER.always("Found {} components with unset license IDs", unset.size());
 
         if (unset.isEmpty() || !Configuration.isPatchMode()) {
             return;
@@ -139,7 +139,7 @@ public class ComponentCare {
                 .fetchAllProjects()
                 .stream()
                 .filter(p -> p.getLastBomImport() != null && notBefore.isBefore(p.getLastBomImport()))
-                .filter(p -> Configuration.getProjectFilter() == null || p.getName().equals(Configuration.getProjectFilter()) || p.getUuid().toString().equalsIgnoreCase(Configuration.getProjectFilter()))
+                .filter(p -> Configuration.getProjectFilter().isEmpty() || Configuration.getProjectFilter().contains(p.getName()) || Configuration.getProjectFilter().contains(p.getUuid().toString()))
                 .toList();
 
         if (!projects.isEmpty()) {

@@ -28,10 +28,6 @@ public class DtToolException extends RuntimeException {
         super(cause.getMessage(), cause);
     }
 
-    public DtToolException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
     public DtToolException(String message) {
         super(message);
     }

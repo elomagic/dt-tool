@@ -191,7 +191,8 @@ public final class Configuration {
         INSTANCE.conf.setPatchMode(value);
     }
 
-    public static String getProjectFilter() {
+    @NotNull
+    public static Set<String> getProjectFilter() {
         return INSTANCE.conf.getProjectFilter();
     }
 

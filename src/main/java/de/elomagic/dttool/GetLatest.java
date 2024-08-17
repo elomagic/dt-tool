@@ -53,7 +53,7 @@ public class GetLatest {
                 case VERSION -> project.getVersion();
             };
         } catch (JsonProcessingException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 

@@ -72,7 +72,7 @@ public class SpdxLicenseManager {
 
             load(licenses);
         } catch (IOException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
 
         return this;
