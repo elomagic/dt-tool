@@ -17,7 +17,6 @@
  */
 package de.elomagic.dttool;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.elomagic.dttool.configuration.Configuration;
@@ -86,8 +85,10 @@ public class ComponentCare {
         try {
             // Patch original JSON string
             ObjectNode root = (ObjectNode) client.fetchComponentAsJson(component.getUuid());
-            JsonNode license =  client.fetchLicenseAsJson(licenseId);
-            root.set("resolvedLicense", license);
+            // JsonNode license =  client.fetchLicenseAsJson(licenseId);
+            // root.set("resolvedLicense", license);
+            root.put("license", licenseId);
+            root.remove("licenseExpression");
 
             // Post patched JSON
             LOGGER.info("Updating component '{}'", component.getPurl());
@@ -113,10 +114,15 @@ public class ComponentCare {
                     throw new DtToolException("License ID '%s' in patch rules '%s' doesn't exist.".formatted(r.getLicenseId(), r.getMatchPurl()));
                 });
 
-        for (Component c : components) {
-             containsRule(c.getPurl())
-                     .ifPresentOrElse(r -> patchComponent(c, r.getLicenseId()), () -> LOGGER.always("No patching rule for component '{}' found.", c.getPurl()));
-        }
+        components
+                .stream()
+                .filter(c -> c.getResolvedLicense() == null)
+                .forEach(c -> containsRule(c.getPurl())
+                        .ifPresentOrElse(
+                                r -> patchComponent(c, r.getLicenseId()),
+                                () -> LOGGER.always("No patching rule for component '{}' found.", c.getPurl())
+                        )
+                );
     }
 
     private boolean filterOnIgnoreConf(Component c) {
