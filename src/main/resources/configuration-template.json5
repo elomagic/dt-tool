@@ -11,7 +11,7 @@
     "ignorePurl": [
         "^pkg:maven/com\\.amazon/corretto.*$"
     ],
-    // If true, then process will continue will patching entities.
+    // If true, then process will continue will patch entities.
     "patchMode": false,
     "patchRules": [
         {
