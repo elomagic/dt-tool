@@ -139,12 +139,14 @@ public class ComponentCare {
 
         ZonedDateTime notBefore = ZonedDateTime.now().minusDays(notOlderThenDays);
 
-        LOGGER.info("Fetching projects which not older then {} days", notOlderThenDays);
+        if (Configuration.getProjectFilter().isEmpty()) {
+            LOGGER.info("Fetching projects which not older then {} days", notOlderThenDays);
+        }
 
         List<Project> projects = client
                 .fetchAllProjects()
                 .stream()
-                .filter(p -> p.getLastBomImport() != null && notBefore.isBefore(p.getLastBomImport()))
+                .filter(p -> !Configuration.getProjectFilter().isEmpty() || p.getLastBomImport() != null && notBefore.isBefore(p.getLastBomImport()))
                 .filter(p -> Configuration.getProjectFilter().isEmpty() || Configuration.getProjectFilter().contains(p.getName()) || Configuration.getProjectFilter().contains(p.getUuid().toString()))
                 .toList();
 
