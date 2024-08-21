@@ -1,0 +1,151 @@
+[
+    {
+        "group": "javax.activation",
+        "name": "activation",
+        "version": "1.1.1",
+        "classifier": "LIBRARY",
+        "md5": "46a37512971d8eca81c3fcf245bf07d2",
+        "sha1": "485de3a253e23f645037828c07f1d7f1af40763a",
+        "sha256": "ae475120e9fcd99b4b00b38329bd61cdc5eb754eee03fe66c01f50e137724f99",
+        "sha512": "49119b0cc3af02700685a55c6f15e6d40643f81640e642b9ea39a59e18d542f8837d30b43b5be006ce1a98c8ec9729bb2165c0442978168f64caa2fc6e3cb93d",
+        "purl": "pkg:maven/javax.activation/activation@1.1.1?type=jar",
+        "purlCoordinates": "pkg:maven/javax.activation/activation@1.1.1",
+        "description": "The JavaBeans(TM) Activation Framework is used by the JavaMail(TM) API to manage MIME data",
+        "resolvedLicense": {
+            "uuid": "9ff79fcf-e58a-4f8b-8797-be065bca78a5",
+            "name": "Common Development and Distribution License 1.0",
+            "licenseId": "CDDL-1.0",
+            "isOsiApproved": true,
+            "isFsfLibre": true,
+            "isDeprecatedLicenseId": false,
+            "isCustomLicense": false
+        },
+        "externalReferences": [
+            {
+                "type": "website",
+                "url": "http://java.sun.com/javase/technologies/desktop/javabeans/jaf/index.jsp"
+            }
+        ],
+        "lastInheritedRiskScore": 0.0,
+        "uuid": "7530bfc5-de4e-437a-9e6a-a7b683fce7f7",
+        "metrics": {
+            "critical": 0,
+            "high": 0,
+            "medium": 0,
+            "low": 0,
+            "unassigned": 0,
+            "vulnerabilities": 0,
+            "suppressed": 0,
+            "findingsTotal": 0,
+            "findingsAudited": 0,
+            "findingsUnaudited": 0,
+            "inheritedRiskScore": 0.0,
+            "policyViolationsFail": 0,
+            "policyViolationsWarn": 0,
+            "policyViolationsInfo": 0,
+            "policyViolationsTotal": 0,
+            "policyViolationsAudited": 0,
+            "policyViolationsUnaudited": 0,
+            "policyViolationsSecurityTotal": 0,
+            "policyViolationsSecurityAudited": 0,
+            "policyViolationsSecurityUnaudited": 0,
+            "policyViolationsLicenseTotal": 0,
+            "policyViolationsLicenseTotal": 0,
+            "policyViolationsLicenseAudited": 0,
+            "policyViolationsLicenseUnaudited": 0,
+            "policyViolationsOperationalTotal": 0,
+            "policyViolationsOperationalAudited": 0,
+            "policyViolationsOperationalUnaudited": 0,
+            "firstOccurrence": 1719906217448,
+            "lastOccurrence": 1723722413775
+        },
+        "repositoryMeta": {
+            "repositoryType": "MAVEN",
+            "namespace": "javax.activation",
+            "name": "activation",
+            "latestVersion": "1.1.1",
+            "published": 1313436456000,
+            "lastCheck": 1713280534456
+        },
+        "expandDependencyGraph": false,
+        "isInternal": false
+    }, {
+        "publisher": "Oracle Corporation",
+        "group": "org.glassfish.hk2.external",
+        "name": "aopalliance-repackaged",
+        "version": "2.3.0-b05",
+        "classifier": "LIBRARY",
+        "md5": "57fbed6f3f5606d8f422344d0e5f2f92",
+        "sha1": "c33dd31ce9589b99c40c16e3f2f4faab5877848a",
+        "sha256": "3970bb25c8b382ee8ec6c0e5f579417c9a3c946a0ed199aca86fd2cd501bbc47",
+        "sha512": "8d33382e47c25a36ecb700af427e06dde5e6ca5bcf421004e714aabb177a82e51ac87b94a8e25b89fe6f255667fd0b5517d15e2ab91c3b830440405d536c9522",
+        "purl": "pkg:maven/org.apache.test/test-packaged@2.3.0-b05?type=jar",
+        "purlCoordinates": "pkg:maven/org.glassfish.hk2.external/aopalliance-repackaged@2.3.0-b05",
+        "description": "Generic Modules subsystem",
+        // "licenseExpression": "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
+        "externalReferences": [
+            {
+                "type": "website",
+                "url": "https://hk2.java.net/external/aopalliance-repackaged"
+            },
+            {
+                "type": "distribution",
+                "url": "https://maven.java.net/service/local/staging/deploy/maven2/"
+            },
+            {
+                "type": "issue-tracker",
+                "url": "http://java.net/jira/browse/HK2"
+            },
+            {
+                "type": "mailing-list",
+                "url": "http://java.net/projects/hk2/lists/dev/archive"
+            },
+            {
+                "type": "vcs",
+                "url": "https://java.net/projects/hk2/sources/git/show/external/aopalliance-repackaged"
+            }
+        ],
+        "lastInheritedRiskScore": 0.0,
+        "uuid": "34012ff4-a94d-44d2-bdc4-4aa63577d96f",
+        "metrics": {
+            "critical": 0,
+            "high": 0,
+            "medium": 0,
+            "low": 0,
+            "unassigned": 0,
+            "vulnerabilities": 0,
+            "suppressed": 0,
+            "findingsTotal": 0,
+            "findingsAudited": 0,
+            "findingsUnaudited": 0,
+            "inheritedRiskScore": 0.0,
+            "policyViolationsFail": 0,
+            "policyViolationsWarn": 0,
+            "policyViolationsInfo": 0,
+            "policyViolationsTotal": 0,
+            "policyViolationsAudited": 0,
+            "policyViolationsUnaudited": 0,
+            "policyViolationsSecurityTotal": 0,
+            "policyViolationsSecurityAudited": 0,
+            "policyViolationsSecurityUnaudited": 0,
+            "policyViolationsLicenseTotal": 0,
+            "policyViolationsLicenseAudited": 0,
+            "policyViolationsLicenseUnaudited": 0,
+            "policyViolationsOperationalTotal": 0,
+            "policyViolationsOperationalAudited": 0,
+            "policyViolationsOperationalUnaudited": 0,
+            "firstOccurrence": 1719906217610,
+            "lastOccurrence": 1723722413883
+        },
+        "repositoryMeta": {
+            "repositoryType": "MAVEN",
+            "namespace": "org.glassfish.hk2.external",
+            "name": "aopalliance-repackaged",
+            "latestVersion": "4.0.0-M2",
+            "published": 1710855407000,
+            "lastCheck": 1713281058390
+        },
+        "expandDependencyGraph": false,
+        "isInternal": false
+    }
+]

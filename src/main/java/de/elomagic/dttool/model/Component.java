@@ -28,6 +28,8 @@ public class Component {
     private String license;
     private String licenseUrl;
     private License resolvedLicense;
+    private String purl;
+    private Project project;
 
     public UUID getUuid() {
         return uuid;
@@ -83,6 +85,22 @@ public class Component {
 
     public void setResolvedLicense(License resolvedLicense) {
         this.resolvedLicense = resolvedLicense;
+    }
+
+    public String getPurl() {
+        return purl;
+    }
+
+    public void setPurl(String purl) {
+        this.purl = purl;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
 }

@@ -44,7 +44,7 @@ public class SpdxLicenseManager {
     }
 
     private void load(@NotNull SpdxLicenses licenses) {
-        LOGGER.info("Using SPDX license version {}", licenses.getLicenseListVersion());
+        LOGGER.info("Using {} SPDX licenses from version {}", licenses.getLicenses().size(), licenses.getLicenseListVersion());
 
         idMap.putAll(licenses
                 .getLicenses()
@@ -72,18 +72,21 @@ public class SpdxLicenseManager {
 
             load(licenses);
         } catch (IOException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
 
         return this;
     }
 
-    public boolean matchIdOrName(@Nullable String id, @Nullable String name) {
+    public boolean containsIdOrName(@Nullable String id, @Nullable String name) {
         return (id != null && idMap.containsKey(id))
                 || (id != null && nameMap.containsKey(id))
                 || (name != null && idMap.containsKey(id))
                 || (name != null && nameMap.containsKey(id));
     }
 
+    public boolean containsId(@Nullable String id) {
+        return id != null && idMap.containsKey(id);
+    }
 
 }

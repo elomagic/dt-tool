@@ -17,6 +17,10 @@
  */
 package de.elomagic.dttool.configuration.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,6 +37,10 @@ public class Root {
     private boolean batchMode;
     private ProjectResult projectResult;
     private Set<String> ignorePurl = new HashSet<>();
+    @JsonProperty("patchRules")
+    private Set<PatchRule> patchRules = new HashSet<>();
+    private boolean patchMode;
+    private String projectFilter;
 
     public String getBaseUrl() {
         return baseUrl;
@@ -116,6 +124,27 @@ public class Root {
 
     public Set<String> getIgnorePurl() {
         return ignorePurl;
+    }
+
+    public Set<PatchRule> getPatchRules() {
+        return patchRules;
+    }
+
+    public boolean isPatchMode() {
+        return patchMode;
+    }
+
+    public void setPatchMode(boolean patchMode) {
+        this.patchMode = patchMode;
+    }
+
+    @NotNull
+    public Set<String> getProjectFilter() {
+        return projectFilter == null ? Set.of() : Set.of(projectFilter.split(","));
+    }
+
+    public void setProjectFilter(String projectFilter) {
+        this.projectFilter = projectFilter;
     }
 
 }

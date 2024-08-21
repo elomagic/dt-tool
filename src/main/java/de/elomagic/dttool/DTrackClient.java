@@ -18,13 +18,13 @@
 package de.elomagic.dttool;
 
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.model.Component;
-import de.elomagic.dttool.model.License;
 import de.elomagic.dttool.model.Project;
 import de.elomagic.dttool.model.Violation;
 
@@ -42,10 +42,12 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class DTrackClient extends AbstractRestClient {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
+    private final ObjectMapper mapper = JsonMapperFactory.create();
 
     private final String baseURL = Configuration.INSTANCE.getBaseUrl();
 
@@ -58,7 +60,7 @@ public class DTrackClient extends AbstractRestClient {
 
             return List.of(executeRequest(request, Violation[].class));
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
@@ -76,7 +78,7 @@ public class DTrackClient extends AbstractRestClient {
 
             return List.of(executeRequest(request, Project[].class));
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
@@ -123,31 +125,83 @@ public class DTrackClient extends AbstractRestClient {
 
             return List.of(executeRequest(request, Project[].class));
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
-    public Component fetchComponent(@NotNull String uuid) {
+    /**
+     * Fetch all active project by internal pagination of {@link this#fetchProjects(int, int)}
+     *
+     * @return Returns a stream
+     */
+    public Stream<Component> fetchComponents(@NotNull UUID projectUuid) {
+        List<Component> components = new ArrayList<>();
+        int size;
+        int page = 0;
+        int limit = 1000;
+
+        do {
+            page++;
+            List<Component> pageResult = fetchComponents(projectUuid, limit, page);
+            components.addAll(pageResult);
+            size = pageResult.size();
+        } while (size > 0);
+
+        return components.stream();
+    }
+
+    public List<Component> fetchComponents(@NotNull UUID projectUuid, int limit, int page) {
         try {
-            LOGGER.info("Fetching component #{}", uuid);
-            URI uri = URI.create("%s/api/v1/component/%s?includeRepositoryMetaData=false".formatted(baseURL, uuid));
+            LOGGER.info("Fetching components of project #{}", projectUuid);
+            URI uri = URI.create("%s/api/v1/component/project/%s?limit=%s&page=%s".formatted(baseURL, projectUuid, limit, page));
             HttpRequest request = createDefaultGET(uri);
+
+            return List.of(executeRequest(request, Component[].class));
+        } catch (IOException | InterruptedException ex) {
+            throw new DtToolException(ex);
+        }
+    }
+
+    @NotNull
+    public JsonNode fetchComponentAsJson(@NotNull UUID componentUuid) {
+        try {
+            LOGGER.info("Fetching component #{}", componentUuid);
+            URI uri = URI.create("%s/api/v1/component/%s".formatted(baseURL, componentUuid));
+            HttpRequest request = createDefaultGET(uri);
+
+            return mapper.readTree(executeRequest(request));
+        } catch (IOException | InterruptedException ex) {
+            throw new DtToolException(ex);
+        }
+    }
+
+    public Component updateComponent(@NotNull ObjectNode root) {
+        try {
+            URI uri = URI.create("%s/api/v1/component".formatted(baseURL));
+
+            ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
+            String payload = writer.writeValueAsString(root);
+
+            LOGGER.trace("Updating component > HTTP POST body={}", payload);
+
+            HttpRequest request = createDefaultPOST(uri, HttpRequest.BodyPublishers.ofString(payload));
 
             return executeRequest(request, Component.class);
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
-    public License fetchLicense(@NotNull String licenseId) {
+    @NotNull
+    public JsonNode fetchLicenseAsJson(@NotNull String licenseId) {
         try {
-            LOGGER.info("Fetching license {}", licenseId);
+            LOGGER.info("Fetching license '{}'", licenseId);
             URI uri = URI.create("%s/api/v1/license/%s".formatted(baseURL, URLEncoder.encode(licenseId, StandardCharsets.UTF_8)));
             HttpRequest request = createDefaultGET(uri);
 
-            return executeRequest(request, License.class);
+            return mapper.readTree(executeRequest(request));
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
@@ -162,7 +216,7 @@ public class DTrackClient extends AbstractRestClient {
 
             return BomParserFactory.createParser(bytes).parse(bytes);
         } catch (IOException | InterruptedException | ParseException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
@@ -173,7 +227,6 @@ public class DTrackClient extends AbstractRestClient {
 
             String base64 = Base64.getEncoder().encodeToString(bom.getBytes(StandardCharsets.UTF_8));
 
-            ObjectMapper mapper = JsonMapperFactory.create();
             ObjectNode root = mapper.createObjectNode();
             root.put("projectName", projectName)
                     .put("projectVersion", projectVersion)
@@ -187,7 +240,7 @@ public class DTrackClient extends AbstractRestClient {
 
             executeRequest(request);
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
     }
 
@@ -199,7 +252,7 @@ public class DTrackClient extends AbstractRestClient {
 
             executeRequest(request);
         } catch (IOException | InterruptedException ex) {
-            throw new DtToolException(ex.getMessage(), ex);
+            throw new DtToolException(ex);
         }
 
     }

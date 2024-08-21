@@ -22,8 +22,6 @@ import de.elomagic.dttool.model.Project;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Console;
-import java.io.PrintWriter;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -41,19 +39,10 @@ public class ProjectCare {
             return;
         }
 
-        boolean confirm = Configuration.INSTANCE.isBatchMode() || confirmByUser("Delete projects (Y/N)", "Y");
+        boolean confirm = Configuration.INSTANCE.isBatchMode() || ConsoleUtils.confirmByUser("Delete projects (Y/N)", "Y");
 
         if (confirm) {
             projects.forEach(p -> client.deleteProject(p.getUuid()));
-        }
-    }
-
-    private boolean confirmByUser(@NotNull String confirmationText, @NotNull String confirmText) {
-        Console console = System.console();
-        try (PrintWriter w = console.writer()) {
-            w.printf("%n%s: ", confirmationText);
-            w.flush();
-            return confirmText.equalsIgnoreCase(console.readLine());
         }
     }
 

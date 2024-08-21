@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration status="warn">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%msg%n" />
         </Console>
 
-        <Console name="Console2" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %msg - %logger{36}%n" />
-        </Console>
+        <RollingFile
+                name="MyFile"
+                filename="${sys:user.home}/.dt-tool/dt-tool.log"
+                filePattern="${sys:user.home}/.dt-tool/dt-tool-%d{MM-dd-yyyy}-%i.log.gz"
+                ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %msg - %logger{36}%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1024 kB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="7"/>
+        </RollingFile>
     </Appenders>
+
     <Loggers>
-        <Root level="info">
-            <AppenderRef ref="Console" />
+        <Logger name="de.elomagic" level="trace" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="MyFile"/>
+        </Logger>
+
+        <Root level="debug">
+            <AppenderRef ref="MyFile"/>
         </Root>
     </Loggers>
 </Configuration>

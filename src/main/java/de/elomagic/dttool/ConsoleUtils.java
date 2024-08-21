@@ -19,17 +19,20 @@ package de.elomagic.dttool;
 
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Common base class for all exceptions in DT-Tool.
- */
-public class DtToolException extends RuntimeException {
+import java.io.Console;
+import java.io.PrintWriter;
 
-    public DtToolException(@NotNull Throwable cause) {
-        super(cause.getMessage(), cause);
-    }
+public final class ConsoleUtils {
 
-    public DtToolException(String message) {
-        super(message);
+    private ConsoleUtils() {}
+
+    public static boolean confirmByUser(@NotNull String confirmationText, @NotNull String confirmText) {
+        Console console = System.console();
+        try (PrintWriter w = console.writer()) {
+            w.printf("%n%s: ", confirmationText);
+            w.flush();
+            return confirmText.equalsIgnoreCase(console.readLine());
+        }
     }
 
 }

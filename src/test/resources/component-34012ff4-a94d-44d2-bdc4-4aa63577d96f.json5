@@ -1,0 +1,50 @@
+{
+    "publisher": "Oracle Corporation",
+    "group": "org.glassfish.hk2.external",
+    "name": "aopalliance-repackaged",
+    "version": "2.3.0-b05",
+    "classifier": "LIBRARY",
+    "md5": "57fbed6f3f5606d8f422344d0e5f2f92",
+    "sha1": "c33dd31ce9589b99c40c16e3f2f4faab5877848a",
+    "sha256": "3970bb25c8b382ee8ec6c0e5f579417c9a3c946a0ed199aca86fd2cd501bbc47",
+    "sha512": "8d33382e47c25a36ecb700af427e06dde5e6ca5bcf421004e714aabb177a82e51ac87b94a8e25b89fe6f255667fd0b5517d15e2ab91c3b830440405d536c9522",
+    "purl": "pkg:maven/org.apache.test/test-packaged@2.3.0-b05?type=jar",
+    "purlCoordinates": "pkg:maven/org.glassfish.hk2.external/aopalliance-repackaged@2.3.0-b05",
+    "description": "Generic Modules subsystem",
+    "externalReferences": [
+        {
+            "type": "website",
+            "url": "https://hk2.java.net/external/aopalliance-repackaged"
+        },
+        {
+            "type": "distribution",
+            "url": "https://maven.java.net/service/local/staging/deploy/maven2/"
+        },
+        {
+            "type": "issue-tracker",
+            "url": "http://java.net/jira/browse/HK2"
+        },
+        {
+            "type": "mailing-list",
+            "url": "http://java.net/projects/hk2/lists/dev/archive"
+        },
+        {
+            "type": "vcs",
+            "url": "https://java.net/projects/hk2/sources/git/show/external/aopalliance-repackaged"
+        }
+    ],
+    "project": {
+        "name": "medibridge-service",
+        "version": "3.0.0.0-master-SNAPSHOT",
+        "classifier": "APPLICATION",
+        "uuid": "86a87888-764c-41a3-bd0b-490e90b3dff2",
+        "lastBomImport": 1723721703231,
+        "lastBomImportFormat": "CycloneDX 1.4",
+        "lastInheritedRiskScore": 110.0,
+        "active": true
+    },
+    "lastInheritedRiskScore": 0.0,
+    "uuid": "34012ff4-a94d-44d2-bdc4-4aa63577d96f",
+    "expandDependencyGraph": false,
+    "isInternal": false
+}
