@@ -27,8 +27,11 @@ set CMD_LINE_ARGS=%*
 
 set CLASS_LAUNCHER=de.elomagic.dttool.App
 
+set libFolder=libs
+if exist target (SET libFolder=target)
+
 "%JAVACMD%" ^
-    -cp "%APP_HOME%\target\*" ^
+    -cp "%APP_HOME%\%libFolder%\*" ^
     %CLASS_LAUNCHER% %CMD_LINE_ARGS%
 
 goto end

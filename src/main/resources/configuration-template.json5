@@ -1,7 +1,7 @@
 {
-    // Base URL of Dependency Track. Required to upload or download BOM to DT instance.
+    // Base URL of Dependency Track.
     baseUrl: "https://dependencytrackapi.local",
-    // Api key to access Dependency Track REST API
+    // API key to access REST API of the Dependency Track
     apiKey: "odt_abcde",
     // Project version regular expression matcher
     "versionMatch": "\\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT",
