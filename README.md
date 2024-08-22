@@ -17,39 +17,41 @@ A tool that helps you to manage Dependency Track content better.
 ### Requirements
 
 * Installed Java 21 or higher
-* Download the latest version of DT Tool https://github.com/elomagic/dt-tool/releases
+* Download the latest version of DT-Tool https://github.com/elomagic/dt-tool/releases
 
 ### Configuration
 
-#### File ```configuration.properties```
+#### File ```${sys:user.home}/.dt-tool/configuration.json5```
 
-Currently only needed when accessing Dependency Track
+The configuration `file, named ```configuration.json5```, must be placed in a sub folder named ```.dt-tool``` of the users home folder.
 
-```properties
-# Base URL of Dependency Track
-baseUrl=https://dependencytrackapi.local
-# API Key to access REST API of the Dependency Track
-apiKey=<API-KEY>
+```json5
+{
+    // Base URL of Dependency Track
+    "baseUrl": "https://dependencytrackapi.local",
+    // API key to access REST API of the Dependency Track
+    "apiKey": "<API-KEY>",
+}
 ```
 
 ### Execute
 
-Execute following line to see all supported options
+Execute following line to see all supported options:
 
-```
-java -jar <LATEST_RELEASED_JAR> -help
+```shell
+dt-tool.sh -help
 ```
 
 #### Example - Print outdated SNAPSHOTS (30 days and older)
 
-```
-java -jar <LATEST_RELEASED_JAR> -cp
+```shell
+dt-tool.sh -cp
 ```
 
 #### Example - Print invalid license IDs
 
-```
-java -jar <LATEST_RELEASED_JAR> -lic -v
+```shell
+dt-tool.sh -lic -v
 ```
 
 ## Contributing

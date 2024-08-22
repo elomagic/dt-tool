@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 https://maven.apache.org/xsd/assembly-2.2.0.xsd">
+    <id>distribution</id>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <fileSets>
+        <fileSet>
+            <directory>${basedir}/target</directory>
+            <outputDirectory></outputDirectory>
+            <filtered>false</filtered>
+            <includes>
+                <include>**/*-sbom.*</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>${basedir}</directory>
+            <outputDirectory></outputDirectory>
+            <filtered>false</filtered>
+            <includes>
+                <include>dt-tool.*</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+
+    <files>
+        <file>
+            <source>${basedir}/target/${project.build.finalName}.jar</source>
+            <outputDirectory>libs</outputDirectory>
+            <filtered>false</filtered>
+        </file>
+
+        <file>
+            <source>${basedir}/README.md</source>
+            <outputDirectory></outputDirectory>
+            <filtered>false</filtered>
+        </file>
+        <file>
+            <source>${basedir}/LICENSE.txt</source>
+            <!--<destName>LICENSE</destName>-->
+            <outputDirectory></outputDirectory>
+            <filtered>false</filtered>
+        </file>
+    </files>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>libs</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+</assembly>
