@@ -5,7 +5,7 @@
   ],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
-  "pinDigests": true,
+  "pinDigests": false,
   "dependencyDashboard": true,
   "packageRules": [
     {
