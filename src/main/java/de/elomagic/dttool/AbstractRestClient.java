@@ -111,6 +111,16 @@ public abstract class AbstractRestClient {
         }
     }
 
+    /**
+     * Execute a HTTP request and the result JSON body will be mapped into a given class type.
+     *
+     * @param request HTTP to be requested
+     * @param classType Class type to be mapped
+     * @return Returns instance of class type
+     * @param <T> Class type to be mapped
+     * @throws IOException Thrown if an I/ O error occurs when sending or receiving, or the client has shut down
+     * @throws InterruptedException Thrown if the operation is interrupted
+     */
     protected <T> T executeRequest(@NotNull HttpRequest request, Class<? extends T> classType) throws IOException, InterruptedException {
         try {
             String content = executeRequest(request);

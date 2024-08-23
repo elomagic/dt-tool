@@ -23,6 +23,7 @@ import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.configuration.model.PatchRule;
 import de.elomagic.dttool.model.Component;
 import de.elomagic.dttool.model.Project;
+import de.elomagic.dttool.spdx.SpdxLicenseManager;
 
 import org.jetbrains.annotations.NotNull;
 

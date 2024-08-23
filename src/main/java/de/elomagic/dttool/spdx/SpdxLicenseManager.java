@@ -15,10 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool;
+package de.elomagic.dttool.spdx;
 
-import de.elomagic.dttool.model.SpdxLicense;
-import de.elomagic.dttool.model.SpdxLicenses;
+import de.elomagic.dttool.ConsolePrinter;
+import de.elomagic.dttool.DtToolException;
+import de.elomagic.dttool.JsonMapperFactory;
+import de.elomagic.dttool.spdx.model.SpdxLicense;
+import de.elomagic.dttool.spdx.model.SpdxLicenses;
 
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
