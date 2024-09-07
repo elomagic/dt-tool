@@ -17,13 +17,17 @@
  */
 package de.elomagic.dttool;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
+@SuppressWarnings("squid:S6548")
 public final class ConsolePrinter {
 
-    private static final Logger LOGGER = LogManager.getLogger(ConsolePrinter.class);
+    private static final Marker ALWAYS = MarkerFactory.getMarker("ALWAYS");
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConsolePrinter.class);
     private boolean verbose = false;
     private boolean debug = false;
 
@@ -66,7 +70,7 @@ public final class ConsolePrinter {
     }
 
     public void always(@NotNull String message, Object ...args) {
-        LOGGER.always().log(message, args);
+        LOGGER.info(ALWAYS, message, args);
     }
 
 }
