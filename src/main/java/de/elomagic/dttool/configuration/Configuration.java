@@ -34,6 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Set;
 
+@SuppressWarnings("squid:S6548")
 public final class Configuration {
 
     private static final Path CONFIG_FILE = Path.of(
