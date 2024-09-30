@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ -f $JAVA_HOME/bin/java ]
+if [ -f /usr/bin/java ]
 then
-    export JAVACMD=$JAVA_HOME/bin/java
+    export JAVACMD=/usr/bin/java
     APP_HOME=.
     CMD_LINE_ARGS=%*
 
