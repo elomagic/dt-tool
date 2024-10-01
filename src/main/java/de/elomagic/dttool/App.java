@@ -34,6 +34,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 public class App {
 
@@ -63,27 +64,27 @@ public class App {
 
     public static void main( String[] args ) {
 
-        Options options = new Options();
-        options.addOption(COMMAND_PROJECT_CARE);
-        options.addOption(COMMAND_LATEST_VERSION);
-        options.addOption(COMMAND_LICENSE_CHECK);
-        options.addOption(COMMAND_CREATE_CONFIG);
-        options.addOption(COMMAND_HELP);
+        Options options = new Options()
+                .addOption(COMMAND_PROJECT_CARE)
+                .addOption(COMMAND_LATEST_VERSION)
+                .addOption(COMMAND_LICENSE_CHECK)
+                .addOption(COMMAND_CREATE_CONFIG)
+                .addOption(COMMAND_HELP);
 
-        options.addOption(OPTION_API_KEY);
-        options.addOption(OPTION_BASE_URL);
-        options.addOption(OPTION_BATCH_MODE);
-        options.addOption(OPTION_CONFIG_FILE);
-        options.addOption(OPTION_DEBUG);
-        options.addOption(OPTION_DELETE);
-        options.addOption(OPTION_LATEST_VERSION_MATCH);
-        options.addOption(OPTION_OLDER_THEN);
-        options.addOption(OPTION_PATCH);
-        options.addOption(OPTION_PROJECT_FILTER);
-        options.addOption(OPTION_PROJECT_NAME);
-        options.addOption(OPTION_RETURN_PROPERTY);
-        options.addOption(OPTION_VERBOSE);
-        options.addOption(OPTION_VERSION_MATCH);
+        options.addOption(OPTION_API_KEY)
+                .addOption(OPTION_BASE_URL)
+                .addOption(OPTION_BATCH_MODE)
+                .addOption(OPTION_CONFIG_FILE)
+                .addOption(OPTION_DEBUG)
+                .addOption(OPTION_DELETE)
+                .addOption(OPTION_LATEST_VERSION_MATCH)
+                .addOption(OPTION_OLDER_THEN)
+                .addOption(OPTION_PATCH)
+                .addOption(OPTION_PROJECT_FILTER)
+                .addOption(OPTION_PROJECT_NAME)
+                .addOption(OPTION_RETURN_PROPERTY)
+                .addOption(OPTION_VERBOSE)
+                .addOption(OPTION_VERSION_MATCH);
 
         CommandLineParser parser = new DefaultParser();
         try {
@@ -99,36 +100,17 @@ public class App {
                 ConsolePrinter.INSTANCE.setDebug(true);
             }
 
-            if (cmd.hasOption(OPTION_CONFIG_FILE)) {
-                Configuration.INSTANCE.loadAlternative(Path.of(cmd.getOptionValue(OPTION_CONFIG_FILE)));
-            }
-            if (cmd.hasOption(OPTION_DELETE)) {
-                Configuration.INSTANCE.setDelete(true);
-            }
-            if (cmd.hasOption(OPTION_BASE_URL)) {
-                Configuration.INSTANCE.setBaseUrl(cmd.getOptionValue(OPTION_BASE_URL));
-            }
-            if (cmd.hasOption(OPTION_API_KEY)) {
-                Configuration.INSTANCE.setApiKey(cmd.getOptionValue(OPTION_API_KEY));
-            }
-            if (cmd.hasOption(OPTION_LATEST_VERSION_MATCH)) {
-                Configuration.INSTANCE.setLatestVersionMatch(cmd.getOptionValue(OPTION_LATEST_VERSION_MATCH));
-            }
-            if (cmd.hasOption(OPTION_BATCH_MODE)) {
-                Configuration.INSTANCE.setBatchMode(true);
-            }
-            if (cmd.hasOption(OPTION_PATCH)) {
-                Configuration.setPatchMode(true);
-            }
-            if (cmd.hasOption(OPTION_PROJECT_FILTER)) {
-                Configuration.setProjectFilter(cmd.getOptionValue(OPTION_PROJECT_FILTER));
-            }
-            if (cmd.hasOption(OPTION_RETURN_PROPERTY)) {
-                Configuration.INSTANCE.setReturnProperty(ProjectResult.valueOf(cmd.getOptionValue(OPTION_RETURN_PROPERTY)));
-            }
-            if (cmd.hasOption(OPTION_VERSION_MATCH)) {
-                Configuration.INSTANCE.setVersionMatch(cmd.getOptionValue(OPTION_VERSION_MATCH));
-            }
+            applyOptionIfExist(cmd, OPTION_CONFIG_FILE, (v) -> Configuration.INSTANCE.loadAlternative(Path.of(v)));
+            applyOptionIfExist(cmd, OPTION_DELETE, (v) -> Configuration.INSTANCE.setDelete(true));
+            applyOptionIfExist(cmd, OPTION_BASE_URL, Configuration.INSTANCE::setBaseUrl);
+            applyOptionIfExist(cmd, OPTION_API_KEY, Configuration.INSTANCE::setApiKey);
+            applyOptionIfExist(cmd, OPTION_LATEST_VERSION_MATCH, Configuration.INSTANCE::setLatestVersionMatch);
+            applyOptionIfExist(cmd, OPTION_BATCH_MODE, (v) -> Configuration.INSTANCE.setBatchMode(true));
+            applyOptionIfExist(cmd, OPTION_OLDER_THEN, (v) -> Configuration.INSTANCE.setOlderThenDays(Integer.parseInt(v)));
+            applyOptionIfExist(cmd, OPTION_PATCH, (v) -> Configuration.setPatchMode(true));
+            applyOptionIfExist(cmd, OPTION_PROJECT_FILTER, Configuration::setProjectFilter);
+            applyOptionIfExist(cmd, OPTION_RETURN_PROPERTY, (v) -> Configuration.INSTANCE.setReturnProperty(ProjectResult.valueOf(cmd.getOptionValue(OPTION_RETURN_PROPERTY))));
+            applyOptionIfExist(cmd, OPTION_VERSION_MATCH, Configuration.INSTANCE::setVersionMatch);
 
             if (cmd.hasOption(COMMAND_PROJECT_CARE)) {
                 ProjectCare projectCare = new ProjectCare();
@@ -150,6 +132,12 @@ public class App {
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             System.exit(1);
+        }
+    }
+
+    private static void applyOptionIfExist(@NotNull CommandLine cmd, @NotNull Option option, @NotNull Consumer<String> consumer) {
+        if (cmd.hasOption(option.getOpt())) {
+            consumer.accept(cmd.getOptionValue(option));
         }
     }
 
