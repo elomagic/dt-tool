@@ -19,8 +19,7 @@ package de.elomagic.dttool.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.time.Instant;
 import java.time.ZoneId;

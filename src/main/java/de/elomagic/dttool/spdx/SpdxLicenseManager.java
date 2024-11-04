@@ -17,6 +17,9 @@
  */
 package de.elomagic.dttool.spdx;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.DtToolException;
 import de.elomagic.dttool.JsonMapperFactory;
@@ -24,8 +27,6 @@ import de.elomagic.dttool.spdx.model.SpdxLicense;
 import de.elomagic.dttool.spdx.model.SpdxLicenses;
 
 import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -46,7 +47,7 @@ public class SpdxLicenseManager {
         return new SpdxLicenseManager();
     }
 
-    private void load(@NotNull SpdxLicenses licenses) {
+    private void load(@Nonnull SpdxLicenses licenses) {
         LOGGER.info("Using {} SPDX licenses from version {}", licenses.getLicenses().size(), licenses.getLicenseListVersion());
 
         idMap.putAll(licenses
@@ -59,7 +60,7 @@ public class SpdxLicenseManager {
                 .collect(Collectors.toMap(SpdxLicense::getName, Function.identity(), (existing, replacement) -> existing)));
     }
 
-    @NotNull
+    @Nonnull
     public SpdxLicenseManager loadDefaults() {
         try {
             LOGGER.info("Loading local copy of SPDX licenses");

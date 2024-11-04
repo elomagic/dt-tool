@@ -17,6 +17,8 @@
  */
 package de.elomagic.dttool;
 
+import jakarta.annotation.Nonnull;
+
 import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.configuration.model.ProjectResult;
 
@@ -26,7 +28,6 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -100,16 +101,16 @@ public class App {
                 ConsolePrinter.INSTANCE.setDebug(true);
             }
 
-            applyOptionIfExist(cmd, OPTION_CONFIG_FILE, (v) -> Configuration.INSTANCE.loadAlternative(Path.of(v)));
-            applyOptionIfExist(cmd, OPTION_DELETE, (v) -> Configuration.INSTANCE.setDelete(true));
+            applyOptionIfExist(cmd, OPTION_CONFIG_FILE, v -> Configuration.INSTANCE.loadAlternative(Path.of(v)));
+            applyOptionIfExist(cmd, OPTION_DELETE, v -> Configuration.INSTANCE.setDelete(true));
             applyOptionIfExist(cmd, OPTION_BASE_URL, Configuration.INSTANCE::setBaseUrl);
             applyOptionIfExist(cmd, OPTION_API_KEY, Configuration.INSTANCE::setApiKey);
             applyOptionIfExist(cmd, OPTION_LATEST_VERSION_MATCH, Configuration.INSTANCE::setLatestVersionMatch);
-            applyOptionIfExist(cmd, OPTION_BATCH_MODE, (v) -> Configuration.INSTANCE.setBatchMode(true));
-            applyOptionIfExist(cmd, OPTION_OLDER_THEN, (v) -> Configuration.INSTANCE.setOlderThenDays(Integer.parseInt(v)));
-            applyOptionIfExist(cmd, OPTION_PATCH, (v) -> Configuration.setPatchMode(true));
+            applyOptionIfExist(cmd, OPTION_BATCH_MODE, v -> Configuration.INSTANCE.setBatchMode(true));
+            applyOptionIfExist(cmd, OPTION_OLDER_THEN, v -> Configuration.INSTANCE.setOlderThenDays(Integer.parseInt(v)));
+            applyOptionIfExist(cmd, OPTION_PATCH, v -> Configuration.setPatchMode(true));
             applyOptionIfExist(cmd, OPTION_PROJECT_FILTER, Configuration::setProjectFilter);
-            applyOptionIfExist(cmd, OPTION_RETURN_PROPERTY, (v) -> Configuration.INSTANCE.setReturnProperty(ProjectResult.valueOf(cmd.getOptionValue(OPTION_RETURN_PROPERTY))));
+            applyOptionIfExist(cmd, OPTION_RETURN_PROPERTY, v -> Configuration.INSTANCE.setReturnProperty(ProjectResult.valueOf(cmd.getOptionValue(OPTION_RETURN_PROPERTY))));
             applyOptionIfExist(cmd, OPTION_VERSION_MATCH, Configuration.INSTANCE::setVersionMatch);
 
             if (cmd.hasOption(COMMAND_PROJECT_CARE)) {
@@ -135,13 +136,13 @@ public class App {
         }
     }
 
-    private static void applyOptionIfExist(@NotNull CommandLine cmd, @NotNull Option option, @NotNull Consumer<String> consumer) {
+    private static void applyOptionIfExist(@Nonnull CommandLine cmd, @Nonnull Option option, @Nonnull Consumer<String> consumer) {
         if (cmd.hasOption(option.getOpt())) {
             consumer.accept(cmd.getOptionValue(option));
         }
     }
 
-    private static void printHelp(@NotNull Options options) {
+    private static void printHelp(@Nonnull Options options) {
         String version = "unknown";
         try (InputStream in = App.class.getResourceAsStream("/de/elomagic/dttool/meta.properties")) {
             Properties properties = new Properties();

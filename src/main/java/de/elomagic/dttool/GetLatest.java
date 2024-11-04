@@ -18,12 +18,11 @@
 package de.elomagic.dttool;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.annotation.Nonnull;
 
 import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.configuration.model.ProjectResult;
 import de.elomagic.dttool.model.Project;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,16 +35,16 @@ public class GetLatest {
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
     private final DTrackClient client = new DTrackClient();
 
-    @NotNull
-    public Optional<String> getLatest(@NotNull String projectName) {
+    @Nonnull
+    public Optional<String> getLatest(@Nonnull String projectName) {
         return fetchProjectByName(projectName, Configuration.INSTANCE.getLatestVersionMatch())
                 .sorted(ComparatorFactory.create())
                 .map(p -> mapToString(p, Configuration.INSTANCE.getReturnProperty()))
                 .findFirst();
     }
 
-    @NotNull
-    private String mapToString(@NotNull Project project, @NotNull ProjectResult result) {
+    @Nonnull
+    private String mapToString(@Nonnull Project project, @Nonnull ProjectResult result) {
         try {
             return switch (result) {
                 case JSON -> JsonMapperFactory.create().writeValueAsString(project);
@@ -57,7 +56,8 @@ public class GetLatest {
         }
     }
 
-    private Stream<Project> fetchProjectByName(@NotNull String projectName, @NotNull String regExVersionMatch) {
+    @Nonnull
+    private Stream<Project> fetchProjectByName(@Nonnull String projectName, @Nonnull String regExVersionMatch) {
 
         LOGGER.info("Fetching projects with name {}", projectName);
 

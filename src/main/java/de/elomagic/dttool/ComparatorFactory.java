@@ -17,6 +17,8 @@
  */
 package de.elomagic.dttool;
 
+import jakarta.annotation.Nonnull;
+
 import de.elomagic.dttool.model.Project;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -27,6 +29,7 @@ public final class ComparatorFactory {
 
     private ComparatorFactory() {}
 
+    @Nonnull
     public static Comparator<Project> create() {
         return Comparator.comparing((Project o) -> new ComparableVersion(o.getVersion())).reversed();
     }

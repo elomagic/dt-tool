@@ -18,14 +18,13 @@
 package de.elomagic.dttool;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.annotation.Nonnull;
 
 import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.configuration.model.PatchRule;
 import de.elomagic.dttool.model.Component;
 import de.elomagic.dttool.model.Project;
 import de.elomagic.dttool.spdx.SpdxLicenseManager;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -71,8 +70,8 @@ public class ComponentCare {
 
     }
 
-    @NotNull
-    private Optional<PatchRule> containsRule(@NotNull String purl) {
+    @Nonnull
+    private Optional<PatchRule> containsRule(@Nonnull String purl) {
         return Configuration
                 .getPatchRules()
                 .stream()
@@ -80,7 +79,7 @@ public class ComponentCare {
                 .findFirst();
     }
 
-    private void patchComponent(@NotNull Component component, @NotNull String licenseId) {
+    private void patchComponent(@Nonnull Component component, @Nonnull String licenseId) {
 
         LOGGER.always("Patching component '{}' with license ID '{}'", component.getPurl(), licenseId);
         try {
@@ -104,7 +103,7 @@ public class ComponentCare {
 
     }
 
-    private void patchComponents(@NotNull Set<Component> components) {
+    private void patchComponents(@Nonnull Set<Component> components) {
         LOGGER.info("Validating license IDs in {} patch rules", Configuration.getPatchRules().size());
         Configuration
                 .getPatchRules()

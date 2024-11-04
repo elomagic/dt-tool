@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.annotation.Nonnull;
 
 import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.model.Component;
@@ -31,7 +32,6 @@ import de.elomagic.dttool.model.Violation;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.parsers.BomParserFactory;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URI;
@@ -111,7 +111,8 @@ public class DTrackClient extends AbstractRestClient {
      * @param page Starts from 1
      * @return List of projects
      */
-    public List<Project> fetchProjectsByName(@NotNull String name, int limit, int page) {
+    @Nonnull
+    public List<Project> fetchProjectsByName(@Nonnull String name, int limit, int page) {
         try {
             URI uri = URI.create(
                     "%s/api/v1/project?name=%s&excludeInactive=false&limit=%s&page=%s".formatted(
@@ -134,7 +135,8 @@ public class DTrackClient extends AbstractRestClient {
      *
      * @return Returns a stream
      */
-    public Stream<Component> fetchComponents(@NotNull UUID projectUuid) {
+    @Nonnull
+    public Stream<Component> fetchComponents(@Nonnull UUID projectUuid) {
         List<Component> components = new ArrayList<>();
         int size;
         int page = 0;
@@ -150,7 +152,8 @@ public class DTrackClient extends AbstractRestClient {
         return components.stream();
     }
 
-    public List<Component> fetchComponents(@NotNull UUID projectUuid, int limit, int page) {
+    @Nonnull
+    public List<Component> fetchComponents(@Nonnull UUID projectUuid, int limit, int page) {
         try {
             LOGGER.info("Fetching components of project #{}", projectUuid);
             URI uri = URI.create("%s/api/v1/component/project/%s?limit=%s&page=%s".formatted(baseURL, projectUuid, limit, page));
@@ -162,8 +165,8 @@ public class DTrackClient extends AbstractRestClient {
         }
     }
 
-    @NotNull
-    public JsonNode fetchComponentAsJson(@NotNull UUID componentUuid) {
+    @Nonnull
+    public JsonNode fetchComponentAsJson(@Nonnull UUID componentUuid) {
         try {
             LOGGER.info("Fetching component #{}", componentUuid);
             URI uri = URI.create("%s/api/v1/component/%s".formatted(baseURL, componentUuid));
@@ -175,7 +178,8 @@ public class DTrackClient extends AbstractRestClient {
         }
     }
 
-    public Component updateComponent(@NotNull ObjectNode root) {
+    @Nonnull
+    public Component updateComponent(@Nonnull ObjectNode root) {
         try {
             URI uri = URI.create("%s/api/v1/component".formatted(baseURL));
 
@@ -192,8 +196,8 @@ public class DTrackClient extends AbstractRestClient {
         }
     }
 
-    @NotNull
-    public JsonNode fetchLicenseAsJson(@NotNull String licenseId) {
+    @Nonnull
+    public JsonNode fetchLicenseAsJson(@Nonnull String licenseId) {
         try {
             LOGGER.info("Fetching license '{}'", licenseId);
             URI uri = URI.create("%s/api/v1/license/%s".formatted(baseURL, URLEncoder.encode(licenseId, StandardCharsets.UTF_8)));
@@ -205,7 +209,8 @@ public class DTrackClient extends AbstractRestClient {
         }
     }
 
-    public Bom fetchProjectBom(@NotNull UUID projectUid) {
+    @Nonnull
+    public Bom fetchProjectBom(@Nonnull UUID projectUid) {
         try {
             LOGGER.info("Fetching BOM of project '{}'", projectUid);
             URI uri = URI.create("%s/api/v1/bom/cyclonedx/project/%s?download=false".formatted(baseURL, URLEncoder.encode(projectUid.toString(), StandardCharsets.UTF_8)));
@@ -220,7 +225,7 @@ public class DTrackClient extends AbstractRestClient {
         }
     }
 
-    public void updateBom(@NotNull String bom, @NotNull String projectName, @NotNull String projectVersion) {
+    public void updateBom(@Nonnull String bom, @Nonnull String projectName, @Nonnull String projectVersion) {
         try {
             LOGGER.info("Upload BOM for project '{}' and version '{}'", projectName, projectVersion);
             URI uri = URI.create("%s/api/v1/bom".formatted(baseURL));
@@ -244,7 +249,7 @@ public class DTrackClient extends AbstractRestClient {
         }
     }
 
-    public void deleteProject(@NotNull UUID uuid) {
+    public void deleteProject(@Nonnull UUID uuid) {
         try {
             LOGGER.info("Delete project {}", uuid);
             URI uri = URI.create("%s/api/v1/project/%s".formatted(baseURL, uuid));

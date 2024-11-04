@@ -17,7 +17,8 @@
  */
 package de.elomagic.dttool;
 
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -43,33 +44,33 @@ public final class ConsolePrinter {
         this.debug = debug;
     }
 
-    public void trace(@NotNull String message, Object ...args) {
+    public void trace(@Nonnull String message, Object ...args) {
         if (debug) {
             LOGGER.trace(message, args);
         }
     }
 
-    public void debug(@NotNull String message, Object ...args) {
+    public void debug(@Nonnull String message, Object ...args) {
         if (debug) {
             LOGGER.debug(message, args);
         }
     }
 
-    public void info(@NotNull String message, Object ...args) {
+    public void info(@Nonnull String message, Object ...args) {
         if (debug || verbose) {
             LOGGER.info(message, args);
         }
     }
 
-    public void warn(@NotNull String message, Object ...args) {
+    public void warn(@Nonnull String message, Object ...args) {
         LOGGER.warn(message, args);
     }
 
-    public void error(@NotNull String message, Object ...args) {
+    public void error(@Nonnull String message, Object ...args) {
         LOGGER.error(message, args);
     }
 
-    public void always(@NotNull String message, Object ...args) {
+    public void always(@Nonnull String message, Object ...args) {
         LOGGER.info(ALWAYS, message, args);
     }
 

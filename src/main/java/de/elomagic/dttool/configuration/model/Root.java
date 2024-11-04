@@ -18,8 +18,7 @@
 package de.elomagic.dttool.configuration.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -138,7 +137,7 @@ public class Root {
         this.patchMode = patchMode;
     }
 
-    @NotNull
+    @Nonnull
     public Set<String> getProjectFilter() {
         return projectFilter == null ? Set.of() : Set.of(projectFilter.split(","));
     }

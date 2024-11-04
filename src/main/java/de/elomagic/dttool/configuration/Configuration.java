@@ -18,14 +18,13 @@
 package de.elomagic.dttool.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Nonnull;
 
 import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.JsonMapperFactory;
 import de.elomagic.dttool.configuration.model.PatchRule;
 import de.elomagic.dttool.configuration.model.ProjectResult;
 import de.elomagic.dttool.configuration.model.Root;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -92,7 +91,7 @@ public final class Configuration {
         }
     }
 
-    public void loadAlternative(@NotNull Path file) {
+    public void loadAlternative(@Nonnull Path file) {
         LOGGER.info("Loading alternative configuration from '{}'.", file);
         ObjectMapper objectMapper = JsonMapperFactory.create();
         try {
@@ -154,7 +153,7 @@ public final class Configuration {
         return conf.getProjectResult() == null ? ProjectResult.JSON : conf.getProjectResult();
     }
 
-    public void setReturnProperty(@NotNull ProjectResult value) {
+    public void setReturnProperty(@Nonnull ProjectResult value) {
         conf.setProjectResult(value);
     }
 
@@ -192,7 +191,7 @@ public final class Configuration {
         INSTANCE.conf.setPatchMode(value);
     }
 
-    @NotNull
+    @Nonnull
     public static Set<String> getProjectFilter() {
         return INSTANCE.conf.getProjectFilter();
     }
