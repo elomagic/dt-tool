@@ -17,10 +17,10 @@
  */
 package de.elomagic.dttool;
 
+import jakarta.annotation.Nonnull;
+
 import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.model.Project;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -46,7 +46,8 @@ public class ProjectCare {
         }
     }
 
-    private Stream<Project> fetchProject(@NotNull String regExMatch, int olderThenDays) {
+    @Nonnull
+    private Stream<Project> fetchProject(@Nonnull String regExMatch, int olderThenDays) {
 
         ZonedDateTime notBefore = ZonedDateTime.now().minusDays(olderThenDays);
 

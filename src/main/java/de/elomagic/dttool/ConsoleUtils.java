@@ -17,7 +17,7 @@
  */
 package de.elomagic.dttool;
 
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.io.Console;
 import java.io.PrintWriter;
@@ -26,7 +26,7 @@ public final class ConsoleUtils {
 
     private ConsoleUtils() {}
 
-    public static boolean confirmByUser(@NotNull String confirmationText, @NotNull String confirmText) {
+    public static boolean confirmByUser(@Nonnull String confirmationText, @Nonnull String confirmText) {
         Console console = System.console();
         try (PrintWriter w = console.writer()) {
             w.printf("%n%s: ", confirmationText);
