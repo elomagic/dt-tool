@@ -50,7 +50,7 @@ public class MockTool {
             client.when(
                             request()
                                     .withMethod("DELETE")
-                                    .withPath("/api/v1/project/01d558ae-5075-4cbb-94ea-73ce6ae23999")
+                                    //.withPath("/api/v1/project/01d558ae-5075-4cbb-94ea-73ce6ae23999")
                                     .withHeader("X-Api-Key", apiKey)
                     )
                     .respond(

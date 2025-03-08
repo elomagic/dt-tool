@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Nonnull;
+import picocli.CommandLine;
 
 import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.model.Component;
@@ -44,12 +45,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+@CommandLine.Command
 public class DTrackClient extends AbstractRestClient {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
     private final ObjectMapper mapper = JsonMapperFactory.create();
 
-    private final String baseURL = Configuration.INSTANCE.getBaseUrl();
+    @CommandLine.Option(names = { "--baseUrl", "-u" }, description = "DTrack base URL")
+    private String baseURL = Configuration.INSTANCE.getBaseUrl();
 
     // https://[HOSTNAME]/api/swagger.json
 

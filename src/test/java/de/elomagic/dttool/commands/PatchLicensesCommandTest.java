@@ -1,6 +1,7 @@
-package de.elomagic.dttool;
+package de.elomagic.dttool.commands;
 
-import de.elomagic.dttool.configuration.Configuration;
+import de.elomagic.dttool.AbstractMockedServer;
+import de.elomagic.dttool.App;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
@@ -12,17 +13,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-class ComponentCareTest extends AbstractMockedServer {
+class PatchLicensesCommandTest extends AbstractMockedServer {
 
     @Test
-    void care() throws IOException {
-        String projects = IOUtils.resourceToString("projects-future.json5", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
-        String comps = IOUtils.resourceToString("components-01.json5", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
-        String comp = IOUtils.resourceToString("component-34012ff4-a94d-44d2-bdc4-4aa63577d96f.json5", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
-        String license = IOUtils.resourceToString("license-apache-2.0.json5", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
+    void testPatch() throws IOException {
+        String projects = IOUtils.resourceToString("projects-future.json5", StandardCharsets.UTF_8, PatchLicensesCommandTest.class.getClassLoader());
+        String comps = IOUtils.resourceToString("components-01.json5", StandardCharsets.UTF_8, PatchLicensesCommandTest.class.getClassLoader());
+        String comp = IOUtils.resourceToString("component-34012ff4-a94d-44d2-bdc4-4aa63577d96f.json5", StandardCharsets.UTF_8, PatchLicensesCommandTest.class.getClassLoader());
+        String license = IOUtils.resourceToString("license-apache-2.0.json5", StandardCharsets.UTF_8, PatchLicensesCommandTest.class.getClassLoader());
         String apiKey = UUID.randomUUID().toString();
 
         try (MockServerClient client = new MockServerClient("localhost", getPort())) {
@@ -127,19 +129,16 @@ class ComponentCareTest extends AbstractMockedServer {
                                     .withBody(license)
                     );
 
-            Configuration.INSTANCE.setApiKey(apiKey);
-            Configuration.INSTANCE.setBaseUrl("http://localhost:%s".formatted(getPort()));
-            Configuration.INSTANCE.setBatchMode(true);
-            Configuration.setPatchMode(true);
-
             assertThat(comp)
                     .doesNotContainPattern("resolvedLicense")
                     .doesNotContainPattern("Apache-2.0");
 
-            // Execute the text
-            ComponentCare care = new ComponentCare();
-            care.care();
+            App app = new App();
+            int exitCode = app.execute(new String[]{"patch-licenses", "--apiKey=" + apiKey, "--baseUrl=http://localhost:%s".formatted(getPort()), "--batchMode"});
 
+            assertEquals(0, exitCode);
+
+            // TODO Assert successful patch
         }
     }
 }

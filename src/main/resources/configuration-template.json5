@@ -3,26 +3,4 @@
     baseUrl: "https://dependencytrackapi.local",
     // API key to access REST API of the Dependency Track
     apiKey: "odt_abcde",
-    // Project version regular expression matcher
-    "versionMatch": "\\d+\\.\\d+\\.\\d+\\.\\d+-SNAPSHOT",
-    // Only select projects that are older than X days. Works together with property "versionMatch"
-    "olderThenDays": 30,
-    // Array of PURL in RegEx syntax which will be ignored during license check
-    "ignorePurl": [
-        "^pkg:maven/com\\.amazon/corretto.*$"
-    ],
-    // If true, then process will continue will patch entities.
-    "patchMode": false,
-    "patchRules": [
-        {
-            "matchPurl": "^pkg:maven/org\\.apache.*$",
-            "licenseId": "Apache-2.0"
-        }
-    ],
-    // Select projects by comma separated UIDs
-    // "projectFilter": "b4e4cd7f-1e9e-4b42-9269-bb4c553e36f3,19434a73-057f-4212-b25c-2c571bab0e58"
-    // Prints more console output
-    "verbose": false,
-    // Prints debug console output.
-    "debug": false,
 }

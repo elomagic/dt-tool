@@ -4,14 +4,19 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%msg%n" />
         </Console>
-        <File name="MyFile" fileName="./junit.log" immediateFlush="true" append="false">
+
+        <File name="MyFile" fileName="./junit.log" append="false">
             <PatternLayout pattern="%msg%n" />
         </File>
     </Appenders>
+
     <Loggers>
+        <Logger name="de.elomagic" level="debug">
+            <AppenderRef ref="MyFile" />
+        </Logger>
+
         <Root level="trace">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="MyFile"/>
         </Root>
     </Loggers>
 </Configuration>

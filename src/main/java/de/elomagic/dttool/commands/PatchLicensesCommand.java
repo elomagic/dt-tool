@@ -15,11 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool;
+package de.elomagic.dttool.commands;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Nonnull;
+import picocli.CommandLine;
 
+import de.elomagic.dttool.ConsolePrinter;
+import de.elomagic.dttool.ConsoleUtils;
+import de.elomagic.dttool.DTrackClient;
+import de.elomagic.dttool.DtToolException;
+import de.elomagic.dttool.OptionsParams;
+import de.elomagic.dttool.ProjectFilterOptions;
 import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.configuration.model.PatchRule;
 import de.elomagic.dttool.model.Component;
@@ -31,20 +38,37 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-public class ComponentCare {
+@CommandLine.Command(name = "patch-licenses", description = "Patch unset licenses")
+public class PatchLicensesCommand implements Callable<Void>  {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
-    private final DTrackClient client = new DTrackClient();
+
     private final SpdxLicenseManager spdx = SpdxLicenseManager.create();
 
-    public void care() {
+    @CommandLine.Mixin
+    private DTrackClient client;
+    @CommandLine.Mixin
+    private ProjectFilterOptions projectFilterOptions;
+    @CommandLine.Option(names = { OptionsParams.BATCH_MODE, OptionsParams.BATCH_MODE_SHORT }, description = "In non-interactive (batch)")
+    private boolean batchMode;
+    @CommandLine.Option(names = { "--debug", "-d" }, negatable = true, description = "Debug mode")
+    void setDebug(boolean debug) {
+        ConsolePrinter.INSTANCE.setDebug(true);
+    }
+    @CommandLine.Option(names = { "--verbose", "-v" }, negatable = true, description = "Verbose mode")
+    void setVerbose(boolean debug) {
+        ConsolePrinter.INSTANCE.setVerbose(true);
+    }
 
-        LOGGER.info("Project name filter: {}", Configuration.getProjectFilter());
+    public Void call() {
+
+        LOGGER.info("Project name filter: {}", projectFilterOptions.getProjectFilter());
         LOGGER.info("Configured patch rules: {}", Configuration.getPatchRules().size());
 
-        Set<Component> unset = fetchProjectsUnsetComponentsLicenseId(Configuration.INSTANCE.getOlderThenDays());
+        Set<Component> unset = fetchProjectsUnsetComponentsLicenseId();
 
         unset.forEach(c -> LOGGER.info(
                 "Component '{}' of project {} version {} has not license ID.",
@@ -55,11 +79,11 @@ public class ComponentCare {
 
         LOGGER.always("Found {} components with unset license IDs", unset.size());
 
-        if (unset.isEmpty() || !Configuration.isPatchMode()) {
-            return;
+        if (unset.isEmpty()) {
+            return null;
         }
 
-        boolean confirm = Configuration.INSTANCE.isBatchMode() || ConsoleUtils.confirmByUser("Patch component license ID (Y/N)", "Y");
+        boolean confirm = batchMode || ConsoleUtils.confirmByUser("Patch component license ID (Y/N)", "Y");
 
         if (confirm) {
             LOGGER.info("Init SPDX database");
@@ -68,6 +92,7 @@ public class ComponentCare {
             patchComponents(unset);
         }
 
+        return null;
     }
 
     @Nonnull
@@ -135,19 +160,19 @@ public class ComponentCare {
                 .noneMatch(purl::matches);
     }
 
-    private Set<Component> fetchProjectsUnsetComponentsLicenseId(int notOlderThenDays) {
+    private Set<Component> fetchProjectsUnsetComponentsLicenseId() {
 
-        ZonedDateTime notBefore = ZonedDateTime.now().minusDays(notOlderThenDays);
+        ZonedDateTime notBefore = ZonedDateTime.now().minusDays(projectFilterOptions.getOlderThenDays());
 
-        if (Configuration.getProjectFilter().isEmpty()) {
-            LOGGER.info("Fetching projects which not older then {} days", notOlderThenDays);
+        if (projectFilterOptions.getProjectFilter().isEmpty()) {
+            LOGGER.info("Fetching projects which not older then {} days", projectFilterOptions.getOlderThenDays());
         }
 
         List<Project> projects = client
                 .fetchAllProjects()
                 .stream()
-                .filter(p -> !Configuration.getProjectFilter().isEmpty() || p.getLastBomImport() != null && notBefore.isBefore(p.getLastBomImport()))
-                .filter(p -> Configuration.getProjectFilter().isEmpty() || Configuration.getProjectFilter().contains(p.getName()) || Configuration.getProjectFilter().contains(p.getUuid().toString()))
+                .filter(p -> !projectFilterOptions.getProjectFilter().isEmpty() || p.getLastBomImport() != null && notBefore.isBefore(p.getLastBomImport()))
+                .filter(p -> projectFilterOptions.getProjectFilter().isEmpty() || projectFilterOptions.getProjectFilter().contains(p.getName()) || projectFilterOptions.getProjectFilter().contains(p.getUuid().toString()))
                 .toList();
 
         if (!projects.isEmpty()) {

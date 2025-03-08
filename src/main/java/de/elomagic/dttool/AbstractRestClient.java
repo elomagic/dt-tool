@@ -20,6 +20,7 @@ package de.elomagic.dttool;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import picocli.CommandLine;
 
 import de.elomagic.dttool.configuration.Configuration;
 
@@ -36,7 +37,9 @@ public abstract class AbstractRestClient {
 
     private static final String APPLICATION_JSON = "application/json";
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
-    private final String apiKey = Configuration.INSTANCE.getApiKey();
+
+    @CommandLine.Option(names = { "--apiKey", "-k" }, description = "DTrack API Key")
+    private String apiKey = Configuration.INSTANCE.getApiKey();
     private final ObjectMapper objectMapper = JsonMapperFactory.create();
 
     @Nonnull
