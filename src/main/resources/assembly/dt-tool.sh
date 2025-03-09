@@ -15,7 +15,6 @@ then
     CLASS_LAUNCHER=de.elomagic.dttool.App
 
     $JAVACMD \
-        -javaagent:../sec-agent/target/sec-agent-2.0.1-SNAPSHOT.jar \
         -cp "$APP_HOME/$LIBS_FOLDER/*" \
         $CLASS_LAUNCHER $CMD_LINE_ARGS
 else
