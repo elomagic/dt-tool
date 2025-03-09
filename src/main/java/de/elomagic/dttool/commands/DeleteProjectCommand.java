@@ -20,6 +20,7 @@ package de.elomagic.dttool.commands;
 import jakarta.annotation.Nonnull;
 import picocli.CommandLine;
 
+import de.elomagic.dttool.ConsoleOptions;
 import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.ConsoleUtils;
 import de.elomagic.dttool.DTrackClient;
@@ -43,6 +44,8 @@ public class DeleteProjectCommand implements Callable<Void> {
     private DTrackClient client;
     @CommandLine.Mixin
     private ProjectFilterOptions projectFilterOptions;
+    @CommandLine.Mixin
+    private ConsoleOptions consoleOptions;
     @CommandLine.Option(
             names = { OptionsParams.BATCH_MODE, OptionsParams.BATCH_MODE_SHORT },
             negatable = true,
@@ -54,14 +57,6 @@ public class DeleteProjectCommand implements Callable<Void> {
             defaultValue = "^\\d+(\\.\\d+)*(-.*)?-(SNAPSHOT|(b\\d{4}))$"
     )
     private String versionMatch;
-    @CommandLine.Option(names = { "--debug", "-d" }, negatable = true, description = "Debug mode")
-    void setDebug(boolean debug) {
-        ConsolePrinter.INSTANCE.setDebug(true);
-    }
-    @CommandLine.Option(names = { "--verbose", "-v" }, negatable = true, description = "Verbose mode")
-    void setVerbose(boolean debug) {
-        ConsolePrinter.INSTANCE.setVerbose(true);
-    }
 
     public Void call() {
 

@@ -22,6 +22,7 @@ import jakarta.annotation.Nonnull;
 import picocli.CommandLine;
 
 import de.elomagic.dttool.ComparatorFactory;
+import de.elomagic.dttool.ConsoleOptions;
 import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.DTrackClient;
 import de.elomagic.dttool.DtToolException;
@@ -48,6 +49,8 @@ public class FetchProjectsCommand implements Callable<Void> {
     private DTrackClient client;
     @CommandLine.Mixin
     private ProjectFilterOptions projectFilterOptions;
+    @CommandLine.Mixin
+    private ConsoleOptions consoleOptions;
     @CommandLine.Option(
             names = { "--format", "-f" },
             description = "Returns format. Supported values are: JSON, VERSION, UUID",
@@ -58,14 +61,6 @@ public class FetchProjectsCommand implements Callable<Void> {
             description = "Regular expression to match version",
             defaultValue = "^\\d+(\\.\\d+)*(\\-Final)?$")
     private String versionMatch;
-    @CommandLine.Option(names = { "--debug", "-d" }, negatable = true, description = "Debug mode")
-    void setDebug(boolean debug) {
-        ConsolePrinter.INSTANCE.setDebug(true);
-    }
-    @CommandLine.Option(names = { "--verbose", "-v" }, negatable = true, description = "Verbose mode")
-    void setVerbose(boolean debug) {
-        ConsolePrinter.INSTANCE.setVerbose(true);
-    }
 
     @Override
     public Void call() {

@@ -17,12 +17,18 @@
  */
 package de.elomagic.dttool;
 
-public interface OptionsParams {
+import picocli.CommandLine;
 
-    String VERSION_MATCH = "--versionMatch";
-    String VERSION_MATCH_SHORT = "-vm";
+@CommandLine.Command
+public class ConsoleOptions {
 
-    String BATCH_MODE = "--batchMode";
-    String BATCH_MODE_SHORT = "-b";
+    @CommandLine.Option(names = { "--debug", "-d" }, negatable = true, description = "Debug mode")
+    void setDebug(boolean debug) {
+        ConsolePrinter.INSTANCE.setDebug(true);
+    }
+    @CommandLine.Option(names = { "--verbose", "-v" }, negatable = true, description = "Verbose mode")
+    void setVerbose(boolean debug) {
+        ConsolePrinter.INSTANCE.setVerbose(true);
+    }
 
 }

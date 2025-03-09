@@ -19,12 +19,16 @@ package de.elomagic.dttool.commands;
 
 import picocli.CommandLine;
 
+import de.elomagic.dttool.ConsoleOptions;
 import de.elomagic.dttool.configuration.Configuration;
 
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "create-configuration", description = "Create configuration file")
 public class CreateConfigurationFileCommand implements Callable<Void> {
+
+    @CommandLine.Mixin
+    private ConsoleOptions consoleOptions;
 
     @Override
     public Void call() throws Exception {
