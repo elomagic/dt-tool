@@ -6,6 +6,7 @@
     <includeBaseDirectory>true</includeBaseDirectory>
     <formats>
         <format>zip</format>
+        <format>tar.gz</format>
     </formats>
 
     <fileSets>
@@ -31,6 +32,7 @@
             <directory>${basedir}/src/main/resources/assembly</directory>
             <outputDirectory></outputDirectory>
             <filtered>false</filtered>
+            <fileMode>744</fileMode>
             <includes>
                 <include>dt-tool.*</include>
             </includes>
