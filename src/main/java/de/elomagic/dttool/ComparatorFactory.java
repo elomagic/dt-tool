@@ -30,8 +30,13 @@ public final class ComparatorFactory {
     private ComparatorFactory() {}
 
     @Nonnull
-    public static Comparator<Project> create() {
+    public static Comparator<Project> versionComparator() {
         return Comparator.comparing((Project o) -> new ComparableVersion(o.getVersion())).reversed();
+    }
+
+    @Nonnull
+    public static Comparator<Project> nameComparator() {
+        return Comparator.comparing(Project::getName);
     }
 
 }

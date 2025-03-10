@@ -21,36 +21,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.annotation.Nonnull;
 import picocli.CommandLine;
 
-import de.elomagic.dttool.ComparatorFactory;
-import de.elomagic.dttool.ConsoleOptions;
 import de.elomagic.dttool.ConsolePrinter;
-import de.elomagic.dttool.DTrackClient;
 import de.elomagic.dttool.DtToolException;
 import de.elomagic.dttool.JsonMapperFactory;
 import de.elomagic.dttool.OptionsParams;
-import de.elomagic.dttool.ProjectFilterOptions;
 import de.elomagic.dttool.configuration.model.ProjectResult;
 import de.elomagic.dttool.model.Project;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 
 @CommandLine.Command(name = "fetch-projects", description = "Fetch projects")
-public class FetchProjectsCommand implements Callable<Void> {
+public class FetchProjectsCommand extends AbstractProjectFilterCommand implements Callable<Void> {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
 
-    @CommandLine.Mixin
-    private DTrackClient client;
-    @CommandLine.Mixin
-    private ProjectFilterOptions projectFilterOptions;
-    @CommandLine.Mixin
-    private ConsoleOptions consoleOptions;
     @CommandLine.Option(
             names = { "--format", "-f" },
             description = "Returns format. Supported values are: JSON, VERSION, UUID",
@@ -64,8 +51,7 @@ public class FetchProjectsCommand implements Callable<Void> {
 
     @Override
     public Void call() {
-        fetchProjectByName()
-                .sorted(ComparatorFactory.create())
+        fetchProjectsByName()
                 .map(p -> mapToString(p, format))
                 .limit(projectFilterOptions.getMaxCount())
                 .findFirst()
@@ -88,17 +74,7 @@ public class FetchProjectsCommand implements Callable<Void> {
     }
 
     @Nonnull
-    private Stream<Project> fetchProjectByName() {
-
-        LOGGER.info("Fetching projects with name/uid {}", projectFilterOptions.getProjectFilter());
-
-        ZonedDateTime notAfter = ZonedDateTime.now().minusDays(projectFilterOptions.getOlderThenDays());
-
-        return  client
-                .fetchAllProjects()
-                .stream()
-                .filter(p -> projectFilterOptions.getProjectFilter().isEmpty() || projectFilterOptions.getProjectFilter().contains(p.getName()))
-                .filter(p -> p.getLastBomImport() == null || notAfter.isAfter(p.getLastBomImport()))
-                .filter(p -> StringUtils.isBlank(versionMatch) || p.getVersion().matches(versionMatch));
+    private Stream<Project> fetchProjectsByName() {
+        return fetchProjects(versionMatch).stream();
     }
 }

@@ -17,35 +17,18 @@
  */
 package de.elomagic.dttool.commands;
 
-import jakarta.annotation.Nonnull;
 import picocli.CommandLine;
 
-import de.elomagic.dttool.ConsoleOptions;
-import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.ConsoleUtils;
-import de.elomagic.dttool.DTrackClient;
 import de.elomagic.dttool.OptionsParams;
-import de.elomagic.dttool.ProjectFilterOptions;
 import de.elomagic.dttool.model.Project;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.stream.Stream;
 
 @CommandLine.Command(name = "delete-projects", description = "Delete projects")
-public class DeleteProjectCommand implements Callable<Void> {
+public class DeleteProjectCommand extends AbstractProjectFilterCommand implements Callable<Void> {
 
-    private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
-
-    @CommandLine.Mixin
-    private DTrackClient client;
-    @CommandLine.Mixin
-    private ProjectFilterOptions projectFilterOptions;
-    @CommandLine.Mixin
-    private ConsoleOptions consoleOptions;
     @CommandLine.Option(
             names = { OptionsParams.BATCH_MODE, OptionsParams.BATCH_MODE_SHORT },
             negatable = true,
@@ -60,7 +43,7 @@ public class DeleteProjectCommand implements Callable<Void> {
 
     public Void call() {
 
-        List<Project> projects = fetchProject().toList();
+        List<Project> projects = fetchProjects(versionMatch);
 
         if (projects.isEmpty()) {
             return null;
@@ -73,29 +56,6 @@ public class DeleteProjectCommand implements Callable<Void> {
         }
 
         return null;
-    }
-
-    @Nonnull
-    private Stream<Project> fetchProject() {
-
-        ZonedDateTime notBefore = ZonedDateTime.now().minusDays(projectFilterOptions.getOlderThenDays());
-
-        LOGGER.info("Version match: {}", versionMatch);
-        LOGGER.info("Fetching projects which not older then {} days", projectFilterOptions.getOlderThenDays());
-
-        List<Project> projects = client
-                .fetchAllProjects()
-                .stream()
-                .filter(p -> projectFilterOptions.getProjectFilter().isEmpty() || projectFilterOptions.getProjectFilter().contains(p.getName()))
-                .filter(p -> p.getLastBomImport() == null || notBefore.isAfter(p.getLastBomImport()))
-                .filter(p -> StringUtils.isBlank(versionMatch) || p.getVersion().matches(versionMatch))
-                .toList();
-
-        projects.forEach(p -> LOGGER.info("{}\t {}\t Created {}", p.getName(), p.getVersion(), p.getLastBomImport()));
-        LOGGER.info("{} projects matched ", projects.size());
-
-        return projects.stream();
-
     }
 
 }
