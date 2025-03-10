@@ -31,7 +31,6 @@ import de.elomagic.dttool.model.Project;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.stream.Stream;
 
 @CommandLine.Command(name = "fetch-projects", description = "Fetch projects")
 public class FetchProjectsCommand extends AbstractProjectFilterCommand implements Callable<Void> {
@@ -51,7 +50,8 @@ public class FetchProjectsCommand extends AbstractProjectFilterCommand implement
 
     @Override
     public Void call() {
-        fetchProjectsByName()
+        fetchProjects(versionMatch)
+                .stream()
                 .map(p -> mapToString(p, format))
                 .limit(projectFilterOptions.getMaxCount())
                 .findFirst()
@@ -73,8 +73,4 @@ public class FetchProjectsCommand extends AbstractProjectFilterCommand implement
         }
     }
 
-    @Nonnull
-    private Stream<Project> fetchProjectsByName() {
-        return fetchProjects(versionMatch).stream();
-    }
 }

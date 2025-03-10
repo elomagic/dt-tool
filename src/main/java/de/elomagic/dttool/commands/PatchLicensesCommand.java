@@ -21,13 +21,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Nonnull;
 import picocli.CommandLine;
 
-import de.elomagic.dttool.ConsoleOptions;
 import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.ConsoleUtils;
-import de.elomagic.dttool.DTrackClient;
 import de.elomagic.dttool.DtToolException;
 import de.elomagic.dttool.OptionsParams;
-import de.elomagic.dttool.ProjectFilterOptions;
 import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.configuration.model.PatchRule;
 import de.elomagic.dttool.model.Component;
@@ -43,18 +40,12 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "patch-licenses", description = "Patch unset licenses")
-public class PatchLicensesCommand implements Callable<Void>  {
+public class PatchLicensesCommand extends AbstractProjectFilterCommand implements Callable<Void>  {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
 
     private final SpdxLicenseManager spdx = SpdxLicenseManager.create();
 
-    @CommandLine.Mixin
-    private DTrackClient client;
-    @CommandLine.Mixin
-    private ProjectFilterOptions projectFilterOptions;
-    @CommandLine.Mixin
-    private ConsoleOptions consoleOptions;
     @CommandLine.Option(names = { OptionsParams.BATCH_MODE, OptionsParams.BATCH_MODE_SHORT }, description = "In non-interactive (batch)")
     private boolean batchMode;
 
@@ -78,7 +69,7 @@ public class PatchLicensesCommand implements Callable<Void>  {
             return null;
         }
 
-        boolean confirm = batchMode || ConsoleUtils.confirmByUser("Patch component license ID (Y/N)", "Y");
+        boolean confirm = batchMode || ConsoleUtils.confirmByUser("Patch component license ID, enter YES", "YES");
 
         if (confirm) {
             LOGGER.info("Init SPDX database");
@@ -163,12 +154,7 @@ public class PatchLicensesCommand implements Callable<Void>  {
             LOGGER.info("Fetching projects which not older then {} days", projectFilterOptions.getOlderThenDays());
         }
 
-        List<Project> projects = client
-                .fetchAllProjects()
-                .stream()
-                .filter(p -> !projectFilterOptions.getProjectFilter().isEmpty() || p.getLastBomImport() != null && notBefore.isBefore(p.getLastBomImport()))
-                .filter(p -> projectFilterOptions.getProjectFilter().isEmpty() || projectFilterOptions.getProjectFilter().contains(p.getName()) || projectFilterOptions.getProjectFilter().contains(p.getUuid().toString()))
-                .toList();
+        List<Project> projects = fetchProjects(null);
 
         if (!projects.isEmpty()) {
             LOGGER.info("Checking components of {} project versions since {}. Please wait, this process can take a while.", projects.size(), notBefore);
