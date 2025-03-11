@@ -15,28 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool;
+package de.elomagic.dttool.commands;
 
-import jakarta.annotation.Nonnull;
+import picocli.CommandLine;
 
-import de.elomagic.dttool.model.Project;
+import de.elomagic.dttool.ConsoleOptions;
+import de.elomagic.dttool.configuration.Configuration;
 
-import org.apache.maven.artifact.versioning.ComparableVersion;
+import java.util.concurrent.Callable;
 
-import java.util.Comparator;
+@CommandLine.Command(name = "create-configuration", description = "Create configuration file")
+public class CreateConfigurationFileCommand implements Callable<Void> {
 
-public final class ComparatorFactory {
+    @CommandLine.Mixin
+    private ConsoleOptions consoleOptions;
 
-    private ComparatorFactory() {}
+    @Override
+    public Void call() throws Exception {
+        Configuration.INSTANCE.createTemplate();
 
-    @Nonnull
-    public static Comparator<Project> versionComparator() {
-        return Comparator.comparing((Project o) -> new ComparableVersion(o.getVersion())).reversed();
-    }
-
-    @Nonnull
-    public static Comparator<Project> nameComparator() {
-        return Comparator.comparing(Project::getName);
+        return null;
     }
 
 }

@@ -17,26 +17,12 @@
  */
 package de.elomagic.dttool;
 
-import jakarta.annotation.Nonnull;
+public interface OptionsParams {
 
-import de.elomagic.dttool.model.Project;
+    String VERSION_MATCH = "--versionMatch";
+    String VERSION_MATCH_SHORT = "-vm";
 
-import org.apache.maven.artifact.versioning.ComparableVersion;
-
-import java.util.Comparator;
-
-public final class ComparatorFactory {
-
-    private ComparatorFactory() {}
-
-    @Nonnull
-    public static Comparator<Project> versionComparator() {
-        return Comparator.comparing((Project o) -> new ComparableVersion(o.getVersion())).reversed();
-    }
-
-    @Nonnull
-    public static Comparator<Project> nameComparator() {
-        return Comparator.comparing(Project::getName);
-    }
+    String BATCH_MODE = "--batchMode";
+    String BATCH_MODE_SHORT = "-b";
 
 }

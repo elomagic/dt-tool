@@ -17,26 +17,20 @@
  */
 package de.elomagic.dttool;
 
-import jakarta.annotation.Nonnull;
+import picocli.CommandLine;
 
-import de.elomagic.dttool.model.Project;
+import java.io.InputStream;
+import java.util.Properties;
 
-import org.apache.maven.artifact.versioning.ComparableVersion;
+public class VersionProvider implements CommandLine.IVersionProvider {
 
-import java.util.Comparator;
-
-public final class ComparatorFactory {
-
-    private ComparatorFactory() {}
-
-    @Nonnull
-    public static Comparator<Project> versionComparator() {
-        return Comparator.comparing((Project o) -> new ComparableVersion(o.getVersion())).reversed();
-    }
-
-    @Nonnull
-    public static Comparator<Project> nameComparator() {
-        return Comparator.comparing(Project::getName);
+    @Override
+    public String[] getVersion() throws Exception {
+        try (InputStream in = App.class.getResourceAsStream("/de/elomagic/dttool/meta.properties")) {
+            Properties properties = new Properties();
+            properties.load(in);
+            return new String[] { properties.getProperty("version") };
+        }
     }
 
 }

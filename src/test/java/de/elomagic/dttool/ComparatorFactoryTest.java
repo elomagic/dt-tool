@@ -13,7 +13,7 @@ class ComparatorFactoryTest {
     @Test
     void testCreate() {
 
-        Comparator<Project> c = ComparatorFactory.create();
+        Comparator<Project> c = ComparatorFactory.versionComparator();
 
         Project pa = new Project();
         Project pb = new Project();

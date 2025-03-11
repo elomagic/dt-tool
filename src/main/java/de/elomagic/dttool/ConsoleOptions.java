@@ -17,26 +17,18 @@
  */
 package de.elomagic.dttool;
 
-import jakarta.annotation.Nonnull;
+import picocli.CommandLine;
 
-import de.elomagic.dttool.model.Project;
+@CommandLine.Command
+public class ConsoleOptions {
 
-import org.apache.maven.artifact.versioning.ComparableVersion;
-
-import java.util.Comparator;
-
-public final class ComparatorFactory {
-
-    private ComparatorFactory() {}
-
-    @Nonnull
-    public static Comparator<Project> versionComparator() {
-        return Comparator.comparing((Project o) -> new ComparableVersion(o.getVersion())).reversed();
+    @CommandLine.Option(names = { "--debug", "-d" }, negatable = true, description = "Debug mode")
+    void setDebug(boolean debug) {
+        ConsolePrinter.INSTANCE.setDebug(true);
     }
-
-    @Nonnull
-    public static Comparator<Project> nameComparator() {
-        return Comparator.comparing(Project::getName);
+    @CommandLine.Option(names = { "--verbose", "-v" }, negatable = true, description = "Verbose mode")
+    void setVerbose(boolean debug) {
+        ConsolePrinter.INSTANCE.setVerbose(true);
     }
 
 }

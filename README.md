@@ -39,19 +39,19 @@ The configuration `file, named ```configuration.json5```, must be placed in a su
 Execute following line to see all supported options:
 
 ```shell
-dt-tool.sh -help
+dt-tool.sh --help
 ```
 
-#### Example - Print outdated SNAPSHOTS (30 days and older)
+#### Example - Delete outdated SNAPSHOTS (30 days and older)
 
 ```shell
-dt-tool.sh -cp
+dt-tool.sh delete-projects -v
 ```
 
 #### Example - Print invalid license IDs
 
 ```shell
-dt-tool.sh -lic -v
+dt-tool.sh check-licenses -v --projectFilter="dt-tool"
 ```
 
 ## Contributing

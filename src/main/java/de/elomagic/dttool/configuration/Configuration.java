@@ -23,7 +23,6 @@ import jakarta.annotation.Nonnull;
 import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.JsonMapperFactory;
 import de.elomagic.dttool.configuration.model.PatchRule;
-import de.elomagic.dttool.configuration.model.ProjectResult;
 import de.elomagic.dttool.configuration.model.Root;
 
 import java.io.IOException;
@@ -40,10 +39,6 @@ public final class Configuration {
             System.getProperty("user.home"),
             ".dt-tool",
             "configuration.json5");
-
-    public static final String DEFAULT_PROJECT_VERSION_MATCH = "^\\d+(\\.\\d+)*(-.*)?-(SNAPSHOT|(b\\d{4}))$";
-    public static final String DEFAULT_PROJECT_LATEST_VERSION_MATCH = "^\\d+(\\.\\d+)*(\\-Final)?$";
-    public static final int DEFAULT_OLDER_THEN_DAYS = 30;
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
 
@@ -86,6 +81,7 @@ public final class Configuration {
 
         try (InputStream in = Configuration.class.getResourceAsStream("/configuration-template.json5")) {
             Files.copy(in, CONFIG_FILE, StandardCopyOption.REPLACE_EXISTING);
+            LOGGER.always("Configuration file '{}' created. Please edit and save it.", CONFIG_FILE);
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
@@ -117,87 +113,10 @@ public final class Configuration {
         conf.setApiKey(apiKey);
     }
 
-    public boolean isDelete() {
-        return conf.isDelete();
-    }
-
-    public void setDelete(boolean value) {
-        conf.setDelete(value);
-    }
-
-    public String getVersionMatch() {
-        return conf.getVersionMatch() == null ? DEFAULT_PROJECT_VERSION_MATCH : conf.getVersionMatch();
-    }
-
-    public void setVersionMatch(String value) {
-        conf.setVersionMatch(value);
-    }
-
-    public int getOlderThenDays() {
-        return conf.getOlderThenDays() == null ? DEFAULT_OLDER_THEN_DAYS : conf.getOlderThenDays();
-    }
-
-    public void setOlderThenDays(int value) {
-        conf.setOlderThenDays(value);
-    }
-
-    public boolean isBatchMode() {
-        return conf.isBatchMode();
-    }
-
-    public void setBatchMode(boolean value) {
-        conf.setBatchMode(value);
-    }
-
-    public ProjectResult getReturnProperty() {
-        return conf.getProjectResult() == null ? ProjectResult.JSON : conf.getProjectResult();
-    }
-
-    public void setReturnProperty(@Nonnull ProjectResult value) {
-        conf.setProjectResult(value);
-    }
-
-    public String getLatestVersionMatch() {
-        return conf.getVersionMatch() == null ? DEFAULT_PROJECT_LATEST_VERSION_MATCH : conf.getVersionLatestMatch();
-    }
-
-    public void setLatestVersionMatch(String value) {
-        conf.setVersionLatestMatch(value);
-    }
-
-    public boolean isVerbose() {
-        return conf.isVerbose();
-    }
-
-    public void setVerbose(boolean value) {
-        conf.setVerbose(value);
-    }
-
-    public void setDebug(boolean value) {
-        conf.setDebug(value);
-    }
-
     public Set<String> getIgnorePurl() { return conf.getIgnorePurl(); }
 
     public static Set<PatchRule> getPatchRules() {
             return INSTANCE.conf.getPatchRules() == null ? Set.of() : INSTANCE.conf.getPatchRules();
-    }
-
-    public static boolean isPatchMode() {
-        return INSTANCE.conf.isPatchMode();
-    }
-
-    public static void setPatchMode(boolean value) {
-        INSTANCE.conf.setPatchMode(value);
-    }
-
-    @Nonnull
-    public static Set<String> getProjectFilter() {
-        return INSTANCE.conf.getProjectFilter();
-    }
-
-    public static void setProjectFilter(String projectFilter) {
-        INSTANCE.conf.setProjectFilter(projectFilter);
     }
 
 }

@@ -6,12 +6,13 @@
     <includeBaseDirectory>true</includeBaseDirectory>
     <formats>
         <format>zip</format>
+        <format>tar.gz</format>
     </formats>
 
     <fileSets>
         <fileSet>
             <directory>${basedir}/target</directory>
-            <outputDirectory></outputDirectory>
+            <outputDirectory>bom</outputDirectory>
             <filtered>false</filtered>
             <includes>
                 <include>**/*-sbom.*</include>
@@ -22,6 +23,16 @@
             <directory>${basedir}</directory>
             <outputDirectory></outputDirectory>
             <filtered>false</filtered>
+            <includes>
+                <include>dt-tool.*</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>${basedir}/src/main/resources/assembly</directory>
+            <outputDirectory></outputDirectory>
+            <filtered>false</filtered>
+            <fileMode>744</fileMode>
             <includes>
                 <include>dt-tool.*</include>
             </includes>

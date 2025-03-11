@@ -4,7 +4,7 @@ if [ -f /usr/bin/java ]
 then
     export JAVACMD=/usr/bin/java
     APP_HOME=.
-    CMD_LINE_ARGS=%*
+    CMD_LINE_ARGS=("$@")
 
     LIBS_FOLDER=libs
 

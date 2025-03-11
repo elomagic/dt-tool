@@ -15,32 +15,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool;
+package de.elomagic.dttool.commands;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.annotation.Nonnull;
+import picocli.CommandLine;
 
-import de.elomagic.dttool.configuration.Configuration;
+import de.elomagic.dttool.ConsolePrinter;
+import de.elomagic.dttool.DtToolException;
+import de.elomagic.dttool.JsonMapperFactory;
+import de.elomagic.dttool.OptionsParams;
 import de.elomagic.dttool.configuration.model.ProjectResult;
 import de.elomagic.dttool.model.Project;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
+import java.util.concurrent.Callable;
 
-public class GetLatest {
+@CommandLine.Command(name = "fetch-projects", description = "Fetch projects")
+public class FetchProjectsCommand extends AbstractProjectFilterCommand implements Callable<Void> {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
-    private final DTrackClient client = new DTrackClient();
 
-    @Nonnull
-    public Optional<String> getLatest(@Nonnull String projectName) {
-        return fetchProjectByName(projectName, Configuration.INSTANCE.getLatestVersionMatch())
-                .sorted(ComparatorFactory.create())
-                .map(p -> mapToString(p, Configuration.INSTANCE.getReturnProperty()))
-                .findFirst();
+    @CommandLine.Option(
+            names = { "--format", "-f" },
+            description = "Returns format. Supported values are: JSON, VERSION, UUID",
+            defaultValue = "JSON")
+    private ProjectResult format;
+    @CommandLine.Option(
+            names = { OptionsParams.VERSION_MATCH, OptionsParams.VERSION_MATCH_SHORT },
+            description = "Regular expression to match version",
+            defaultValue = "^\\d+(\\.\\d+)*(\\-Final)?$")
+    private String versionMatch;
+
+    @Override
+    public Void call() {
+        fetchProjects(versionMatch)
+                .stream()
+                .map(p -> mapToString(p, format))
+                .limit(projectFilterOptions.getMaxCount())
+                .findFirst()
+                .ifPresent(LOGGER::always);
+
+        return null;
     }
 
     @Nonnull
@@ -56,31 +73,4 @@ public class GetLatest {
         }
     }
 
-    @Nonnull
-    private Stream<Project> fetchProjectByName(@Nonnull String projectName, @Nonnull String regExVersionMatch) {
-
-        LOGGER.info("Fetching projects with name {}", projectName);
-
-        List<Project> projects = new ArrayList<>();
-        int size;
-        int page = 0;
-        int limit = 1000;
-
-        do {
-            page++;
-
-            List<Project> pageResult = client.fetchProjectsByName(projectName, limit, page);
-
-            projects.addAll(pageResult
-                    .stream()
-                    .filter(p -> p.getName().equals(projectName))
-                    .filter(p -> p.getVersion().matches(regExVersionMatch))
-                    .toList()
-            );
-
-            size = pageResult.size();
-        } while (size > 0);
-
-        return projects.stream();
-    }
 }
