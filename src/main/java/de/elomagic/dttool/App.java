@@ -22,7 +22,7 @@ import picocli.CommandLine;
 import de.elomagic.dttool.commands.CreateConfigurationFileCommand;
 import de.elomagic.dttool.commands.DeleteProjectCommand;
 import de.elomagic.dttool.commands.FetchProjectsCommand;
-import de.elomagic.dttool.commands.PatchLicensesCommand;
+import de.elomagic.dttool.commands.CheckLicensesCommand;
 
 @CommandLine.Command(versionProvider = VersionProvider.class, name = "dt-tool", description = "Dependency Track Tool")
 public class App {
@@ -44,7 +44,7 @@ public class App {
         CommandLine commandLine = new CommandLine(this)
                 .addSubcommand(new CommandLine.HelpCommand())
                 .addSubcommand(new DeleteProjectCommand())
-                .addSubcommand(new PatchLicensesCommand())
+                .addSubcommand(new CheckLicensesCommand())
                 .addSubcommand(new FetchProjectsCommand())
                 .addSubcommand(new CreateConfigurationFileCommand());
 

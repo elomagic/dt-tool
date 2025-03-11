@@ -39,13 +39,15 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-@CommandLine.Command(name = "patch-licenses", description = "Patch unset licenses")
-public class PatchLicensesCommand extends AbstractProjectFilterCommand implements Callable<Void>  {
+@CommandLine.Command(name = "check-licenses", description = "Check or patch unset licenses")
+public class CheckLicensesCommand extends AbstractProjectFilterCommand implements Callable<Void>  {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
 
     private final SpdxLicenseManager spdx = SpdxLicenseManager.create();
 
+    @CommandLine.Option(names = { "-p", "--patch" }, description = "Patch invalid licenses")
+    private boolean patch;
     @CommandLine.Option(names = { OptionsParams.BATCH_MODE, OptionsParams.BATCH_MODE_SHORT }, description = "In non-interactive (batch)")
     private boolean batchMode;
 
@@ -65,7 +67,7 @@ public class PatchLicensesCommand extends AbstractProjectFilterCommand implement
 
         LOGGER.always("Found {} components with unset license IDs", unset.size());
 
-        if (unset.isEmpty()) {
+        if (unset.isEmpty() || !patch) {
             return null;
         }
 
@@ -79,6 +81,7 @@ public class PatchLicensesCommand extends AbstractProjectFilterCommand implement
         }
 
         return null;
+
     }
 
     @Nonnull
@@ -149,10 +152,6 @@ public class PatchLicensesCommand extends AbstractProjectFilterCommand implement
     private Set<Component> fetchProjectsUnsetComponentsLicenseId() {
 
         ZonedDateTime notBefore = ZonedDateTime.now().minusDays(projectFilterOptions.getOlderThenDays());
-
-        if (projectFilterOptions.getProjectFilter().isEmpty()) {
-            LOGGER.info("Fetching projects which not older then {} days", projectFilterOptions.getOlderThenDays());
-        }
 
         List<Project> projects = fetchProjects(null);
 

@@ -42,20 +42,16 @@ Execute following line to see all supported options:
 dt-tool.sh --help
 ```
 
-#### Example - Print outdated SNAPSHOTS (30 days and older)
-
-TODO UPDATE SYNTAX
+#### Example - Delete outdated SNAPSHOTS (30 days and older)
 
 ```shell
-dt-tool.sh -cp
+dt-tool.sh delete-projects -v
 ```
 
 #### Example - Print invalid license IDs
 
-TODO UPDATE SYNTAX
-
 ```shell
-dt-tool.sh -lic -v
+dt-tool.sh check-licenses -v --projectFilter="dt-tool"
 ```
 
 ## Contributing

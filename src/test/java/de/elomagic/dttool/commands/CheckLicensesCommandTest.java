@@ -17,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-class PatchLicensesCommandTest extends AbstractMockedServer {
+class CheckLicensesCommandTest extends AbstractMockedServer {
 
     @Test
     void testPatch() throws IOException {
-        String projects = IOUtils.resourceToString("projects-future.json5", StandardCharsets.UTF_8, PatchLicensesCommandTest.class.getClassLoader());
-        String comps = IOUtils.resourceToString("components-01.json5", StandardCharsets.UTF_8, PatchLicensesCommandTest.class.getClassLoader());
-        String comp = IOUtils.resourceToString("component-34012ff4-a94d-44d2-bdc4-4aa63577d96f.json5", StandardCharsets.UTF_8, PatchLicensesCommandTest.class.getClassLoader());
-        String license = IOUtils.resourceToString("license-apache-2.0.json5", StandardCharsets.UTF_8, PatchLicensesCommandTest.class.getClassLoader());
+        String projects = IOUtils.resourceToString("projects-future.json5", StandardCharsets.UTF_8, CheckLicensesCommandTest.class.getClassLoader());
+        String comps = IOUtils.resourceToString("components-01.json5", StandardCharsets.UTF_8, CheckLicensesCommandTest.class.getClassLoader());
+        String comp = IOUtils.resourceToString("component-34012ff4-a94d-44d2-bdc4-4aa63577d96f.json5", StandardCharsets.UTF_8, CheckLicensesCommandTest.class.getClassLoader());
+        String license = IOUtils.resourceToString("license-apache-2.0.json5", StandardCharsets.UTF_8, CheckLicensesCommandTest.class.getClassLoader());
         String apiKey = UUID.randomUUID().toString();
 
         try (MockServerClient client = new MockServerClient("localhost", getPort())) {
@@ -134,7 +134,7 @@ class PatchLicensesCommandTest extends AbstractMockedServer {
                     .doesNotContainPattern("Apache-2.0");
 
             App app = new App();
-            int exitCode = app.execute(new String[]{"patch-licenses", "--apiKey=" + apiKey, "--baseUrl=http://localhost:%s".formatted(getPort()), "--batchMode"});
+            int exitCode = app.execute(new String[]{"check-licenses", "--apiKey=" + apiKey, "--baseUrl=http://localhost:%s".formatted(getPort()), "--batchMode"});
 
             assertEquals(0, exitCode);
 
