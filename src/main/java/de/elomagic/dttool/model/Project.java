@@ -69,4 +69,14 @@ public class Project {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Project{" +
+                "uuid=" + uuid +
+                ", name='" + name + '\'' +
+                ", version='" + version + '\'' +
+                ", lastBomImport='" + lastBomImport + '\'' +
+                '}';
+    }
+
 }

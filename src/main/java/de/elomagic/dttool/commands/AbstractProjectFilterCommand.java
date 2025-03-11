@@ -49,9 +49,9 @@ public class AbstractProjectFilterCommand {
 
         ZonedDateTime notBefore = ZonedDateTime.now().minusDays(projectFilterOptions.getOlderThenDays());
 
-        LOGGER.info("Version match: {}", versionMatchRegEx);
-        LOGGER.info("Fetching projects with name/uid {}", projectFilterOptions.getProjectFilter());
-        LOGGER.info("Fetching projects which not older then {} days", projectFilterOptions.getOlderThenDays());
+        LOGGER.info("Version match: {}", versionMatchRegEx == null ? "unset" : versionMatchRegEx);
+        LOGGER.info("Fetching projects with name/uid: {}", projectFilterOptions.getProjectFilter().isEmpty() ? "unset" : projectFilterOptions.getProjectFilter());
+        LOGGER.info("Fetching projects which days threshold of: {} days", projectFilterOptions.getOlderThenDays());
 
         List<Project> projects = client
                 .fetchAllProjects()
