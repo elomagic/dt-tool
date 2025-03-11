@@ -19,6 +19,7 @@ package de.elomagic.dttool;
 
 import picocli.CommandLine;
 
+import de.elomagic.dttool.commands.CollectBomsCommand;
 import de.elomagic.dttool.commands.CreateConfigurationFileCommand;
 import de.elomagic.dttool.commands.DeleteProjectCommand;
 import de.elomagic.dttool.commands.FetchProjectsCommand;
@@ -43,10 +44,11 @@ public class App {
     public int execute(String[] args) {
         CommandLine commandLine = new CommandLine(this)
                 .addSubcommand(new CommandLine.HelpCommand())
-                .addSubcommand(new DeleteProjectCommand())
+                .addSubcommand(new CollectBomsCommand())
                 .addSubcommand(new CheckLicensesCommand())
-                .addSubcommand(new FetchProjectsCommand())
-                .addSubcommand(new CreateConfigurationFileCommand());
+                .addSubcommand(new CreateConfigurationFileCommand())
+                .addSubcommand(new DeleteProjectCommand())
+                .addSubcommand(new FetchProjectsCommand());
 
         return commandLine.execute(args);
     }

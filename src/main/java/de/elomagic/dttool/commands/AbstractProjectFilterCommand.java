@@ -58,7 +58,7 @@ public class AbstractProjectFilterCommand {
                 .stream()
                 .sorted(ComparatorFactory.nameComparator())
                 .sorted(ComparatorFactory.versionComparator())
-                .filter(p -> projectFilterOptions.getProjectFilter().isEmpty() || projectFilterOptions.getProjectFilter().contains(p.getName()) || projectFilterOptions.getProjectFilter().contains(p.getUuid()))
+                .filter(p -> projectFilterOptions.getProjectFilter().isEmpty() || projectFilterOptions.getProjectFilter().contains(p.getName()) || projectFilterOptions.getProjectFilter().contains(p.getUuid().toString()))
                 .filter(p -> p.getLastBomImport() == null || notBefore.isAfter(p.getLastBomImport()))
                 .filter(p -> StringUtils.isBlank(versionMatchRegEx) || p.getVersion().matches(versionMatchRegEx))
                 .toList();

@@ -27,6 +27,7 @@ import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.model.Bom;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,14 +38,14 @@ import java.util.concurrent.Callable;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-@CommandLine.Command(name = "collects-boms", description = "Collect BOMs of projects")
+@CommandLine.Command(name = "collect-boms", description = "Collect BOMs of projects")
 public class CollectBomsCommand extends AbstractProjectFilterCommand implements Callable<Void> {
 
     @CommandLine.Option(
             names = { "-fp", "--filePattern" },
             description = "Target file pattern, %1 -> Filename, %2 -> Version",
             required = true,
-            defaultValue = "%1-%2.bom.json"
+            defaultValue = "%s1-%s2.bom.json"
     )
     private String pattern;
     @CommandLine.Option(
@@ -87,15 +88,18 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
         });
     }
 
-    private void writeIntoZIP(List<Bom> boms, Path target) throws Exception {
+    private void writeIntoZIP(List<Bom> boms, Path target) throws IOException, GeneratorException {
 
         try (FileOutputStream fos = new FileOutputStream(target.toFile());
              ZipOutputStream zipOut = new ZipOutputStream(fos)) {
 
             for (Bom bom : boms) {
+                String json = getBomAsJson(bom);
+
                 ZipEntry zipEntry = new ZipEntry(createFilename(bom));
                 zipOut.putNextEntry(zipEntry);
-                zipOut.write(getBomAsJson(bom).getBytes(StandardCharsets.UTF_8));
+                zipOut.write(json.getBytes(StandardCharsets.UTF_8));
+                zipOut.flush();
             }
         }
 
