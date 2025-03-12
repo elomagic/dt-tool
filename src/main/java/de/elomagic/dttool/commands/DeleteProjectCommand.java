@@ -52,7 +52,7 @@ public class DeleteProjectCommand extends AbstractProjectFilterCommand implement
         boolean confirm = batchMode || ConsoleUtils.confirmByUser("Delete projects, enter YES", "YES");
 
         if (confirm) {
-            projects.forEach(p -> client.deleteProject(p.getUuid()));
+            projects.forEach(p -> client.deleteProject(p));
         }
 
         return null;

@@ -98,7 +98,7 @@ public class CheckLicensesCommand extends AbstractProjectFilterCommand implement
         LOGGER.always("Patching component '{}' with license ID '{}'", component.getPurl(), licenseId);
         try {
             // Patch original JSON string
-            ObjectNode root = (ObjectNode) client.fetchComponentAsJson(component.getUuid());
+            ObjectNode root = (ObjectNode) client.fetchComponentAsJson(component);
             // JsonNode license =  client.fetchLicenseAsJson(licenseId);
             // root.set("resolvedLicense", license);
             root.put("license", licenseId);
@@ -162,7 +162,7 @@ public class CheckLicensesCommand extends AbstractProjectFilterCommand implement
         Set<Component> unsetComponents = new HashSet<>();
         for (Project project : projects) {
             unsetComponents.addAll(
-                    client.fetchComponents(project.getUuid())
+                    client.fetchComponents(project)
                             .filter(c -> c.getResolvedLicense() == null)
                             .filter(this::filterOnIgnoreConf)
                             .collect(Collectors.toSet())

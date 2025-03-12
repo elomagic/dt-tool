@@ -60,7 +60,7 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
 
         List<Bom> boms = fetchProjects(null)
                 .stream()
-                .map(p -> client.fetchProjectBom(p.getUuid()))
+                .map(p -> client.fetchProjectBom(p))
                 .toList();
 
         Files.createDirectories(path.getParent());
