@@ -65,16 +65,18 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
                 .map(p -> client.fetchProjectBom(p))
                 .toList();
 
-        Path parent = path.getParent();
-        if (parent != null) {
-            Files.createDirectories(parent);
-        }
-
         boolean compressed = path.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".zip");
 
         if (compressed) {
+            Path parent = path.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
+
             writeIntoZIP(boms, path);
         } else {
+            Files.createDirectories(path);
+
             writeIntoFolder(boms, path);
         }
 
