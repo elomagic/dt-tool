@@ -41,6 +41,9 @@ public class App {
         }
     }
 
+    /**
+     * Use this entrypoint for JUnit tests.
+     */
     public int execute(String[] args) {
         CommandLine commandLine = new CommandLine(this)
                 .addSubcommand(new CommandLine.HelpCommand())
