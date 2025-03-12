@@ -2,10 +2,12 @@ package de.elomagic.dttool.commands;
 
 import de.elomagic.dttool.AbstractMockedServer;
 import de.elomagic.dttool.App;
+import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.MockTool;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -22,6 +24,12 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
 
     private static final Logger LOGGER = LogManager.getLogger(FetchProjectsCommandTest.class);
     private static final Path LOG_FILE = Path.of("./junit.log");
+
+    @BeforeAll
+    static void beforeAll() {
+        ConsolePrinter.INSTANCE.setDebug(false);
+        ConsolePrinter.INSTANCE.setVerbose(false);
+    }
 
     @Test
     void testLatestVersion() throws Throwable {
