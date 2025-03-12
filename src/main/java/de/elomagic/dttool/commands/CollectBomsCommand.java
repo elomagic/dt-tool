@@ -58,12 +58,17 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
     @Override
     public Void call() throws Exception {
 
+        projectFilterOptions.setOlderThenDays(9999);
+
         List<Bom> boms = fetchProjects(null)
                 .stream()
                 .map(p -> client.fetchProjectBom(p))
                 .toList();
 
-        Files.createDirectories(path.getParent());
+        Path parent = path.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
 
         boolean compressed = path.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".zip");
 

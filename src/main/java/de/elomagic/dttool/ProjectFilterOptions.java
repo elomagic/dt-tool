@@ -36,6 +36,9 @@ public class ProjectFilterOptions {
         return olderThenDays;
     }
 
+    public void setOlderThenDays(int olderThenDays) {
+        this.olderThenDays = olderThenDays;
+    }
 
     public List<String> getProjectFilter() {
         return Arrays.asList(projectFilter);
