@@ -23,6 +23,7 @@ import de.elomagic.dttool.ConsoleUtils;
 import de.elomagic.dttool.OptionsParams;
 import de.elomagic.dttool.model.Project;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -43,7 +44,10 @@ public class DeleteProjectCommand extends AbstractProjectFilterCommand implement
 
     public Void call() {
 
-        List<Project> projects = fetchProjects(versionMatch);
+        List<Project> projects = fetchProjects(
+                ZonedDateTime.now().minusYears(40),
+                ZonedDateTime.now().minusDays(projectFilterOptions.getOlderThenDays()),
+                versionMatch);
 
         if (projects.isEmpty()) {
             return null;

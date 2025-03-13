@@ -45,13 +45,12 @@ public class AbstractProjectFilterCommand {
     ConsoleOptions consoleOptions;
 
     @Nonnull
-    protected List<Project> fetchProjects(@Nullable String versionMatchRegEx) {
-
-        ZonedDateTime notBefore = ZonedDateTime.now().minusDays(projectFilterOptions.getOlderThenDays());
+    protected List<Project> fetchProjects(@Nonnull ZonedDateTime notBefore, @Nonnull ZonedDateTime notAfter, @Nullable String versionMatchRegEx) {
 
         LOGGER.info("Matching version with pattern: {}", versionMatchRegEx == null ? "unset" : versionMatchRegEx);
         LOGGER.info("Matching projects with name/uid: {}", projectFilterOptions.getProjectFilter().isEmpty() ? "unset" : projectFilterOptions.getProjectFilter());
-        LOGGER.info("Matching projects which days threshold of: {} days", projectFilterOptions.getOlderThenDays());
+        LOGGER.info("Matching projects which not before : {}", notBefore);
+        LOGGER.info("Matching projects which not after : {}", notAfter);
 
         List<Project> projects = client
                 .fetchAllProjects()
@@ -59,7 +58,8 @@ public class AbstractProjectFilterCommand {
                 .sorted(ComparatorFactory.nameComparator())
                 .sorted(ComparatorFactory.versionComparator())
                 .filter(p -> projectFilterOptions.getProjectFilter().isEmpty() || projectFilterOptions.getProjectFilter().contains(p.getName()) || projectFilterOptions.getProjectFilter().contains(p.getUuid().toString()))
-                .filter(p -> p.getLastBomImport() == null || notBefore.isAfter(p.getLastBomImport()))
+                .filter(p -> p.getLastBomImport() == null || notBefore.isBefore(p.getLastBomImport()))
+                .filter(p -> p.getLastBomImport() == null || notAfter.isAfter(p.getLastBomImport()))
                 .filter(p -> StringUtils.isBlank(versionMatchRegEx) || p.getVersion().matches(versionMatchRegEx))
                 .toList();
 

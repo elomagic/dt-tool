@@ -153,7 +153,10 @@ public class CheckLicensesCommand extends AbstractProjectFilterCommand implement
 
         ZonedDateTime notBefore = ZonedDateTime.now().minusDays(projectFilterOptions.getOlderThenDays());
 
-        List<Project> projects = fetchProjects(null);
+        List<Project> projects = fetchProjects(
+                notBefore,
+                ZonedDateTime.now(),
+                null);
 
         if (!projects.isEmpty()) {
             LOGGER.info("Checking components of {} project versions since {}. Please wait, this process can take a while.", projects.size(), notBefore);
