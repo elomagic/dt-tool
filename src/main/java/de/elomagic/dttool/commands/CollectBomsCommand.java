@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -60,11 +59,11 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
     @Override
     public Void call() throws Exception {
 
-        projectFilterOptions.setOlderThenDays(0);
+        // projectFilterOptions.setOlderThenDays(0);
 
         List<Project> projects = fetchProjects(
-                ZonedDateTime.now().minusYears(40),
-                ZonedDateTime.now(),
+                getNotBeforeInZonedTime(365 * 40),
+                getNotAfterInZonedTime(0),
                 null)
                 .stream()
                 .toList();

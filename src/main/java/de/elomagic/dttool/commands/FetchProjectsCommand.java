@@ -28,7 +28,6 @@ import de.elomagic.dttool.OptionsParams;
 import de.elomagic.dttool.configuration.model.ProjectResult;
 import de.elomagic.dttool.model.Project;
 
-import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -52,8 +51,8 @@ public class FetchProjectsCommand extends AbstractProjectFilterCommand implement
     @Override
     public Void call() {
         fetchProjects(
-                ZonedDateTime.now().minusYears(projectFilterOptions.getOlderThenDays()),
-                ZonedDateTime.now(),
+                getNotBeforeInZonedTime(365 * 40),
+                getNotAfterInZonedTime(0),
                 versionMatch)
                 .stream()
                 .map(p -> mapToString(p, format))

@@ -36,7 +36,7 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
         MockTool.mockServer(getPort(), () -> {
             LOGGER.info("ABC1");
             App app = new App();
-            int exitCode = app.execute(new String[]{"fetch-projects", "--projectFilter=ProjectDoesNotExist", "-mc=1", "-f=VERSION"});
+            int exitCode = app.execute(new String[]{"fetch-projects", "--projectFilter=ProjectDoesNotExist", "-nad=30", "-mc=1", "-f=VERSION"});
             LOGGER.info("ABC1");
 
             assertEquals(0, exitCode);
@@ -49,7 +49,7 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
         MockTool.mockServer(getPort(), () -> {
             LOGGER.info("ABC3");
             App app = new App();
-            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-f=VERSION"});
+            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-nad=30","-f=VERSION"});
             LOGGER.info("ABC3");
 
             assertEquals(0, exitCode);
@@ -62,7 +62,7 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
         MockTool.mockServer(getPort(), () -> {
             LOGGER.info("ABC4");
             App app = new App();
-            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-f=UUID" });
+            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-nad=30", "-f=UUID" });
             LOGGER.info("ABC4");
 
             assertEquals(0, exitCode);
@@ -75,7 +75,7 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
         MockTool.mockServer(getPort(), () -> {
             LOGGER.info("ABC5");
             App app = new App();
-            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-f=JSON" });
+            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-nad=30", "-f=JSON" });
             LOGGER.info("ABC5");
 
             assertEquals(0, exitCode);

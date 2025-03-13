@@ -31,7 +31,6 @@ import de.elomagic.dttool.model.Component;
 import de.elomagic.dttool.model.Project;
 import de.elomagic.dttool.spdx.SpdxLicenseManager;
 
-import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -151,15 +150,13 @@ public class CheckLicensesCommand extends AbstractProjectFilterCommand implement
 
     private Set<Component> fetchProjectsUnsetComponentsLicenseId() {
 
-        ZonedDateTime notBefore = ZonedDateTime.now().minusDays(projectFilterOptions.getOlderThenDays());
-
         List<Project> projects = fetchProjects(
-                notBefore,
-                ZonedDateTime.now(),
+                getNotBeforeInZonedTime(30),
+                getNotAfterInZonedTime(0),
                 null);
 
         if (!projects.isEmpty()) {
-            LOGGER.info("Checking components of {} project versions since {}. Please wait, this process can take a while.", projects.size(), notBefore);
+            LOGGER.info("Checking license components of {} project versions, this process can take a while.", projects.size());
         }
 
         Set<Component> unsetComponents = new HashSet<>();

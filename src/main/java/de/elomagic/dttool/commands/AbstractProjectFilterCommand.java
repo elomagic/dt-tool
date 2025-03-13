@@ -44,6 +44,14 @@ public class AbstractProjectFilterCommand {
     @CommandLine.Mixin
     ConsoleOptions consoleOptions;
 
+    protected ZonedDateTime getNotAfterInZonedTime(int defaultDays) {
+        return ZonedDateTime.now().minusDays(projectFilterOptions.getNotAfterDays() == null ? defaultDays : projectFilterOptions.getNotAfterDays());
+    }
+
+    protected ZonedDateTime getNotBeforeInZonedTime(int defaultDays) {
+        return ZonedDateTime.now().minusDays(projectFilterOptions.getNotBeforeDays() == null ? defaultDays : projectFilterOptions.getNotBeforeDays());
+    }
+
     @Nonnull
     protected List<Project> fetchProjects(@Nonnull ZonedDateTime notBefore, @Nonnull ZonedDateTime notAfter, @Nullable String versionMatchRegEx) {
 
