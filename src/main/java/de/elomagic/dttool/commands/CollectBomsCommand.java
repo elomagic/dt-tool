@@ -20,6 +20,7 @@ package de.elomagic.dttool.commands;
 import picocli.CommandLine;
 
 import de.elomagic.dttool.DtToolException;
+import de.elomagic.dttool.model.Project;
 
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.GeneratorException;
@@ -61,12 +62,11 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
 
         projectFilterOptions.setOlderThenDays(0);
 
-        List<Bom> boms = fetchProjects(
+        List<Project> projects = fetchProjects(
                 ZonedDateTime.now().minusYears(40),
                 ZonedDateTime.now(),
                 null)
                 .stream()
-                .map(p -> client.fetchProjectBom(p))
                 .toList();
 
         boolean compressed = path.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".zip");
@@ -77,19 +77,21 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
                 Files.createDirectories(parent);
             }
 
-            writeIntoZIP(boms, path);
+            writeIntoZIP(projects, path);
         } else {
             Files.createDirectories(path);
 
-            writeIntoFolder(boms, path);
+            writeIntoFolder(projects, path);
         }
 
         return null;
     }
 
-    private void writeIntoFolder(List<Bom> boms, Path target) {
-        boms.forEach(bom -> {
+    private void writeIntoFolder(List<Project> projects, Path target) {
+        projects.forEach(project -> {
             try {
+                Bom bom = client.fetchProjectBom(project);
+
                 Path targetFile = target.resolve(createFilename(bom));
 
                 Files.writeString(targetFile, getBomAsJson(bom));
@@ -99,12 +101,14 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
         });
     }
 
-    private void writeIntoZIP(List<Bom> boms, Path target) throws IOException, GeneratorException {
+    private void writeIntoZIP(List<Project> projects, Path target) throws IOException, GeneratorException {
 
         try (FileOutputStream fos = new FileOutputStream(target.toFile());
              ZipOutputStream zipOut = new ZipOutputStream(fos)) {
 
-            for (Bom bom : boms) {
+            for (Project project : projects) {
+                Bom bom = client.fetchProjectBom(project);
+
                 String json = getBomAsJson(bom);
 
                 ZipEntry zipEntry = new ZipEntry(createFilename(bom));
