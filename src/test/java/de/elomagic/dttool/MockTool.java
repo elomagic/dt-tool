@@ -18,6 +18,7 @@ public class MockTool {
 
         String apiKey = UUID.randomUUID().toString();
         String licenses = IOUtils.resourceToString("projects.json", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
+        String bom = IOUtils.resourceToString("bom-example.json", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
 
         try (MockServerClient client = new MockServerClient("localhost", port)) {
             // When download projects
@@ -56,6 +57,20 @@ public class MockTool {
                     .respond(
                             response()
                                     .withStatusCode(204)
+                    );
+
+            // When download projects
+            client.when(
+                            request()
+                                    .withMethod("GET")
+                                    .withQueryStringParameter("download", "false")
+                                    .withPath("/api/v1/bom/cyclonedx/project/.*")
+                                    .withHeader("X-Api-Key", apiKey)
+                    )
+                    .respond(
+                            response()
+                                    .withStatusCode(200)
+                                    .withBody(bom)
                     );
 
             Configuration.INSTANCE.setApiKey(apiKey);

@@ -13,10 +13,12 @@ class ComparatorFactoryTest {
     @Test
     void testCreate() {
 
-        Comparator<Project> c = ComparatorFactory.versionComparator();
+        Comparator<Project> c = ComparatorFactory.defaultComparator();
 
         Project pa = new Project();
+        pa.setName("Project");
         Project pb = new Project();
+        pb.setName("Project");
 
         pa.setVersion("1.0.0.b0001");
         pb.setVersion("1.0.0.b0005");

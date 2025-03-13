@@ -2,10 +2,12 @@ package de.elomagic.dttool.commands;
 
 import de.elomagic.dttool.AbstractMockedServer;
 import de.elomagic.dttool.App;
+import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.MockTool;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -23,12 +25,18 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
     private static final Logger LOGGER = LogManager.getLogger(FetchProjectsCommandTest.class);
     private static final Path LOG_FILE = Path.of("./junit.log");
 
+    @BeforeAll
+    static void beforeAll() {
+        ConsolePrinter.INSTANCE.setDebug(false);
+        ConsolePrinter.INSTANCE.setVerbose(false);
+    }
+
     @Test
     void testLatestVersion() throws Throwable {
         MockTool.mockServer(getPort(), () -> {
             LOGGER.info("ABC1");
             App app = new App();
-            int exitCode = app.execute(new String[]{"fetch-projects", "--projectFilter=ProjectDoesNotExist", "-mc=1", "-f=VERSION"});
+            int exitCode = app.execute(new String[]{"fetch-projects", "--projectFilter=ProjectDoesNotExist", "-nad=30", "-mc=1", "-f=VERSION"});
             LOGGER.info("ABC1");
 
             assertEquals(0, exitCode);
@@ -41,7 +49,7 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
         MockTool.mockServer(getPort(), () -> {
             LOGGER.info("ABC3");
             App app = new App();
-            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-f=VERSION"});
+            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-nad=30","-f=VERSION"});
             LOGGER.info("ABC3");
 
             assertEquals(0, exitCode);
@@ -54,7 +62,7 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
         MockTool.mockServer(getPort(), () -> {
             LOGGER.info("ABC4");
             App app = new App();
-            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-f=UUID" });
+            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-nad=30", "-f=UUID" });
             LOGGER.info("ABC4");
 
             assertEquals(0, exitCode);
@@ -67,11 +75,11 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
         MockTool.mockServer(getPort(), () -> {
             LOGGER.info("ABC5");
             App app = new App();
-            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-f=JSON" });
+            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-nad=30", "-f=JSON" });
             LOGGER.info("ABC5");
 
             assertEquals(0, exitCode);
-            assertThat(getText("ABC5")).contains("{\"uuid\":\"85b0f240-b405-4d61-a10a-42f54b6ad59e\",\"name\":\"TestLatestVersion1\",\"version\":\"1.0.0.1\",\"lastBomImport\":\"1517198568503\"}");
+            assertThat(getText("ABC5")).contains("{\"uuid\":\"85b0f240-b405-4d61-a10a-42f54b6ad59e\",\"name\":\"TestLatestVersion1\",\"version\":\"1.0.0.1\",\"purl\":null,\"lastBomImport\":\"1517198568503\"}");
         });
     }
 

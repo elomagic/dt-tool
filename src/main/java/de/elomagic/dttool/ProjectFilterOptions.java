@@ -25,17 +25,22 @@ import java.util.List;
 @CommandLine.Command
 public class ProjectFilterOptions {
 
-    @CommandLine.Option(names = { "--olderThenDays", "-otd" }, description = "Older then days", defaultValue = "30")
-    private int olderThenDays;
+    @CommandLine.Option(names = { "--notAfterDays", "-nad" }, description = "Not newer then days")
+    private Integer notAfterDays;
+    @CommandLine.Option(names = { "--notBeforeDays", "-nbd" }, description = "Not older then then days")
+    private Integer notBeforeDays;
     @CommandLine.Option(names = { "--projectFilter", "-pf" }, description = "Project name or UUID filter", split = ",")
     private String[] projectFilter = new String[0];
     @CommandLine.Option(names = { "--maxCount", "-mc" }, description = "Maximum count of results", defaultValue = "999999")
     private int maxCount;
 
-    public int getOlderThenDays() {
-        return olderThenDays;
+    public Integer getNotAfterDays() {
+        return notAfterDays;
     }
 
+    public Integer getNotBeforeDays() {
+        return notBeforeDays;
+    }
 
     public List<String> getProjectFilter() {
         return Arrays.asList(projectFilter);

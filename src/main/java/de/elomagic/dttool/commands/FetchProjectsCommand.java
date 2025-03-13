@@ -50,7 +50,10 @@ public class FetchProjectsCommand extends AbstractProjectFilterCommand implement
 
     @Override
     public Void call() {
-        fetchProjects(versionMatch)
+        fetchProjects(
+                getNotBeforeInZonedTime(365 * 40),
+                getNotAfterInZonedTime(0),
+                versionMatch)
                 .stream()
                 .map(p -> mapToString(p, format))
                 .limit(projectFilterOptions.getMaxCount())

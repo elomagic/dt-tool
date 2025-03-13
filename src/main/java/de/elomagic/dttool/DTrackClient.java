@@ -42,7 +42,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 @CommandLine.Command
@@ -139,7 +138,7 @@ public class DTrackClient extends AbstractRestClient {
      * @return Returns a stream
      */
     @Nonnull
-    public Stream<Component> fetchComponents(@Nonnull UUID projectUuid) {
+    public Stream<Component> fetchComponents(@Nonnull Project project) {
         List<Component> components = new ArrayList<>();
         int size;
         int page = 0;
@@ -147,7 +146,7 @@ public class DTrackClient extends AbstractRestClient {
 
         do {
             page++;
-            List<Component> pageResult = fetchComponents(projectUuid, limit, page);
+            List<Component> pageResult = fetchComponents(project, limit, page);
             components.addAll(pageResult);
             size = pageResult.size();
         } while (size > 0);
@@ -156,10 +155,10 @@ public class DTrackClient extends AbstractRestClient {
     }
 
     @Nonnull
-    public List<Component> fetchComponents(@Nonnull UUID projectUuid, int limit, int page) {
+    public List<Component> fetchComponents(@Nonnull Project project, int limit, int page) {
         try {
-            LOGGER.info("Fetching components of project #{}", projectUuid);
-            URI uri = URI.create("%s/api/v1/component/project/%s?limit=%s&page=%s".formatted(baseURL, projectUuid, limit, page));
+            LOGGER.info("Fetching components of project {} {} {}", project.getUuid(), project.getName(), project.getVersion());
+            URI uri = URI.create("%s/api/v1/component/project/%s?limit=%s&page=%s".formatted(baseURL, project.getUuid(), limit, page));
             HttpRequest request = createDefaultGET(uri);
 
             return List.of(executeRequest(request, Component[].class));
@@ -169,10 +168,10 @@ public class DTrackClient extends AbstractRestClient {
     }
 
     @Nonnull
-    public JsonNode fetchComponentAsJson(@Nonnull UUID componentUuid) {
+    public JsonNode fetchComponentAsJson(@Nonnull Component component) {
         try {
-            LOGGER.info("Fetching component #{}", componentUuid);
-            URI uri = URI.create("%s/api/v1/component/%s".formatted(baseURL, componentUuid));
+            LOGGER.info("Fetching component {} {} {}", component.getUuid(), component.getName(), component.getVersion());
+            URI uri = URI.create("%s/api/v1/component/%s".formatted(baseURL, component.getUuid()));
             HttpRequest request = createDefaultGET(uri);
 
             return mapper.readTree(executeRequest(request));
@@ -213,10 +212,10 @@ public class DTrackClient extends AbstractRestClient {
     }
 
     @Nonnull
-    public Bom fetchProjectBom(@Nonnull UUID projectUid) {
+    public Bom fetchProjectBom(@Nonnull Project project) {
         try {
-            LOGGER.info("Fetching BOM of project '{}'", projectUid);
-            URI uri = URI.create("%s/api/v1/bom/cyclonedx/project/%s?download=false".formatted(baseURL, URLEncoder.encode(projectUid.toString(), StandardCharsets.UTF_8)));
+            LOGGER.info("Fetching BOM of project {} {} {}", project.getUuid(), project.getName(), project.getVersion());
+            URI uri = URI.create("%s/api/v1/bom/cyclonedx/project/%s?download=false".formatted(baseURL, URLEncoder.encode(project.getUuid().toString(), StandardCharsets.UTF_8)));
             HttpRequest request = createDefaultGET(uri);
 
             String content = executeRequest(request);
@@ -252,10 +251,10 @@ public class DTrackClient extends AbstractRestClient {
         }
     }
 
-    public void deleteProject(@Nonnull UUID uuid) {
+    public void deleteProject(@Nonnull Project project) {
         try {
-            LOGGER.info("Delete project {}", uuid);
-            URI uri = URI.create("%s/api/v1/project/%s".formatted(baseURL, uuid));
+            LOGGER.info("Delete project {} {} {}", project.getUuid(), project.getName(), project.getVersion());
+            URI uri = URI.create("%s/api/v1/project/%s".formatted(baseURL, project.getUuid()));
             HttpRequest request = createDefaultDELETE(uri);
 
             executeRequest(request);
