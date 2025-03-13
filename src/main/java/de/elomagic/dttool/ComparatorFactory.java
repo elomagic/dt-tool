@@ -29,14 +29,15 @@ public final class ComparatorFactory {
 
     private ComparatorFactory() {}
 
+    /**
+     * Sort a project by name asc and version desc.
+     *
+     * @return Returns the {@link Comparator<Project>}
+     */
     @Nonnull
-    public static Comparator<Project> versionComparator() {
-        return Comparator.comparing((Project o) -> new ComparableVersion(o.getVersion())).reversed();
-    }
-
-    @Nonnull
-    public static Comparator<Project> nameComparator() {
-        return Comparator.comparing(Project::getName);
+    public static Comparator<Project> defaultComparator() {
+        return Comparator.comparing(Project::getName)
+                .thenComparing((Project o) -> new ComparableVersion(o.getVersion())).reversed();
     }
 
 }

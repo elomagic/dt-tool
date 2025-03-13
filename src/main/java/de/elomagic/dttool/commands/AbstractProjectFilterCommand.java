@@ -55,8 +55,7 @@ public class AbstractProjectFilterCommand {
         List<Project> projects = client
                 .fetchAllProjects()
                 .stream()
-                .sorted(ComparatorFactory.nameComparator())
-                .sorted(ComparatorFactory.versionComparator())
+                .sorted(ComparatorFactory.defaultComparator())
                 .filter(p -> projectFilterOptions.getProjectFilter().isEmpty() || projectFilterOptions.getProjectFilter().contains(p.getName()) || projectFilterOptions.getProjectFilter().contains(p.getUuid().toString()))
                 .filter(p -> p.getLastBomImport() == null || notBefore.isBefore(p.getLastBomImport()))
                 .filter(p -> p.getLastBomImport() == null || notAfter.isAfter(p.getLastBomImport()))
