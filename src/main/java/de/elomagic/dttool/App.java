@@ -28,17 +28,9 @@ import de.elomagic.dttool.commands.CheckLicensesCommand;
 @CommandLine.Command(versionProvider = VersionProvider.class, name = "dt-tool", description = "Dependency Track Tool")
 public class App {
 
-    private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
-
     public static void main( String[] args ) {
-
-        try {
-            App app = new App();
-            System.exit(app.execute(args));
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            System.exit(1);
-        }
+        App app = new App();
+        System.exit(app.execute(args));
     }
 
     /**

@@ -17,6 +17,7 @@
  */
 package de.elomagic.dttool.commands;
 
+import jakarta.annotation.Nonnull;
 import picocli.CommandLine;
 
 import de.elomagic.dttool.DtToolException;
@@ -117,7 +118,8 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
 
     }
 
-    private String getBomAsJson(Bom bom) throws GeneratorException {
+    @Nonnull
+    private String getBomAsJson(@Nonnull Bom bom) throws GeneratorException {
         Version version = Arrays
                 .stream(Version.values())
                 .filter(v -> v.getVersionString().equals(bom.getSpecVersion()))
@@ -127,7 +129,8 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
         return BomGeneratorFactory.createJson(version, bom).toJsonString();
     }
 
-    private String createFilename(Bom bom) {
+    @Nonnull
+    private String createFilename(@Nonnull Bom bom) {
         return pattern.formatted(
                 bom.getMetadata().getComponent().getName(),
                 bom.getMetadata().getComponent().getVersion()
