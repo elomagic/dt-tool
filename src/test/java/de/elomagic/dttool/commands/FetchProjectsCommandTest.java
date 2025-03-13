@@ -79,7 +79,7 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
             LOGGER.info("ABC5");
 
             assertEquals(0, exitCode);
-            assertThat(getText("ABC5")).contains("{\"uuid\":\"85b0f240-b405-4d61-a10a-42f54b6ad59e\",\"name\":\"TestLatestVersion1\",\"version\":\"1.0.0.1\",\"lastBomImport\":\"1517198568503\"}");
+            assertThat(getText("ABC5")).contains("{\"uuid\":\"85b0f240-b405-4d61-a10a-42f54b6ad59e\",\"name\":\"TestLatestVersion1\",\"version\":\"1.0.0.1\",\"purl\":null,\"lastBomImport\":\"1517198568503\"}");
         });
     }
 

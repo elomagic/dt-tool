@@ -35,6 +35,8 @@ public class Project {
     @JsonProperty
     private String version;
     @JsonProperty
+    private String purl;
+    @JsonProperty
     private String lastBomImport;
 
     public String getName() {
@@ -51,6 +53,14 @@ public class Project {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getPurl() {
+        return purl;
+    }
+
+    public void setPurl(String purl) {
+        this.purl = purl;
     }
 
     public UUID getUuid() {
@@ -79,6 +89,7 @@ public class Project {
                 "uuid=" + uuid +
                 ", name='" + name + '\'' +
                 ", version='" + version + '\'' +
+                ", purl='" + purl + '\'' +
                 ", lastBomImport='" + lastBomImport + '\'' +
                 '}';
     }

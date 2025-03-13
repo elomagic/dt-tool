@@ -59,8 +59,6 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
     @Override
     public Void call() throws Exception {
 
-        // projectFilterOptions.setOlderThenDays(0);
-
         List<Project> projects = fetchProjects(
                 getNotBeforeInZonedTime(365 * 40),
                 getNotAfterInZonedTime(0),
