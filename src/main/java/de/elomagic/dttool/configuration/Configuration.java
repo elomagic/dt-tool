@@ -25,11 +25,12 @@ import de.elomagic.dttool.JsonMapperFactory;
 import de.elomagic.dttool.configuration.model.PatchRule;
 import de.elomagic.dttool.configuration.model.Root;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.Set;
 
 @SuppressWarnings("squid:S6548")
@@ -65,7 +66,6 @@ public final class Configuration {
         try {
             ObjectMapper objectMapper = JsonMapperFactory.create();
             conf = objectMapper.readValue(CONFIG_FILE.toFile(), Root.class);
-            // TODO properties.forEach((key, value) -> LOGGER.debug("Configuration: {}={}", key, key.equals("apiKey") ? "???" : value + ""));
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
@@ -79,8 +79,9 @@ public final class Configuration {
 
         Files.createDirectories(CONFIG_FILE.getParent());
 
-        try (InputStream in = Configuration.class.getResourceAsStream("/configuration-template.json5")) {
-            Files.copy(in, CONFIG_FILE, StandardCopyOption.REPLACE_EXISTING);
+        try {
+            String content = IOUtils.resourceToString("/configuration-template.json5", StandardCharsets.UTF_8);
+            Files.writeString(CONFIG_FILE, content, StandardCharsets.UTF_8);
             LOGGER.always("Configuration file '{}' created. Please edit and save it.", CONFIG_FILE);
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
@@ -115,6 +116,7 @@ public final class Configuration {
 
     public Set<String> getIgnorePurl() { return conf.getIgnorePurl(); }
 
+    @Nonnull
     public static Set<PatchRule> getPatchRules() {
             return INSTANCE.conf.getPatchRules() == null ? Set.of() : INSTANCE.conf.getPatchRules();
     }

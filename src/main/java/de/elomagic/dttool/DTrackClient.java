@@ -55,6 +55,7 @@ public class DTrackClient extends AbstractRestClient {
 
     // https://[HOSTNAME]/api/swagger.json
 
+    @Nonnull
     public List<Violation> fetchViolations() {
         try {
             URI uri = URI.create("%s/api/v1/violation?suppressed=false".formatted(baseURL));
@@ -73,6 +74,7 @@ public class DTrackClient extends AbstractRestClient {
      * @param page Starts from 1
      * @return List of projects
      */
+    @Nonnull
     public List<Project> fetchProjects(int limit, int page) {
         try {
             URI uri = URI.create("%s/api/v1/project?excludeInactive=true&limit=%s&page=%s".formatted(baseURL, limit, page));
@@ -89,6 +91,7 @@ public class DTrackClient extends AbstractRestClient {
      *
      * @return Returns a stream
      */
+    @Nonnull
     public List<Project> fetchAllProjects() {
         List<Project> projects = new ArrayList<>();
         int size;

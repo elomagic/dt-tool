@@ -17,6 +17,7 @@
  */
 package de.elomagic.dttool;
 
+import jakarta.annotation.Nonnull;
 import picocli.CommandLine;
 
 import java.io.InputStream;
@@ -24,6 +25,7 @@ import java.util.Properties;
 
 public class VersionProvider implements CommandLine.IVersionProvider {
 
+    @Nonnull
     @Override
     public String[] getVersion() throws Exception {
         try (InputStream in = App.class.getResourceAsStream("/de/elomagic/dttool/meta.properties")) {

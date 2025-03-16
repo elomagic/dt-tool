@@ -43,6 +43,7 @@ public class SpdxLicenseManager {
     private final Map<String, SpdxLicense> idMap = new HashMap<>();
     private final Map<String, SpdxLicense> nameMap = new HashMap<>();
 
+    @Nonnull
     public static SpdxLicenseManager create() {
         return new SpdxLicenseManager();
     }
