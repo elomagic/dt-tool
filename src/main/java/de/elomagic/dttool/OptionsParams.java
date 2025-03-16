@@ -17,12 +17,14 @@
  */
 package de.elomagic.dttool;
 
-public interface OptionsParams {
+public class OptionsParams {
 
-    String VERSION_MATCH = "--versionMatch";
-    String VERSION_MATCH_SHORT = "-vm";
+    public static final String VERSION_MATCH = "--versionMatch";
+    public static final String VERSION_MATCH_SHORT = "-vm";
 
-    String BATCH_MODE = "--batchMode";
-    String BATCH_MODE_SHORT = "-b";
+    public static final String BATCH_MODE = "--batchMode";
+    public static final String BATCH_MODE_SHORT = "-b";
+
+    private OptionsParams() {}
 
 }
