@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @CommandLine.Command
-public class DTrackClient extends AbstractRestClient {
+public class DTrackClient extends AbstractRestClient implements TimeFormatter {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
     private final ObjectMapper mapper = JsonMapperFactory.create();
@@ -256,7 +256,7 @@ public class DTrackClient extends AbstractRestClient {
 
     public void deleteProject(@Nonnull Project project) {
         try {
-            LOGGER.info("Delete project {} {} {}", project.getUuid(), project.getName(), project.getVersion());
+            LOGGER.info("Delete project {} {} {} {}", project.getUuid(), t2s(project.getLastBomImport()), project.getName(), project.getVersion());
             URI uri = URI.create("%s/api/v1/project/%s".formatted(baseURL, project.getUuid()));
             HttpRequest request = createDefaultDELETE(uri);
 

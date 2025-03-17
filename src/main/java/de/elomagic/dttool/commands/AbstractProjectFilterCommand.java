@@ -26,6 +26,7 @@ import de.elomagic.dttool.ConsoleOptions;
 import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.DTrackClient;
 import de.elomagic.dttool.ProjectFilterOptions;
+import de.elomagic.dttool.TimeFormatter;
 import de.elomagic.dttool.model.Project;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public class AbstractProjectFilterCommand {
+public class AbstractProjectFilterCommand implements TimeFormatter {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
 
@@ -57,10 +58,10 @@ public class AbstractProjectFilterCommand {
     @Nonnull
     protected List<Project> fetchProjects(@Nonnull ZonedDateTime notBefore, @Nonnull ZonedDateTime notAfter, @Nullable String versionMatchRegEx) {
 
-        LOGGER.info("Matching version with pattern: {}", versionMatchRegEx == null ? "unset" : versionMatchRegEx);
-        LOGGER.info("Matching projects with name/uid: {}", projectFilterOptions.getProjectFilter().isEmpty() ? "unset" : projectFilterOptions.getProjectFilter());
-        LOGGER.info("Matching projects which not before : {}", notBefore);
-        LOGGER.info("Matching projects which not after : {}", notAfter);
+        LOGGER.info("Matching version with pattern: {}", versionMatchRegEx == null ? "<unset>" : versionMatchRegEx);
+        LOGGER.info("Matching projects with name/uid: {}", projectFilterOptions.getProjectFilter().isEmpty() ? "<unset>" : projectFilterOptions.getProjectFilter());
+        LOGGER.info("Matching projects which not before: {}", t2s(notBefore));
+        LOGGER.info("Matching projects which not after: {}", t2s(notAfter));
 
         List<Project> projects = client
                 .fetchAllProjects()
@@ -72,7 +73,8 @@ public class AbstractProjectFilterCommand {
                 .filter(p -> StringUtils.isBlank(versionMatchRegEx) || p.getVersion().matches(versionMatchRegEx))
                 .toList();
 
-        projects.forEach(p -> LOGGER.info("{}\t {}\t Created {}", p.getName(), p.getVersion(), p.getLastBomImport()));
+        // %tF-T %<tT
+        projects.forEach(p -> LOGGER.info("{}\t {}\t Created {}", p.getName(), p.getVersion(), t2s(p.getLastBomImport())));
         LOGGER.info("{} projects matched ", projects.size());
 
         return projects;
