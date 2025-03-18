@@ -63,6 +63,7 @@ public class DTrackClient extends AbstractRestClient implements TimeFormatter {
 
             return List.of(executeRequest(request, Violation[].class));
         } catch (IOException | InterruptedException ex) {
+            Thread.currentThread().interrupt();
             throw new DtToolException(ex);
         }
     }
@@ -82,6 +83,7 @@ public class DTrackClient extends AbstractRestClient implements TimeFormatter {
 
             return List.of(executeRequest(request, Project[].class));
         } catch (IOException | InterruptedException ex) {
+            Thread.currentThread().interrupt();
             throw new DtToolException(ex);
         }
     }
@@ -131,6 +133,7 @@ public class DTrackClient extends AbstractRestClient implements TimeFormatter {
 
             return List.of(executeRequest(request, Project[].class));
         } catch (IOException | InterruptedException ex) {
+            Thread.currentThread().interrupt();
             throw new DtToolException(ex);
         }
     }
@@ -166,6 +169,7 @@ public class DTrackClient extends AbstractRestClient implements TimeFormatter {
 
             return List.of(executeRequest(request, Component[].class));
         } catch (IOException | InterruptedException ex) {
+            Thread.currentThread().interrupt();
             throw new DtToolException(ex);
         }
     }
@@ -179,6 +183,7 @@ public class DTrackClient extends AbstractRestClient implements TimeFormatter {
 
             return mapper.readTree(executeRequest(request));
         } catch (IOException | InterruptedException ex) {
+            Thread.currentThread().interrupt();
             throw new DtToolException(ex);
         }
     }
@@ -197,6 +202,7 @@ public class DTrackClient extends AbstractRestClient implements TimeFormatter {
 
             return executeRequest(request, Component.class);
         } catch (IOException | InterruptedException ex) {
+            Thread.currentThread().interrupt();
             throw new DtToolException(ex);
         }
     }
@@ -210,6 +216,7 @@ public class DTrackClient extends AbstractRestClient implements TimeFormatter {
 
             return mapper.readTree(executeRequest(request));
         } catch (IOException | InterruptedException ex) {
+            Thread.currentThread().interrupt();
             throw new DtToolException(ex);
         }
     }
@@ -226,6 +233,7 @@ public class DTrackClient extends AbstractRestClient implements TimeFormatter {
 
             return BomParserFactory.createParser(bytes).parse(bytes);
         } catch (IOException | InterruptedException | ParseException ex) {
+            Thread.currentThread().interrupt();
             throw new DtToolException(ex);
         }
     }
@@ -250,6 +258,7 @@ public class DTrackClient extends AbstractRestClient implements TimeFormatter {
 
             executeRequest(request);
         } catch (IOException | InterruptedException ex) {
+            Thread.currentThread().interrupt();
             throw new DtToolException(ex);
         }
     }
@@ -262,6 +271,7 @@ public class DTrackClient extends AbstractRestClient implements TimeFormatter {
 
             executeRequest(request);
         } catch (IOException | InterruptedException ex) {
+            Thread.currentThread().interrupt();
             throw new DtToolException(ex);
         }
 
