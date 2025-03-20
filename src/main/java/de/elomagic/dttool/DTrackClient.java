@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @CommandLine.Command
-public class DTrackClient extends AbstractRestClient implements TimeFormatter {
+public class DTrackClient extends AbstractRestClient implements StringFormatter {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
     private final ObjectMapper mapper = JsonMapperFactory.create();
@@ -276,6 +276,5 @@ public class DTrackClient extends AbstractRestClient implements TimeFormatter {
         }
 
     }
-
 
 }

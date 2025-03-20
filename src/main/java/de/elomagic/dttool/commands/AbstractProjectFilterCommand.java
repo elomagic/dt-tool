@@ -26,7 +26,7 @@ import de.elomagic.dttool.ConsoleOptions;
 import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.DTrackClient;
 import de.elomagic.dttool.ProjectFilterOptions;
-import de.elomagic.dttool.TimeFormatter;
+import de.elomagic.dttool.StringFormatter;
 import de.elomagic.dttool.model.Project;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,7 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public class AbstractProjectFilterCommand implements TimeFormatter {
+public class AbstractProjectFilterCommand implements StringFormatter {
 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
 
@@ -73,8 +73,27 @@ public class AbstractProjectFilterCommand implements TimeFormatter {
                 .filter(p -> StringUtils.isBlank(versionMatchRegEx) || p.getVersion().matches(versionMatchRegEx))
                 .toList();
 
-        // %tF-T %<tT
-        projects.forEach(p -> LOGGER.info("{}\t {}\t Created {}", p.getName(), p.getVersion(), t2s(p.getLastBomImport())));
+        int minimumNameWidth = projects
+                .stream()
+                .filter(p -> p.getName() != null)
+                .mapToInt(p -> p.getName().length())
+                .max()
+                .orElse(0);
+
+        int minimumVersionWidth = projects
+                .stream()
+                .filter(p -> p.getVersion() != null)
+                .mapToInt(p -> p.getVersion().length())
+                .max()
+                .orElse(0);
+
+        projects.forEach(p ->
+                LOGGER.info(
+                        "{}\t {}\t Created {}",
+                        mnw(p.getName(), minimumNameWidth),
+                        mnw(p.getVersion(), minimumVersionWidth),
+                        t2s(p.getLastBomImport())));
+
         LOGGER.info("{} projects matched ", projects.size());
 
         return projects;
