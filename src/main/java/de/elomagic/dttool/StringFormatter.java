@@ -20,16 +20,31 @@ package de.elomagic.dttool;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-public interface TimeFormatter {
+public interface StringFormatter {
 
     DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss XXX");
 
     @Nonnull
     default String t2s(@Nullable ZonedDateTime time) {
         return time == null ? "<unset>" : time.format(FORMATTER);
+    }
+
+    /**
+     * Right pad a string with minimum count of spaces (' ').
+     *
+     * @param value String to pad
+     * @param minWidth Minimum count of spaces
+     *
+     * @return Returns the string with pad right spaces
+     */
+    @Nullable
+    default String mnw(@Nullable String value, int minWidth) {
+        return StringUtils.rightPad(value == null ? "" : value, minWidth);
     }
 
 }
