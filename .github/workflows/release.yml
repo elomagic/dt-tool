@@ -58,6 +58,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git fetch
           mvn versions:set -DnewVersion=${{ env.VERSION }}
           git commit -am "Release version set"
           git push origin main 
