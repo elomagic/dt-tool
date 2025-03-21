@@ -59,7 +59,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [[ "${{ env.ORIGINAL_VERSION }}" == *SNAPSHOT* ]]; then
-            git pull
+            git fetch
             mvn versions:set -DnewVersion=${{ env.VERSION }}
             git commit -am "Release version set"
             git push origin main
