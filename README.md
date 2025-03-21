@@ -12,6 +12,7 @@
 A tool that helps you to manage Dependency Track content better.
 
 * Delete outdated projects
+* Collect SBOMs of projects to one ZIP file
 * tbc
 
 ## Using the library
