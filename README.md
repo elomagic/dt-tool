@@ -1,6 +1,4 @@
-# Dependency Track Tool
-
-A tool that helps you to manage Dependency Track content better.
+# Tool for Dependency Track
 
 ---
 
@@ -10,6 +8,11 @@ A tool that helps you to manage Dependency Track content better.
 [![Latest](https://img.shields.io/github/release/elomagic/dt-tool.svg)](https://github.com/elomagic/dt-tool/releases)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/elomagic/dt-tool/graphs/commit-activity)
 [![Buymeacoffee](https://badgen.net/badge/icon/buymeacoffee?icon=buymeacoffee&label)](https://www.buymeacoffee.com/elomagic)
+
+A tool that helps you to manage Dependency Track content better.
+
+* Delete outdated projects
+* tbc
 
 ## Using the library
 
