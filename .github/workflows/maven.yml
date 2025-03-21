@@ -54,7 +54,7 @@ jobs:
       - name: Extract version from POM
         id: extract_version
         run: |
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          set VERSION=$(mvn help:evaluate -Dexpression="project.version" -q -DforceStdout)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Upload SNAPSHOTs
