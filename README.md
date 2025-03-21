@@ -1,4 +1,4 @@
-# DT Tool
+# Dependency Track Tool
 
 A tool that helps you to manage Dependency Track content better.
 
@@ -11,13 +11,9 @@ A tool that helps you to manage Dependency Track content better.
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/elomagic/dt-tool/graphs/commit-activity)
 [![Buymeacoffee](https://badgen.net/badge/icon/buymeacoffee?icon=buymeacoffee&label)](https://www.buymeacoffee.com/elomagic)
 
-
 ## Using the library
 
-### Requirements
-
-* Installed Java 21 or higher
-* Download the latest version of DT-Tool https://github.com/elomagic/dt-tool/releases
+Download the latest version of DT-Tool https://github.com/elomagic/dt-tool/releases
 
 ### Configuration
 
