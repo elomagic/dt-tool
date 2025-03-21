@@ -24,12 +24,19 @@ import picocli.CommandLine;
 
 import de.elomagic.dttool.configuration.Configuration;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.time.Duration;
 import java.util.List;
 
@@ -38,9 +45,52 @@ public abstract class AbstractRestClient {
     private static final String APPLICATION_JSON = "application/json";
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
 
+    private final ObjectMapper objectMapper = JsonMapperFactory.create();
+
     @CommandLine.Option(names = { "--apiKey", "-k" }, description = "DTrack API Key")
     private String apiKey = Configuration.INSTANCE.getApiKey();
-    private final ObjectMapper objectMapper = JsonMapperFactory.create();
+    @CommandLine.Option(names = { "--disableTlsCheck" }, description = "Disable TLS certificate check", negatable = true)
+    private boolean ignoreCertificate;
+
+    private HttpClient httpClient;
+
+    private HttpClient getHttpClient() {
+        if (httpClient == null) {
+            HttpClient.Builder builder = HttpClient
+                    .newBuilder()
+                    .followRedirects(HttpClient.Redirect.ALWAYS);
+
+            if (ignoreCertificate) {
+                try {
+                    var sslContext = SSLContext.getInstance("TLS");
+                    var trustManager = new X509TrustManager() {
+                        @Override
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return new X509Certificate[]{};
+                        }
+
+                        @Override
+                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                        }
+
+                        @Override
+                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                        }
+                    };
+
+                    sslContext.init(null, new TrustManager[]{trustManager}, new SecureRandom());
+
+                    builder.sslContext(sslContext);
+                } catch (KeyManagementException | NoSuchAlgorithmException ex) {
+                    throw new DtToolException(ex.getMessage());
+                }
+            }
+
+            httpClient = builder.build();
+        }
+
+        return httpClient;
+    }
 
     @Nonnull
     private HttpRequest.Builder createDefaultRequest(@Nonnull URI uri) {
@@ -106,7 +156,8 @@ public abstract class AbstractRestClient {
 
     @Nullable
     protected String executeRequest(@Nonnull HttpRequest request) throws IOException, InterruptedException {
-        try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build()) {
+        HttpClient client = getHttpClient();
+        try {
             LOGGER.debug("Executing HTTP {} to {}", request.method(), request.uri());
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
             LOGGER.debug("Responses HTTP status {}", response.statusCode());
