@@ -3,7 +3,7 @@
 
     <groupId>de.elomagic</groupId>
     <artifactId>dt-tool</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>DT-Tool</name>
@@ -379,19 +379,15 @@
                         </goals>
                         <configuration>
                             <target>
-                                <link includeHeaders="false"
-                                      modulepath="${java.home}/jmods"
-                                      includeManPages="false"
-                                      debug="false"
-                                      destDir="target/distribution/jre">
-                                    <module name="java.base"/>
-                                    <module name="java.net.http"/>
-                                    <module name="java.xml"/>
-                                    <module name="java.sql"/>
-                                    <module name="java.logging"/>
-                                    <module name="java.desktop"/>
-                                    <module name="java.naming"/>
-                                    <module name="java.management"/>
+                                <link includeHeaders="false" modulepath="${java.home}/jmods" includeManPages="false" debug="false" destDir="target/distribution/jre">
+                                    <module name="java.base" />
+                                    <module name="java.net.http" />
+                                    <module name="java.xml" />
+                                    <module name="java.sql" />
+                                    <module name="java.logging" />
+                                    <module name="java.desktop" />
+                                    <module name="java.naming" />
+                                    <module name="java.management" />
                                 </link>
                             </target>
                         </configuration>
