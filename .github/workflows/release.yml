@@ -73,13 +73,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git tag v${{ env.VERSION }}
-          git push origin v${{ env.VERSION }}
+          # Tag only whene tag doesn't exist
+          if ! git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
+            git tag v${{ env.VERSION }}
+            git push origin v${{ env.VERSION }}
+          fi
+        shell: bash
 
       - name: Increase version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git fetch
           mvn -B release:update-versions
           git commit -am "Next development version set"
           git push origin main
