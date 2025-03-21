@@ -2,7 +2,6 @@
 
 if [ -f /usr/bin/java ]
 then
-    export JAVACMD=/usr/bin/java
     APP_HOME=.
     CMD_LINE_ARGS=("$@")
 
@@ -14,7 +13,7 @@ then
 
     CLASS_LAUNCHER=de.elomagic.dttool.App
 
-    $JAVACMD \
+    $APP_HOME/jre/bin/java \
         -cp "$APP_HOME/$LIBS_FOLDER/*" \
         $CLASS_LAUNCHER $CMD_LINE_ARGS
 else

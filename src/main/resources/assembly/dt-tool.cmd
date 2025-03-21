@@ -2,23 +2,13 @@
 
 @setlocal
 
-:OkJHome
-set "JAVACMD=%JAVA_HOME%\bin\java.exe"
-
-:checkJCmd
-if exist "%JAVACMD%" goto chkHome
-
-echo The JAVA_HOME environment variable is not defined correctly >&2
-echo This environment variable is needed to run this program >&2
-echo NB: JAVA_HOME should point to a JDK not a JRE >&2
-goto error
-
 :chkHome
 set "APP_HOME=%~dp0"
 if not "%APP_HOME%"=="" goto valHome
 goto error
 
 :valHome
+set "JAVACMD=%APP_HOME%jre\bin\java.exe"
 
 :init
 set CMD_LINE_ARGS=%*
@@ -31,7 +21,7 @@ set libFolder=libs
 if exist target (SET libFolder=target)
 
 "%JAVACMD%" ^
-    -cp "%APP_HOME%\%libFolder%\*" ^
+    -cp "%APP_HOME%%libFolder%\*" ^
     %CLASS_LAUNCHER% %CMD_LINE_ARGS%
 
 goto end
