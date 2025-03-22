@@ -48,9 +48,9 @@ public abstract class AbstractRestClient {
     private final ObjectMapper objectMapper = JsonMapperFactory.create();
 
     @CommandLine.Option(names = { "--apiKey", "-k" }, description = "DTrack API Key")
-    private String apiKey = Configuration.INSTANCE.getApiKey();
+    String apiKey = Configuration.INSTANCE.getApiKey();
     @CommandLine.Option(names = { "--disableTlsCheck" }, description = "Disable TLS certificate check", negatable = true)
-    private boolean ignoreCertificate;
+    boolean ignoreCertificate;
 
     private HttpClient httpClient;
 
@@ -71,10 +71,12 @@ public abstract class AbstractRestClient {
 
                         @Override
                         public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                            // noop
                         }
 
                         @Override
                         public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                            // noop
                         }
                     };
 

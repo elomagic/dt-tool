@@ -1,25 +1,27 @@
 package de.elomagic.dttool;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+
 import de.elomagic.dttool.configuration.Configuration;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.mockserver.integration.ClientAndServer;
 
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
 public abstract class AbstractMockedServer {
 
-    private ClientAndServer mockServer;
+    public WireMockServer mockServer;
 
     protected Integer getPort() {
-        return mockServer.getPort();
+        return mockServer.port();
     }
 
     @BeforeEach
     public void beforeEach() {
         Configuration.INSTANCE.load();
-        mockServer = startClientAndServer();
+        mockServer = new WireMockServer(options().dynamicPort().dynamicHttpsPort());
+        mockServer.start();
     }
 
     @AfterEach
