@@ -9,7 +9,7 @@ We only support the latest stable version of this project. If you're using an ol
 If you discover a security vulnerability in this project:
 
 1. **Do not** open a public GitHub issue.
-2. **Instead**, please email us directly at [dt-tool.dev@elomagic.de](mailto:dt-tool.dev@elomagic.de).
+2. **Instead**, please email us directly at [security.gh@elomagic.de](mailto:security.gh@elomagic.de).
 3. Include as much detail as possible:
     - Description of the vulnerability
     - Steps to reproduce

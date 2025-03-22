@@ -52,6 +52,11 @@
             <outputDirectory></outputDirectory>
             <filtered>false</filtered>
         </file>
+        <file>
+            <source>${basedir}/SECURITY.md</source>
+            <outputDirectory></outputDirectory>
+            <filtered>false</filtered>
+        </file>
     </files>
 
     <dependencySets>
