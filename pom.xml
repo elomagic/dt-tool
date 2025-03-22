@@ -114,9 +114,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-netty</artifactId>
-            <version>5.15.0</version>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>3.12.1</version>
             <scope>test</scope>
         </dependency>
 

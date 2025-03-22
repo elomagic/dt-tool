@@ -4,81 +4,50 @@ import de.elomagic.dttool.configuration.Configuration;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.function.Executable;
-import org.mockserver.client.MockServerClient;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.HttpResponse.response;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 
 public class MockTool {
 
     public static void mockServer(int port, Executable executable) throws Throwable {
 
         String apiKey = UUID.randomUUID().toString();
-        String licenses = IOUtils.resourceToString("projects.json", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
+        String projects = IOUtils.resourceToString("projects.json", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
         String bom = IOUtils.resourceToString("bom-example.json", StandardCharsets.UTF_8, DTrackClientTest.class.getClassLoader());
 
-        try (MockServerClient client = new MockServerClient("localhost", port)) {
-            // When download projects
-            client.when(
-                            request()
-                                    .withMethod("GET")
-                                    .withQueryStringParameter("page", "1")
-                                    .withPath("/api/v1/project")
-                                    .withHeader("X-Api-Key", apiKey)
-                    )
-                    .respond(
-                            response()
-                                    .withStatusCode(200)
-                                    .withBody(licenses)
-                    );
-            client.when(
-                            request()
-                                    .withMethod("GET")
-                                    .withQueryStringParameter("page", "2")
-                                    .withPath("/api/v1/project")
-                                    .withHeader("X-Api-Key", apiKey)
-                    )
-                    .respond(
-                            response()
-                                    .withStatusCode(200)
-                                    .withBody("[]")
-                    );
+        Configuration.INSTANCE.setApiKey(apiKey);
+        Configuration.INSTANCE.setBaseUrl("http://localhost:%s".formatted(port));
 
-            // When delete project
-            client.when(
-                            request()
-                                    .withMethod("DELETE")
-                                    //.withPath("/api/v1/project/01d558ae-5075-4cbb-94ea-73ce6ae23999")
-                                    .withHeader("X-Api-Key", apiKey)
-                    )
-                    .respond(
-                            response()
-                                    .withStatusCode(204)
-                    );
+        configureFor("localhost", port);
 
-            // When download projects
-            client.when(
-                            request()
-                                    .withMethod("GET")
-                                    .withQueryStringParameter("download", "false")
-                                    .withPath("/api/v1/bom/cyclonedx/project/.*")
-                                    .withHeader("X-Api-Key", apiKey)
-                    )
-                    .respond(
-                            response()
-                                    .withStatusCode(200)
-                                    .withBody(bom)
-                    );
+        // When download projects
+        stubFor(get(urlPathEqualTo("/api/v1/project"))
+                .withQueryParam("page", equalTo("1"))
+                .withHeader("X-Api-Key", equalTo(apiKey))
+                .willReturn(okJson(projects)));
+        stubFor(get(urlPathEqualTo("/api/v1/project"))
+                .withQueryParam("page", equalTo("2"))
+                .withHeader("X-Api-Key", equalTo(apiKey))
+                .willReturn(okJson("[]")));
 
-            Configuration.INSTANCE.setApiKey(apiKey);
-            Configuration.INSTANCE.setBaseUrl("http://localhost:%s".formatted(port));
+        // When delete project
+        stubFor(delete(urlPathMatching("/api/v1/project/.*"))
+                .withHeader("X-Api-Key", equalTo(apiKey))
+                .willReturn(noContent()));
 
-            executable.execute();
+        // When download projects
+        stubFor(get(urlPathMatching("/api/v1/bom/cyclonedx/project/.*"))
+                .withQueryParam("download", equalTo("false"))
+                .withHeader("X-Api-Key", equalTo(apiKey))
+                .willReturn(okJson(bom)));
 
-        }
+        executable.execute();
+
     }
 
 }
