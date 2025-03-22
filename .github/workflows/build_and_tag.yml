@@ -1,0 +1,85 @@
+name: Build and tag
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkin out project
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Cache Maven repository
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Setting up JDK 21
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Setting up Maven server settings
+        uses: s4u/maven-settings-action@64e42c454dbd42ef6370ac8539685755aedd205b # v3.1.0
+        with:
+          servers: |
+            [{
+              "id": "nvd",
+              "username": "john.doe",
+              "password": "${{ secrets.NVD_KEY }}"
+            }]          
+
+      - name: Extracting version from POM
+        id: extract_version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          # Remove -SNAPSHOT from version
+          VERSION=${VERSION%-SNAPSHOT}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Setting up Git user
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      - name: Setting release version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mvn versions:set -DnewVersion=${{ env.VERSION }}
+          git commit -am "Release version set"
+          git push origin main 
+
+      - name: Building with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Create and push tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git tag v${{ env.VERSION }}
+          git push origin v${{ env.VERSION }}
+
+      - name: Increasing version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mvn -B release:update-versions
+          git commit -am "Next development version set"
+          git push origin main
+
+      - name: Calling upload workflow
+
+  call-upload-workflow:
+    needs: release
+    uses: ./.github/workflows/upload-distributions.yml
+    with:
+      tag: v${{ env.VERSION }}
