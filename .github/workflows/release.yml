@@ -84,7 +84,7 @@ jobs:
         with:
           name: v${{ env.VERSION }}
           tag_name: v${{ env.VERSION }}
-          token: ${{ env.VERSION }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
           prerelease: false
           files: |
