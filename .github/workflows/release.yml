@@ -47,6 +47,7 @@ jobs:
           # Remove -SNAPSHOT from version
           VERSION=${ORIGINAL_VERSION%-SNAPSHOT}
           echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "ORIGINAL_VERSION=$ORIGINAL_VERSION" >> $GITHUB_ENV
         shell: bash
 
       - name: Set up Git user
@@ -85,9 +86,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git pull
-          mvn -B release:update-versions
-          git commit -am "Next development version set"
-          git push origin main
+          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          if [[ "$CURRENT_VERSION" != *SNAPSHOT* ]]; then
+            mvn -B release:update-versions
+            git commit -am "Next development version set"
+            git push origin main
+          fi
         shell: bash
 
       - name: Upload released assets
