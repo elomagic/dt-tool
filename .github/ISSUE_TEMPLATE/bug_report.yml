@@ -43,6 +43,7 @@ body:
   - type: textarea
     id: environment
     attributes:
+      label: Environment
       value: |-
         ## Environment
         Please provide some details about the environment in which you observed the defect.
