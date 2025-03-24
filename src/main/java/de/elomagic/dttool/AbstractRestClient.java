@@ -69,11 +69,13 @@ public abstract class AbstractRestClient {
                             return new X509Certificate[]{};
                         }
 
+                        @SuppressWarnings("squid:S4830")
                         @Override
                         public void checkClientTrusted(X509Certificate[] certs, String authType) {
                             // noop
                         }
 
+                        @SuppressWarnings("squid:S4830")
                         @Override
                         public void checkServerTrusted(X509Certificate[] certs, String authType) {
                             // noop
