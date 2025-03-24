@@ -401,27 +401,6 @@
                 <version>3.7.1</version>
                 <executions>
                     <execution>
-                        <id>assembly-jar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>
-                                        de.elomagic.dttool.App
-                                    </mainClass>
-                                </manifest>
-                            </archive>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                            <finalName>${project.artifactId}-${project.version}-fat</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>assemble-distribution</id>
                         <phase>package</phase>
                         <goals>

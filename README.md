@@ -73,3 +73,12 @@ Versioning follows the semantic of [Semantic Versioning 2.0.0](https://semver.or
 The dt-tool is distributed under [Apache License, Version 2.0][license]
 
 [license]: https://www.apache.org/licenses/LICENSE-2.0
+
+## Donations
+
+Donations will ensure the following:
+
+* 🔨 Long term maintenance of the project
+* 🛣 Progress on the roadmap
+* 🐛 Quick responses to bug reports and help requests
+
