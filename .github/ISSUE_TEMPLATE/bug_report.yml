@@ -49,6 +49,8 @@ body:
         * Java version :
         * Java distribution:
         * Operating System and version :
+    validations:
+      required: false
   - type: checkboxes
     id: checklist
     attributes:
