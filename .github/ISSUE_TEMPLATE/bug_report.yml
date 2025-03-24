@@ -44,12 +44,12 @@ body:
     id: environment
     attributes:
       label: Environment
-      value: |-
-        ## Environment
+      description: >-
         Please provide some details about the environment in which you observed the defect.
-        * Java version :
-        * Java distribution:
-        * Operating System and version :
+      value: |-      
+        - Java version :
+        - Java distribution:
+        - Operating System and version :
     validations:
       required: false
   - type: checkboxes
