@@ -1,5 +1,5 @@
 name: Bug report
-description: You're having technical issues. \U0001F41E
+description: You're having technical issues.
 labels: bug
 body:
   - type: markdown
@@ -45,9 +45,9 @@ body:
       value: |
         ## Environment
         Please provide some details about the environment in which you observed the defect.
-        - Java version :
-        - Java distribution:
-        - Operating System and version :
+        * Java version :
+        * Java distribution:
+        * Operating System and version :
   - type: checkboxes
     id: checklist
     attributes:
