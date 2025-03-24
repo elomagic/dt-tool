@@ -42,7 +42,7 @@ body:
       required: true
   - type: markdown
     attributes:
-      value: |
+      value: |-
         ## Environment
         Please provide some details about the environment in which you observed the defect.
         * Java version :
