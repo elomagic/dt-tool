@@ -40,7 +40,8 @@ body:
         Describe how you expect dt-tool to behave instead.
     validations:
       required: true
-  - type: markdown
+  - type: textarea
+    id: environment
     attributes:
       value: |-
         ## Environment
