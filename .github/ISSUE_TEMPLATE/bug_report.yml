@@ -47,8 +47,7 @@ body:
       description: >-
         Please provide some details about the environment in which you observed the defect.
       value: |-      
-        - Java version :
-        - Java distribution:
+        - DT-tool version :
         - Operating System and version :
     validations:
       required: false
