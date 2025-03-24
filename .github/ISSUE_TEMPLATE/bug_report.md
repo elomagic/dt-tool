@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: "You're having technical issues. \U0001F41E"
-labels: [ "bug" ]
+labels: "bug"
 body:
   - type: markdown
     attributes:
