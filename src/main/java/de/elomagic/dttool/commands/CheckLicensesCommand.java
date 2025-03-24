@@ -98,8 +98,6 @@ public class CheckLicensesCommand extends AbstractProjectFilterCommand implement
         try {
             // Patch original JSON string
             ObjectNode root = (ObjectNode) client.fetchComponentAsJson(component);
-            // JsonNode license =  client.fetchLicenseAsJson(licenseId);
-            // root.set("resolvedLicense", license);
             root.put("license", licenseId);
             root.remove("licenseExpression");
 
