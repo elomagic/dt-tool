@@ -120,7 +120,9 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
 
         List<ReportDTO> reports = monthReports.values().stream().flatMap(m -> m.values().stream()).toList();
 
-        Files.createDirectories(file.getParent());
+        if (file.getParent() != null) {
+            Files.createDirectories(file.getParent());
+        }
 
         if (format == ExportFormat.CSV) {
             writeReportAsCsv(reports);
