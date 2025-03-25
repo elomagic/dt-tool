@@ -79,17 +79,15 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
             LOGGER.info("ABC5");
 
             assertEquals(0, exitCode);
-            assertThat(getText("ABC5")).contains("{\"uuid\":\"85b0f240-b405-4d61-a10a-42f54b6ad59e\",\"name\":\"TestLatestVersion1\",\"version\":\"1.0.0.1\",\"purl\":null,\"lastBomImport\":\"1517198568503\",\"metrics\":{\"critical\":0,\"high\":0,\"medium\":0,\"low\":0,\"unassigned\":0,\"vulnerabilities\":0,\"vulnerableComponents\":0,\"components\":0,\"suppressed\":0,\"findingsTotal\":0,\"findingsAudited\":0,\"findingsUnaudited\":0,\"inheritedRiskScore\":0.0,\"policyViolationsFail\":0,\"policyViolationsWarn\":0,\"policyViolationsInfo\":0,\"policyViolationsTotal\":0,\"policyViolationsAudited\":0,\"policyViolationsUnaudited\":0,\"policyViolationsSecurityTotal\":0,\"policyViolationsSecurityAudited\":0,\"policyViolationsSecurityUnaudited\":0,\"policyViolationsLicenseTotal\":0,\"policyViolationsLicenseAudited\":0,\"policyViolationsLicenseUnaudited\":0,\"policyViolationsOperationalTotal\":0,\"policyViolationsOperationalAudited\":0,\"policyViolationsOperationalUnaudited\":0,\"firstOccurrence\":0,\"lastOccurrence\":0}}");
+            assertThat(getText("ABC5")).contains("{  \"uuid\" : \"85b0f240-b405-4d61-a10a-42f54b6ad59e\",  \"name\" : \"TestLatestVersion1\",  \"version\" : \"1.0.0.1\",  \"purl\" : null,  \"lastBomImport\" : \"1517198568503\",  \"metrics\" : {    \"critical\" : 0,    \"high\" : 1,    \"medium\" : 3,    \"low\" : 0,    \"unassigned\" : 0,    \"vulnerabilities\" : 4,    \"vulnerableComponents\" : 2,    \"components\" : 133,    \"suppressed\" : 0,    \"findingsTotal\" : 4,    \"findingsAudited\" : 0,    \"findingsUnaudited\" : 4,    \"inheritedRiskScore\" : 50.0,    \"policyViolationsFail\" : 0,    \"policyViolationsWarn\" : 0,    \"policyViolationsInfo\" : 0,    \"policyViolationsTotal\" : 0,    \"policyViolationsAudited\" : 0,    \"policyViolationsUnaudited\" : 0,    \"policyViolationsSecurityTotal\" : 0,    \"policyViolationsSecurityAudited\" : 0,    \"policyViolationsSecurityUnaudited\" : 0,    \"policyViolationsLicenseTotal\" : 0,    \"policyViolationsLicenseAudited\" : 0,    \"policyViolationsLicenseUnaudited\" : 0,    \"policyViolationsOperationalTotal\" : 0,    \"policyViolationsOperationalAudited\" : 0,    \"policyViolationsOperationalUnaudited\" : 0,    \"firstOccurrence\" : 1741600680649,    \"lastOccurrence\" : 1742911404985  }}");
         });
     }
-
-    private String regEx = ".*%s(?<V>.*)%s.*";
 
     private String getText(String s) throws IOException {
 
         String logText = readLog();
 
-        Pattern pattern = Pattern.compile(regEx.formatted(s, s));
+        Pattern pattern = Pattern.compile(".*%s(?<V>.*)%s.*".formatted(s, s));
 
         Matcher matcher = pattern.matcher(logText);
 

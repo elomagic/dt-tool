@@ -36,8 +36,6 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +44,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @CommandLine.Command(name = "report", description = "Report export")
 public class ReportExportCommand extends AbstractProjectFilterCommand implements Callable<Void> {
@@ -68,18 +65,11 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
     )
     private Path file;
 
-    // Key = X month in the past. 0 = This month, 1 = Last month, 2 = The month before the last month and so on
-    private final List<Map<String, Set<Project>>> projectsPerMonthList = new ArrayList<>();
 
     @Override
     public Void call() throws IOException {
-
-        // Init projectSetMap
-        // TODO Range must be calculated by given days
-        long months = ChronoUnit.MONTHS.between(getNotBeforeInZonedTime(365 * 12), getNotAfterInZonedTime(0));
-        IntStream.range(0, (int)months).forEach(index -> projectsPerMonthList.add(index, new HashMap<>()));
-
-        int current = ZonedDateTime.now().getYear() * 12 + ZonedDateTime.now().getMonthValue();
+        // Key = X month in the past. 0 = This month, 1 = Last month, 2 = The month before the last month and so on
+        Map<Integer, Map<String, Set<Project>>> monthMap = new HashMap<>();
 
         // Get projects and put it into a box
         fetchProjects(
@@ -89,47 +79,46 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
                 .stream()
                 .filter(p -> p.getLastBomImport() != null)
                 .forEach(p -> {
-                    int ref = p.getLastBomImport().getYear() * 12 + p.getLastBomImport().getMonthValue();
-                    int key = current - ref;
-
-                    // Check if key out of range
-                    if (key >= projectsPerMonthList.size() || key < 0) return;
+                    int key = p.getLastBomImport().getYear() * 12 + p.getLastBomImport().getMonthValue();
 
                     // Group by project name
-                    Map<String, Set<Project>> projectsOfMonth = projectsPerMonthList.get(key);
-                    Set<Project> projects = projectsOfMonth.getOrDefault(p.getName(), new HashSet<>());
-                    projectsOfMonth.put(p.getName(), projects);
+                    Map<String, Set<Project>> projectsMap = monthMap.getOrDefault(key, new HashMap<>());
+                    monthMap.put(key, projectsMap);
+
+                    Set<Project> projects = projectsMap.getOrDefault(p.getName(), new HashSet<>());
+                    projects.add(p);
+                    projectsMap.put(p.getName(), projects);
                 });
 
 
-        List<Map<String, ReportDTO>> monthReports = new ArrayList<>();
-        IntStream.range(0, projectsPerMonthList.size()).forEach(index -> monthReports.add(index, new HashMap<>()));
-
-        IntStream.range(0, 11).forEach(index -> projectsPerMonthList.add(index, new HashMap<>()));
+        Map<Integer, Map<String, ReportDTO>> monthReports = new HashMap<>();
 
         // Group reports to project name and month
-        for (int i = 0; i < projectsPerMonthList.size(); i++) {
+        for (Map.Entry<Integer, Map<String, Set<Project>>> e : monthMap.entrySet()) {
             // Map of a specific month with named set of projects
-            Map<String, Set<Project>> namedProjects = projectsPerMonthList.get(i);
+            Map<String, Set<Project>> namedProjects = e.getValue();
 
-            int finalI = i;
             namedProjects.forEach((key, value) -> {
-                double averagedRisk = value
+                double averageRiskScore = value
                         .stream()
                         .mapToDouble(p -> p.getMetrics().getInheritedRiskScore())
                         .average()
                         .orElse(0);
 
-                ReportDTO dto = monthReports.get(finalI).getOrDefault(key, new ReportDTO());
+                Map<String, ReportDTO> namedReport = monthReports.getOrDefault(e.getKey(), new HashMap<>());
+                monthReports.put(e.getKey(), namedReport);
+
+                ReportDTO dto = namedReport.getOrDefault(key, new ReportDTO());
+                namedReport.put(key, dto);
+
                 dto.setProjectName(key);
                 dto.setReportDate(ZonedDateTime.now());
-                dto.setDate(ZonedDateTime.now().withDayOfMonth(1).minusMonths(finalI));
-                dto.setAverageInheritedRiskScore(averagedRisk);
-                monthReports.get(finalI).put(key, dto);
+                dto.setDate(ZonedDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0));
+                dto.setAverageInheritedRiskScore(averageRiskScore);
             });
         }
 
-        List<ReportDTO> reports = monthReports.stream().flatMap(m -> m.values().stream()).toList();
+        List<ReportDTO> reports = monthReports.values().stream().flatMap(m -> m.values().stream()).toList();
 
         Files.createDirectories(file.getParent());
 
@@ -185,7 +174,8 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         ObjectMapper mapper = JsonMapperFactory.create();
 
         try (BufferedWriter writer = Files.newBufferedWriter(file)) {
-            writer.write(mapper.writeValueAsString(reports));
+            String json = mapper.writeValueAsString(reports);
+            writer.write(json);
         }
     }
 
