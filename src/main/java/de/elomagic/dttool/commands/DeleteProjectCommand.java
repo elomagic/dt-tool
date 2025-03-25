@@ -21,7 +21,7 @@ import picocli.CommandLine;
 
 import de.elomagic.dttool.ConsoleUtils;
 import de.elomagic.dttool.OptionsParams;
-import de.elomagic.dttool.model.Project;
+import de.elomagic.dttool.dt.model.Project;
 
 import java.util.List;
 import java.util.concurrent.Callable;

@@ -24,10 +24,10 @@ import picocli.CommandLine;
 import de.elomagic.dttool.ComparatorFactory;
 import de.elomagic.dttool.ConsoleOptions;
 import de.elomagic.dttool.ConsolePrinter;
-import de.elomagic.dttool.DTrackClient;
+import de.elomagic.dttool.dt.DTrackClient;
 import de.elomagic.dttool.ProjectFilterOptions;
 import de.elomagic.dttool.StringFormatter;
-import de.elomagic.dttool.model.Project;
+import de.elomagic.dttool.dt.model.Project;
 
 import org.apache.commons.lang3.StringUtils;
 

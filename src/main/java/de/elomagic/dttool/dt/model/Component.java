@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool.model;
+package de.elomagic.dttool.dt.model;
 
 import java.util.UUID;
 

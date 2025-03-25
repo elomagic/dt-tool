@@ -15,36 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool.model;
+package de.elomagic.dttool.configuration.model;
 
-public class Violation {
+public enum ExportFormat {
 
-    private String type;
-    private Project project;
-    private Component component;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    public Component getComponent() {
-        return component;
-    }
-
-    public void setComponent(Component component) {
-        this.component = component;
-    }
+    CSV,
+    JSON
 
 }

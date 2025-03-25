@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool;
+package de.elomagic.dttool.dt;
 
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -25,10 +25,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Nonnull;
 import picocli.CommandLine;
 
+import de.elomagic.dttool.AbstractRestClient;
+import de.elomagic.dttool.ConsolePrinter;
+import de.elomagic.dttool.DtToolException;
+import de.elomagic.dttool.JsonMapperFactory;
+import de.elomagic.dttool.StringFormatter;
 import de.elomagic.dttool.configuration.Configuration;
-import de.elomagic.dttool.model.Component;
-import de.elomagic.dttool.model.Project;
-import de.elomagic.dttool.model.Violation;
+import de.elomagic.dttool.dt.model.Component;
+import de.elomagic.dttool.dt.model.Project;
+import de.elomagic.dttool.dt.model.Violation;
 
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;

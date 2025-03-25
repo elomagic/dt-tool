@@ -26,7 +26,7 @@ import de.elomagic.dttool.DtToolException;
 import de.elomagic.dttool.JsonMapperFactory;
 import de.elomagic.dttool.OptionsParams;
 import de.elomagic.dttool.configuration.model.ProjectResult;
-import de.elomagic.dttool.model.Project;
+import de.elomagic.dttool.dt.model.Project;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -38,7 +38,7 @@ public class FetchProjectsCommand extends AbstractProjectFilterCommand implement
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
 
     @CommandLine.Option(
-            names = { "--format", "-f" },
+            names = { "--format" },
             description = "Returns format. Supported values are: JSON, VERSION, UUID",
             defaultValue = "JSON")
     private ProjectResult format;

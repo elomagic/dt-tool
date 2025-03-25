@@ -15,29 +15,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool;
+package de.elomagic.dttool.dt.model;
 
-import jakarta.annotation.Nonnull;
+public class Violation {
 
-import de.elomagic.dttool.dt.model.Project;
+    private String type;
+    private Project project;
+    private Component component;
 
-import org.apache.maven.artifact.versioning.ComparableVersion;
+    public String getType() {
+        return type;
+    }
 
-import java.util.Comparator;
+    public void setType(String type) {
+        this.type = type;
+    }
 
-public final class ComparatorFactory {
+    public Project getProject() {
+        return project;
+    }
 
-    private ComparatorFactory() {}
+    public void setProject(Project project) {
+        this.project = project;
+    }
 
-    /**
-     * Sort a project by name asc and version desc.
-     *
-     * @return Returns the {@link Comparator<Project>}
-     */
-    @Nonnull
-    public static Comparator<Project> defaultComparator() {
-        return Comparator.comparing(Project::getName)
-                .thenComparing((Project o) -> new ComparableVersion(o.getVersion())).reversed();
+    public Component getComponent() {
+        return component;
+    }
+
+    public void setComponent(Component component) {
+        this.component = component;
     }
 
 }

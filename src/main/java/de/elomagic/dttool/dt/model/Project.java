@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool.model;
+package de.elomagic.dttool.dt.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -38,6 +38,8 @@ public class Project {
     private String purl;
     @JsonProperty
     private String lastBomImport;
+    @JsonProperty
+    private Metrics metrics = new Metrics();
 
     public String getName() {
         return name;
@@ -65,6 +67,14 @@ public class Project {
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public Metrics getMetrics() {
+        return metrics;
+    }
+
+    public void setMetrics(Metrics metrics) {
+        this.metrics = metrics;
     }
 
     @JsonIgnore

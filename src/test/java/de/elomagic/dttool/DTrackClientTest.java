@@ -1,7 +1,8 @@
 package de.elomagic.dttool;
 
 import de.elomagic.dttool.configuration.Configuration;
-import de.elomagic.dttool.model.Project;
+import de.elomagic.dttool.dt.DTrackClient;
+import de.elomagic.dttool.dt.model.Project;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
