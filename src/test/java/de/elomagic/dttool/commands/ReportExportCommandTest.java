@@ -29,13 +29,13 @@ class ReportExportCommandTest extends AbstractMockedServer {
     void testWriteCSV() throws Throwable {
         MockTool.mockServer(getPort(), () -> {
             App app = new App();
-            int exitCode = app.execute(new String[]{"report", "-nbd=4365", "--file=./target/test/report.csv"});
+            int exitCode = app.execute(new String[]{"report", "-nbd=4365", "--file=./target/test/report.csv", "-ds=,"});
 
             Path file = Paths.get("./target/test/report.csv");
             assertEquals(0, exitCode);
             assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern("projectName;flooredBomDate;reportDate;averageInheritedRiskScore.*");
-            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*TestLatestVersion1;2018-01-01T00:00\\+01:00\\[Europe/Berlin];.*;32\\.0.*");
-            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*TestProject;2018-02-01T00:00\\+01:00\\[Europe/Berlin];.*;230\\.0.*");
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*TestLatestVersion1;2018-01-01T00:00\\+01:00\\[Europe/Berlin];.*;32,.0.*");
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*TestProject;2018-02-01T00:00\\+01:00\\[Europe/Berlin];.*;230,0.*");
         });
     }
 

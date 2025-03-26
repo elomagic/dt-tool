@@ -19,6 +19,7 @@ package de.elomagic.dttool.commands;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import picocli.CommandLine;
 
 import de.elomagic.dttool.DtToolException;
@@ -36,11 +37,14 @@ import java.io.Writer;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -48,6 +52,8 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "report", description = "Report export")
 public class ReportExportCommand extends AbstractProjectFilterCommand implements Callable<Void> {
+
+    private DecimalFormat decimalFormat;
 
     @CommandLine.Option(
             names = { "--format" },
@@ -73,9 +79,20 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
             defaultValue = ";"
     )
     String delimiterChar;
+    @CommandLine.Option(
+            names = { "-ds", "--decimalSymbol" },
+            description = "Decimal symbol for floating values",
+            defaultValue = "."
+    )
+    char decimalSymbol;
 
     @Override
     public Void call() throws IOException {
+        DecimalFormatSymbols decimalSymbols = DecimalFormatSymbols.getInstance(Locale.getDefault());
+        decimalSymbols.setDecimalSeparator(decimalSymbol);
+        decimalFormat = new DecimalFormat("#0.00");
+        decimalFormat.setDecimalFormatSymbols(decimalSymbols);
+
         // Key = X month in the past. 0 = This month, 1 = Last month, 2 = The month before the last month and so on
         Map<Integer, Map<String, Set<Project>>> monthMap = new HashMap<>();
 
@@ -163,13 +180,26 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
 
             writer.write(Arrays
                     .stream(fields)
-                    .map(f -> String.valueOf(ReflectionUtil.getFieldValue(f, dto)))
+                    .map(f -> getCsvCell(f, dto))
                     .map(v -> v == null ? "" : v)
                     .collect(Collectors.joining(delimiterChar)));
             writer.write("\n");
         } catch (IOException ex) {
             throw new DtToolException(ex);
         }
+    }
+
+    @Nullable
+    private String getCsvCell(@Nonnull Field field, ReportDTO dto) {
+        Object o = ReflectionUtil.getFieldValue(field, dto);
+
+        if (o instanceof Double d) {
+            return decimalFormat.format(d);
+        } else if (o instanceof Float f) {
+            return decimalFormat.format(f);
+        }
+
+        return String.valueOf(o);
     }
 
     private void writeReportAsJson(@Nonnull List<ReportDTO> reports) throws IOException {
