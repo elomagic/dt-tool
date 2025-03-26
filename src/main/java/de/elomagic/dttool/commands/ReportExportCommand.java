@@ -19,7 +19,6 @@ package de.elomagic.dttool.commands;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import picocli.CommandLine;
 
 import de.elomagic.dttool.DtToolException;
@@ -28,6 +27,8 @@ import de.elomagic.dttool.OptionsParams;
 import de.elomagic.dttool.configuration.model.ExportFormat;
 import de.elomagic.dttool.dt.model.Project;
 import de.elomagic.dttool.dto.ReportDTO;
+
+import org.apache.logging.log4j.core.util.ReflectionUtil;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -151,23 +152,11 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
 
             writer.write(Arrays
                     .stream(fields)
-                    .map(f -> getFieldValue(dto, f))
+                    .map(f -> String.valueOf(ReflectionUtil.getFieldValue(f, dto)))
                     .map(v -> v == null ? "" : v)
                     .collect(Collectors.joining(",")));
             writer.write("\n");
         } catch (IOException ex) {
-            throw new DtToolException(ex);
-        }
-    }
-
-    @Nullable
-    private String getFieldValue(@Nonnull ReportDTO dto, @Nonnull Field field) {
-        try {
-            if (!field.canAccess(dto)) {
-                field.setAccessible(true);
-            }
-            return String.valueOf(field.get(dto));
-        } catch (IllegalAccessException ex) {
             throw new DtToolException(ex);
         }
     }
