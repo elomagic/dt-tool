@@ -52,20 +52,27 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
     @CommandLine.Option(
             names = { "--format" },
             description = "Export format. Supported values are: CSV, JSON",
-            defaultValue = "CSV")
+            defaultValue = "CSV"
+    )
     ExportFormat format;
     @CommandLine.Option(
             names = { OptionsParams.VERSION_MATCH, OptionsParams.VERSION_MATCH_SHORT },
             description = "Regular expression to match version",
-            defaultValue = "^\\d+(\\.\\d+)*(\\-Final)?$")
+            defaultValue = "^\\d+(\\.\\d+)*(\\-Final)?$"
+    )
     String versionMatch;
     @CommandLine.Option(
             names = { "-f", "--file" },
             description = "Target file or path",
             required = true
     )
-    private Path file;
-
+    Path file;
+    @CommandLine.Option(
+            names = { "-dc", "--delimiterChar" },
+            description = "Delimiter char between columns when export format is CSV",
+            defaultValue = ";"
+    )
+    String delimiterChar;
 
     @Override
     public Void call() throws IOException {
@@ -139,7 +146,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
 
         try (BufferedWriter writer = Files.newBufferedWriter(file)) {
             // Write header
-            writer.write(Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(",")));
+            writer.write(Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(delimiterChar)));
             writer.write("\n");
 
             reports.forEach(r -> writeCsvRecord(r, writer));
@@ -154,7 +161,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
                     .stream(fields)
                     .map(f -> String.valueOf(ReflectionUtil.getFieldValue(f, dto)))
                     .map(v -> v == null ? "" : v)
-                    .collect(Collectors.joining(",")));
+                    .collect(Collectors.joining(delimiterChar)));
             writer.write("\n");
         } catch (IOException ex) {
             throw new DtToolException(ex);
