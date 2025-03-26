@@ -20,13 +20,14 @@ package de.elomagic.dttool.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ReportDTO {
 
     @JsonProperty
     private String projectName;
     @JsonProperty
-    private ZonedDateTime flooredBomDate;
+    private String flooredBomDate;
     @JsonProperty
     private ZonedDateTime reportDate;
     @JsonProperty
@@ -40,12 +41,22 @@ public class ReportDTO {
         this.projectName = projectName;
     }
 
-    public ZonedDateTime getFlooredBomDate() {
+    /**
+     * Returns the month and year as string.
+     *
+     * @return Returns date in pattern "yyyy-MM"
+     */
+    public String getFlooredBomDate() {
         return flooredBomDate;
     }
 
+    /**
+     * Set bom date and will be floored to "yyyy-MM".
+     *
+     * @param flooredBomDate ZonedDateTime
+     */
     public void setFlooredBomDate(ZonedDateTime flooredBomDate) {
-        this.flooredBomDate = flooredBomDate;
+        this.flooredBomDate = flooredBomDate == null ? null : flooredBomDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
     }
 
     public ZonedDateTime getReportDate() {
