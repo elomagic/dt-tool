@@ -121,7 +121,11 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
 
                 dto.setProjectName(key);
                 dto.setReportDate(ZonedDateTime.now());
-                dto.setDate(ZonedDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0));
+                dto.setFlooredBomDate(value
+                        .stream()
+                        .findFirst()
+                        .filter((p -> p.getLastBomImport() != null))
+                        .map(p -> p.getLastBomImport().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0)).orElse(null));
                 dto.setAverageInheritedRiskScore(averageRiskScore);
             });
         }

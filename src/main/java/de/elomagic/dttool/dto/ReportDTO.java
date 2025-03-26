@@ -26,7 +26,7 @@ public class ReportDTO {
     @JsonProperty
     private String projectName;
     @JsonProperty
-    private ZonedDateTime date;
+    private ZonedDateTime flooredBomDate;
     @JsonProperty
     private ZonedDateTime reportDate;
     @JsonProperty
@@ -40,12 +40,12 @@ public class ReportDTO {
         this.projectName = projectName;
     }
 
-    public ZonedDateTime getDate() {
-        return date;
+    public ZonedDateTime getFlooredBomDate() {
+        return flooredBomDate;
     }
 
-    public void setDate(ZonedDateTime date) {
-        this.date = date;
+    public void setFlooredBomDate(ZonedDateTime flooredBomDate) {
+        this.flooredBomDate = flooredBomDate;
     }
 
     public ZonedDateTime getReportDate() {

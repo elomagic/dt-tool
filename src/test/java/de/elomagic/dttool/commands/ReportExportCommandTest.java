@@ -33,9 +33,9 @@ class ReportExportCommandTest extends AbstractMockedServer {
 
             Path file = Paths.get("./target/test/report.csv");
             assertEquals(0, exitCode);
-            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern("projectName;date;reportDate;averageInheritedRiskScore.*");
-            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*TestLatestVersion1;2025-03-01T00:00\\+01:00\\[Europe/Berlin];.*;32\\.0.*");
-            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*TestProject;2025-03-01T00:00\\+01:00\\[Europe/Berlin];.*;230\\.0.*");
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern("projectName;flooredBomDate;reportDate;averageInheritedRiskScore.*");
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*TestLatestVersion1;2018-01-01T00:00\\+01:00\\[Europe/Berlin];.*;32\\.0.*");
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*TestProject;2018-02-01T00:00\\+01:00\\[Europe/Berlin];.*;230\\.0.*");
         });
     }
 
