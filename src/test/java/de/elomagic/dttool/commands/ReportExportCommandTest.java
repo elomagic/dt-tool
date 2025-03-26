@@ -5,7 +5,6 @@ import de.elomagic.dttool.App;
 import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.MockTool;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
