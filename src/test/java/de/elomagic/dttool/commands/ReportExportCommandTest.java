@@ -5,12 +5,16 @@ import de.elomagic.dttool.App;
 import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.MockTool;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -28,9 +32,11 @@ class ReportExportCommandTest extends AbstractMockedServer {
             App app = new App();
             int exitCode = app.execute(new String[]{"report", "-nbd=4365", "--file=./target/test/report.csv"});
 
+            Path file = Paths.get("./target/test/report.csv");
             assertEquals(0, exitCode);
-            assertTrue(Files.exists(Path.of("./target/test/report.csv")));
-            assertTrue(Files.size(Path.of("./target/test/report.csv")) > 200);
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern("projectName,date,reportDate,averageInheritedRiskScore.*");
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*TestLatestVersion1,2025-03-01T00:00\\+01:00\\[Europe/Berlin],.*,32\\.0.*");
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*TestProject,2025-03-01T00:00\\+01:00\\[Europe/Berlin],.*,230\\.0.*");
         });
     }
 

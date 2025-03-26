@@ -1,0 +1,11 @@
+[ {
+  "projectName" : "TestLatestVersion1",
+  "date" : 1740783600.000000000,
+  "reportDate" : 1742973902.541073700,
+  "averageInheritedRiskScore" : 32.0
+}, {
+  "projectName" : "TestProject",
+  "date" : 1740783600.000000000,
+  "reportDate" : 1742973902.541073700,
+  "averageInheritedRiskScore" : 230.0
+} ]
