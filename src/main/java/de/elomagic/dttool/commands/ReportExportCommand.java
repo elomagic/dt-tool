@@ -41,6 +41,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -85,6 +86,14 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
             defaultValue = "."
     )
     char decimalSymbol;
+    @CommandLine.Option(
+            names = { "-fg", "--filLGaps" },
+            description = "Fill gaps of month, where a product has no BOM released with BOM from the previous month",
+            defaultValue = "false",
+            negatable = true
+    )
+    boolean fillGap;
+
 
     @Override
     public Void call() throws IOException {
@@ -94,7 +103,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         decimalFormat.setDecimalFormatSymbols(decimalSymbols);
 
         // Key = X month in the past. 0 = This month, 1 = Last month, 2 = The month before the last month and so on
-        Map<Integer, Map<String, Set<Project>>> monthMap = new HashMap<>();
+        Map<String, Map<String, Set<Project>>> monthMap = new HashMap<>();
 
         // Get projects and put it into a box
         fetchProjects(
@@ -104,7 +113,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
                 .stream()
                 .filter(p -> p.getLastBomImport() != null)
                 .forEach(p -> {
-                    int key = p.getLastBomImport().getYear() * 12 + p.getLastBomImport().getMonthValue();
+                    String key = "%s-%02d".formatted(p.getLastBomImport().getYear(), p.getLastBomImport().getMonthValue());
 
                     // Group by project name
                     Map<String, Set<Project>> projectsMap = monthMap.getOrDefault(key, new HashMap<>());
@@ -116,10 +125,10 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
                 });
 
 
-        Map<Integer, Map<String, ReportDTO>> monthReports = new HashMap<>();
+        Map<String, Map<String, ReportDTO>> monthReports = new HashMap<>();
 
         // Group reports to project name and month
-        for (Map.Entry<Integer, Map<String, Set<Project>>> e : monthMap.entrySet()) {
+        for (Map.Entry<String, Map<String, Set<Project>>> e : monthMap.entrySet()) {
             // Map of a specific month with named set of projects
             Map<String, Set<Project>> namedProjects = e.getValue();
 
@@ -147,6 +156,18 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
             });
         }
 
+        if (fillGap) {
+            // Fill gaps
+            List<String> months = monthReports
+                    .keySet()
+                    .stream()
+                    .sorted(Comparator.naturalOrder())
+                    .toList();
+
+
+        }
+
+        // Flatten into records
         List<ReportDTO> reports = monthReports.values().stream().flatMap(m -> m.values().stream()).toList();
 
         if (file.getParent() != null) {
