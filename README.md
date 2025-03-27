@@ -54,6 +54,12 @@ dt-tool.sh delete-projects -v
 dt-tool.sh collect-boms -v --notBeforeDays=10 --projectFilter="b83457bd-5c89-4dc6-b6e1-eda408507dcd","117a619b-da93-4a85-8f8f-0e3ab9efce4c" -f="solution-stack-sboms.zip"
 ```
 
+#### Example - Export simple report
+
+```shell
+dt-tool.cmd report -v --file dt-report.csv --decimalSymbol=, --fillGaps=true
+```
+
 #### Example - Print invalid license IDs
 
 ```shell
