@@ -79,4 +79,14 @@ public class ReportDTO {
         this.averageInheritedRiskScore = averageInheritedRiskScore;
     }
 
+    @Override
+    public String toString() {
+        return "ReportDTO{" +
+                "flooredBomDate='" + flooredBomDate + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", reportDate=" + reportDate +
+                ", averageInheritedRiskScore=" + averageInheritedRiskScore +
+                '}';
+    }
+
 }
