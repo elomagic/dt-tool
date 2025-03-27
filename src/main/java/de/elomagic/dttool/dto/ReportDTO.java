@@ -25,9 +25,9 @@ import java.time.format.DateTimeFormatter;
 public class ReportDTO {
 
     @JsonProperty
-    private String projectName;
-    @JsonProperty
     private String flooredBomDate;
+    @JsonProperty
+    private String projectName;
     @JsonProperty
     private ZonedDateTime reportDate;
     @JsonProperty
@@ -48,6 +48,10 @@ public class ReportDTO {
      */
     public String getFlooredBomDate() {
         return flooredBomDate;
+    }
+
+    public void setFlooredBomDate(String flooredBomDate) {
+        this.flooredBomDate = flooredBomDate;
     }
 
     /**

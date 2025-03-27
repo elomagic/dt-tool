@@ -22,13 +22,16 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import picocli.CommandLine;
 
+import de.elomagic.dttool.ComparatorFactory;
 import de.elomagic.dttool.DtToolException;
 import de.elomagic.dttool.JsonMapperFactory;
 import de.elomagic.dttool.OptionsParams;
+import de.elomagic.dttool.TimeUtil;
 import de.elomagic.dttool.configuration.model.ExportFormat;
 import de.elomagic.dttool.dt.model.Project;
 import de.elomagic.dttool.dto.ReportDTO;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.core.util.ReflectionUtil;
 
 import java.io.BufferedWriter;
@@ -39,7 +42,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -87,7 +92,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
     )
     char decimalSymbol;
     @CommandLine.Option(
-            names = { "-fg", "--filLGaps" },
+            names = { "-fg", "--fillGaps" },
             description = "Fill gaps of month, where a product has no BOM released with BOM from the previous month",
             defaultValue = "false",
             negatable = true
@@ -95,6 +100,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
     boolean fillGap;
 
 
+    @Nullable
     @Override
     public Void call() throws IOException {
         DecimalFormatSymbols decimalSymbols = DecimalFormatSymbols.getInstance(Locale.getDefault());
@@ -105,7 +111,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         // Key = X month in the past. 0 = This month, 1 = Last month, 2 = The month before the last month and so on
         Map<String, Map<String, Set<Project>>> monthMap = new HashMap<>();
 
-        // Get projects and put it into a box
+        // Get projects and put it into a map with project name key and put it into a map with year-month key
         fetchProjects(
                 getNotBeforeInZonedTime(365 * 12),
                 getNotAfterInZonedTime(0),
@@ -127,7 +133,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
 
         Map<String, Map<String, ReportDTO>> monthReports = new HashMap<>();
 
-        // Group reports to project name and month
+        // Group reports to project name and year-month key
         for (Map.Entry<String, Map<String, Set<Project>>> e : monthMap.entrySet()) {
             // Map of a specific month with named set of projects
             Map<String, Set<Project>> namedProjects = e.getValue();
@@ -157,18 +163,43 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         }
 
         if (fillGap) {
-            // Fill gaps
-            List<String> months = monthReports
-                    .keySet()
-                    .stream()
-                    .sorted(Comparator.naturalOrder())
-                    .toList();
+            // First month
+            LocalDate firstMonth = TimeUtil.parseMonthPattern(monthReports.keySet().stream().sorted().findFirst().orElseThrow());
+            LocalDate lastMonth = TimeUtil.parseMonthPattern(monthReports.keySet().stream().sorted(Comparator.reverseOrder()).limit(monthReports.size()-1L).findFirst().orElseThrow());
 
+            LocalDate currentMonth = firstMonth;
+            while (currentMonth.isBefore(lastMonth)) {
+                String currentMonthString = TimeUtil.toMonthPattern(currentMonth);
+                String nextMonthString = TimeUtil.toMonthPattern(currentMonth.plusMonths(1));
 
+                Set<String> missingProjectNames = new HashSet<>(CollectionUtils.removeAll(
+                        monthReports.get(currentMonthString).keySet(),
+                        monthReports.get(nextMonthString).keySet()));
+
+                for (String projectName : missingProjectNames) {
+                    // Create report for next month
+                    ReportDTO currentReport = monthReports.get(currentMonthString).get(projectName);
+
+                    ReportDTO nextReport = new ReportDTO();
+                    nextReport.setProjectName(projectName);
+                    nextReport.setFlooredBomDate(nextMonthString);
+                    nextReport.setReportDate(currentReport.getReportDate());
+                    nextReport.setAverageInheritedRiskScore(currentReport.getAverageInheritedRiskScore());
+
+                    monthReports.get(nextReport.getFlooredBomDate()).put(projectName, nextReport);
+                }
+
+                currentMonth = currentMonth.plusMonths(1);
+            }
         }
 
         // Flatten into records
-        List<ReportDTO> reports = monthReports.values().stream().flatMap(m -> m.values().stream()).toList();
+        List<ReportDTO> reports = monthReports
+                .values()
+                .stream()
+                .flatMap(m -> m.values().stream())
+                .sorted(ComparatorFactory.reportComparator())
+                .toList();
 
         if (file.getParent() != null) {
             Files.createDirectories(file.getParent());
@@ -181,6 +212,19 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         }
 
         return null;
+    }
+
+    @Nonnull
+    private ReportDTO getPreviousReport(@Nonnull Map<String, Map<String, ReportDTO>> map, @Nonnull String currentFlooredDate, @Nonnull String projectName) {
+        int year = Integer.parseInt(currentFlooredDate.substring(0, 4));
+        int month = Integer.parseInt(currentFlooredDate.substring(5, 7));
+
+        String previousFlooredDate = LocalDate
+                .of(year, month, 1)
+                .minusMonths(1)
+                .format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        return map.get(previousFlooredDate).get(projectName);
     }
 
     private void writeReportAsCsv(@Nonnull List<ReportDTO> reports) throws IOException {
@@ -211,7 +255,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
     }
 
     @Nullable
-    private String getCsvCell(@Nonnull Field field, ReportDTO dto) {
+    private String getCsvCell(@Nonnull Field field, @Nonnull ReportDTO dto) {
         Object o = ReflectionUtil.getFieldValue(field, dto);
 
         if (o instanceof Double d) {

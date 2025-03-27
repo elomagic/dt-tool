@@ -29,13 +29,14 @@ class ReportExportCommandTest extends AbstractMockedServer {
     void testWriteCSV() throws Throwable {
         MockTool.mockServer(getPort(), () -> {
             App app = new App();
-            int exitCode = app.execute(new String[]{"report", "-nbd=4365", "--file=./target/test/report.csv", "-ds=,"});
+            int exitCode = app.execute(new String[]{"report", "-nbd=4365", "--file=./target/test/report.csv", "-ds=,", "--fillGaps=true"});
 
             Path file = Paths.get("./target/test/report.csv");
             assertEquals(0, exitCode);
-            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern("projectName;flooredBomDate;reportDate;averageInheritedRiskScore.*");
-            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*TestLatestVersion1;2018-01;.*;32,.0.*");
-            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*TestProject;2018-02;.*;230,0.*");
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern("flooredBomDate;projectName;reportDate;averageInheritedRiskScore.*");
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*2018-01;TestLatestVersion1;.*;32,.0.*");
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*2018-02;TestLatestVersion1;.*;32,.0.*");
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*2018-02;TestProject;.*;230,0.*");
         });
     }
 
