@@ -19,7 +19,8 @@ package de.elomagic.dttool;
 
 import jakarta.annotation.Nonnull;
 
-import de.elomagic.dttool.model.Project;
+import de.elomagic.dttool.dt.model.Project;
+import de.elomagic.dttool.dto.ReportDTO;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
 
@@ -38,6 +39,12 @@ public final class ComparatorFactory {
     public static Comparator<Project> defaultComparator() {
         return Comparator.comparing(Project::getName)
                 .thenComparing((Project o) -> new ComparableVersion(o.getVersion())).reversed();
+    }
+
+    @Nonnull
+    public static Comparator<ReportDTO> reportComparator() {
+        return Comparator.comparing(ReportDTO::getFlooredBomDate)
+                .thenComparing(ReportDTO::getProjectName);
     }
 
 }

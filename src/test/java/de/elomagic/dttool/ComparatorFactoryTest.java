@@ -1,6 +1,6 @@
 package de.elomagic.dttool;
 
-import de.elomagic.dttool.model.Project;
+import de.elomagic.dttool.dt.model.Project;
 
 import org.junit.jupiter.api.Test;
 

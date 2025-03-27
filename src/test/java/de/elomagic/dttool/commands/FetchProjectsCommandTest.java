@@ -36,7 +36,7 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
         MockTool.mockServer(getPort(), () -> {
             LOGGER.info("ABC1");
             App app = new App();
-            int exitCode = app.execute(new String[]{"fetch-projects", "--projectFilter=ProjectDoesNotExist", "-nad=30", "-mc=1", "-f=VERSION"});
+            int exitCode = app.execute(new String[]{"fetch-projects", "--projectFilter=ProjectDoesNotExist", "-nad=30", "-mc=1", "--format=VERSION"});
             LOGGER.info("ABC1");
 
             assertEquals(0, exitCode);
@@ -49,7 +49,7 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
         MockTool.mockServer(getPort(), () -> {
             LOGGER.info("ABC3");
             App app = new App();
-            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-nad=30","-f=VERSION"});
+            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-nad=30","--format=VERSION"});
             LOGGER.info("ABC3");
 
             assertEquals(0, exitCode);
@@ -62,7 +62,7 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
         MockTool.mockServer(getPort(), () -> {
             LOGGER.info("ABC4");
             App app = new App();
-            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-nad=30", "-f=UUID" });
+            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-nad=30", "--format=UUID" });
             LOGGER.info("ABC4");
 
             assertEquals(0, exitCode);
@@ -75,21 +75,19 @@ class FetchProjectsCommandTest extends AbstractMockedServer {
         MockTool.mockServer(getPort(), () -> {
             LOGGER.info("ABC5");
             App app = new App();
-            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-nad=30", "-f=JSON" });
+            int exitCode = app.execute(new String[] { "fetch-projects", "--projectFilter=TestLatestVersion1", "-nad=30", "--format=JSON" });
             LOGGER.info("ABC5");
 
             assertEquals(0, exitCode);
-            assertThat(getText("ABC5")).contains("{\"uuid\":\"85b0f240-b405-4d61-a10a-42f54b6ad59e\",\"name\":\"TestLatestVersion1\",\"version\":\"1.0.0.1\",\"purl\":null,\"lastBomImport\":\"1517198568503\"}");
+            assertThat(getText("ABC5")).contains("{  \"uuid\" : \"85b0f240-b405-4d61-a10a-42f54b6ad59e\",  \"name\" : \"TestLatestVersion1\",  \"version\" : \"1.0.0.1\",  \"purl\" : null,  \"lastBomImport\" : \"1517198568503\",  \"metrics\" : {    \"critical\" : 0,    \"high\" : 1,    \"medium\" : 3,    \"low\" : 0,    \"unassigned\" : 0,    \"vulnerabilities\" : 4,    \"vulnerableComponents\" : 2,    \"components\" : 133,    \"suppressed\" : 0,    \"findingsTotal\" : 4,    \"findingsAudited\" : 0,    \"findingsUnaudited\" : 4,    \"inheritedRiskScore\" : 50.0,    \"policyViolationsFail\" : 0,    \"policyViolationsWarn\" : 0,    \"policyViolationsInfo\" : 0,    \"policyViolationsTotal\" : 0,    \"policyViolationsAudited\" : 0,    \"policyViolationsUnaudited\" : 0,    \"policyViolationsSecurityTotal\" : 0,    \"policyViolationsSecurityAudited\" : 0,    \"policyViolationsSecurityUnaudited\" : 0,    \"policyViolationsLicenseTotal\" : 0,    \"policyViolationsLicenseAudited\" : 0,    \"policyViolationsLicenseUnaudited\" : 0,    \"policyViolationsOperationalTotal\" : 0,    \"policyViolationsOperationalAudited\" : 0,    \"policyViolationsOperationalUnaudited\" : 0,    \"firstOccurrence\" : 1741600680649,    \"lastOccurrence\" : 1742911404985  }}");
         });
     }
-
-    private String regEx = ".*%s(?<V>.*)%s.*";
 
     private String getText(String s) throws IOException {
 
         String logText = readLog();
 
-        Pattern pattern = Pattern.compile(regEx.formatted(s, s));
+        Pattern pattern = Pattern.compile(".*%s(?<V>.*)%s.*".formatted(s, s));
 
         Matcher matcher = pattern.matcher(logText);
 

@@ -21,7 +21,7 @@ import jakarta.annotation.Nonnull;
 import picocli.CommandLine;
 
 import de.elomagic.dttool.DtToolException;
-import de.elomagic.dttool.model.Project;
+import de.elomagic.dttool.dt.model.Project;
 
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.GeneratorException;

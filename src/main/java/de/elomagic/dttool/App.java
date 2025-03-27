@@ -24,6 +24,7 @@ import de.elomagic.dttool.commands.CreateConfigurationFileCommand;
 import de.elomagic.dttool.commands.DeleteProjectCommand;
 import de.elomagic.dttool.commands.FetchProjectsCommand;
 import de.elomagic.dttool.commands.CheckLicensesCommand;
+import de.elomagic.dttool.commands.ReportExportCommand;
 
 @CommandLine.Command(versionProvider = VersionProvider.class, name = "dt-tool", description = "Dependency Track Tool")
 public class App {
@@ -43,7 +44,8 @@ public class App {
                 .addSubcommand(new CheckLicensesCommand())
                 .addSubcommand(new CreateConfigurationFileCommand())
                 .addSubcommand(new DeleteProjectCommand())
-                .addSubcommand(new FetchProjectsCommand());
+                .addSubcommand(new FetchProjectsCommand())
+                .addSubcommand(new ReportExportCommand());
 
         return commandLine.execute(args);
     }

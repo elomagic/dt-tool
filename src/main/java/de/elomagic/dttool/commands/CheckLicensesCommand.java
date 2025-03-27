@@ -27,8 +27,8 @@ import de.elomagic.dttool.DtToolException;
 import de.elomagic.dttool.OptionsParams;
 import de.elomagic.dttool.configuration.Configuration;
 import de.elomagic.dttool.configuration.model.PatchRule;
-import de.elomagic.dttool.model.Component;
-import de.elomagic.dttool.model.Project;
+import de.elomagic.dttool.dt.model.Component;
+import de.elomagic.dttool.dt.model.Project;
 import de.elomagic.dttool.spdx.SpdxLicenseManager;
 
 import java.util.HashSet;

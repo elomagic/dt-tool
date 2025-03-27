@@ -15,36 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.dttool.model;
+package de.elomagic.dttool;
 
-public class Violation {
+import jakarta.annotation.Nonnull;
 
-    private String type;
-    private Project project;
-    private Component component;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-    public String getType() {
-        return type;
+public final class TimeUtil {
+
+    private TimeUtil() {}
+
+    @Nonnull
+    public static LocalDate parseMonthPattern(@Nonnull String monthPattern) {
+        int year = Integer.parseInt(monthPattern.substring(0, 4));
+        int month = Integer.parseInt(monthPattern.substring(5, 7));
+
+        return LocalDate.of(year, month, 1);
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    public Component getComponent() {
-        return component;
-    }
-
-    public void setComponent(Component component) {
-        this.component = component;
+    @Nonnull
+    public static String toMonthPattern(@Nonnull LocalDate localDate) {
+        return localDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
     }
 
 }
