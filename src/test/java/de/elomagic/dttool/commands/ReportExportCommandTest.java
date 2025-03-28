@@ -35,7 +35,7 @@ class ReportExportCommandTest extends AbstractMockedServer {
             assertEquals(0, exitCode);
             assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern("flooredBomDate;projectName;reportDate;averageInheritedRiskScore.*");
             assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*2018-01;TestLatestVersion1;.*;32,00;0,00;1,00;3,00;0,00;0,00.*");
-            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*2018-02;TestLatestVersion1;.*;32,00;0,00;0,00;0,00;0,00;0,00.*");
+            assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*2018-02;TestLatestVersion1;.*;32,00;0,00;1,00;3,00;0,00;0,00.*");
             assertThat(Files.readString(file, StandardCharsets.UTF_8)).containsPattern(".*2018-02;TestProject;.*;230,00;0,00;1,00;3,00;0,00;0,00.*");
         });
     }

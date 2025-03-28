@@ -109,58 +109,8 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         decimalFormat = new DecimalFormat("#0.00");
         decimalFormat.setDecimalFormatSymbols(decimalSymbols);
 
-        // Key = X month in the past. 0 = This month, 1 = Last month, 2 = The month before the last month and so on
-        Map<String, Map<String, Set<Project>>> monthMap = new HashMap<>();
-
-        // Get projects and put it into a map with project name key and put it into a map with year-month key
-        fetchProjects(
-                getNotBeforeInZonedTime(365 * 12),
-                getNotAfterInZonedTime(0),
-                versionMatch)
-                .stream()
-                .filter(p -> p.getLastBomImport() != null)
-                .forEach(p -> {
-                    String key = "%s-%02d".formatted(p.getLastBomImport().getYear(), p.getLastBomImport().getMonthValue());
-
-                    // Group by project name
-                    Map<String, Set<Project>> projectsMap = monthMap.getOrDefault(key, new HashMap<>());
-                    monthMap.put(key, projectsMap);
-
-                    Set<Project> projects = projectsMap.getOrDefault(p.getName(), new HashSet<>());
-                    projects.add(p);
-                    projectsMap.put(p.getName(), projects);
-                });
-
-
-        Map<String, Map<String, ReportDTO>> monthReports = new HashMap<>();
-
-        // Group reports to project name and year-month key
-        for (Map.Entry<String, Map<String, Set<Project>>> e : monthMap.entrySet()) {
-            // Map of a specific month with named set of projects
-            Map<String, Set<Project>> namedProjects = e.getValue();
-
-            namedProjects.forEach((key, value) -> {
-                Map<String, ReportDTO> namedReport = monthReports.getOrDefault(e.getKey(), new HashMap<>());
-                monthReports.put(e.getKey(), namedReport);
-
-                ReportDTO dto = namedReport.getOrDefault(key, new ReportDTO());
-                namedReport.put(key, dto);
-
-                dto.setProjectName(key);
-                dto.setReportDate(ZonedDateTime.now());
-                dto.setFlooredBomDate(value
-                        .stream()
-                        .findFirst()
-                        .filter((p -> p.getLastBomImport() != null))
-                        .map(p -> p.getLastBomImport().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0)).orElse(null));
-                dto.setAverageInheritedRiskScore(getAverage(value, p -> p.getMetrics().getInheritedRiskScore()));
-                dto.setAverageCritical(getAverage(value, p -> p.getMetrics().getCritical()));
-                dto.setAverageHigh(getAverage(value, p -> p.getMetrics().getHigh()));
-                dto.setAverageMedium(getAverage(value, p -> p.getMetrics().getMedium()));
-                dto.setAverageLow(getAverage(value, p -> p.getMetrics().getLow()));
-                dto.setAverageUnassigned(getAverage(value, p -> p.getMetrics().getUnassigned()));
-            });
-        }
+        Map<String, Map<String, Set<Project>>> monthMap = getMonthMap();
+        Map<String, Map<String, ReportDTO>> monthReports = summaryInMonthReports(monthMap);
 
         if (fillGap) {
             // First month
@@ -180,13 +130,19 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
                     // Create report for next month
                     ReportDTO currentReport = monthReports.get(currentMonthString).get(projectName);
 
-                    ReportDTO nextReport = new ReportDTO();
-                    nextReport.setProjectName(projectName);
-                    nextReport.setFlooredBomDate(nextMonthString);
-                    nextReport.setReportDate(currentReport.getReportDate());
-                    nextReport.setAverageInheritedRiskScore(currentReport.getAverageInheritedRiskScore());
+                    ReportDTO nextReport = new ReportDTO(
+                            nextMonthString,
+                            currentReport.projectName(),
+                            currentReport.reportDate(),
+                            currentReport.averageInheritedRiskScore(),
+                            currentReport.averageCritical(),
+                            currentReport.averageHigh(),
+                            currentReport.averageMedium(),
+                            currentReport.averageLow(),
+                            currentReport.averageUnassigned()
+                    );
 
-                    monthReports.get(nextReport.getFlooredBomDate()).put(projectName, nextReport);
+                    monthReports.get(nextReport.flooredBomDate()).put(projectName, nextReport);
                 }
 
                 currentMonth = currentMonth.plusMonths(1);
@@ -212,6 +168,79 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         }
 
         return null;
+    }
+
+    /**
+     * Group reports to project name and year-month key.
+     *
+     * @return A map but never null
+     */
+    @Nonnull
+    private Map<String, Map<String, ReportDTO>> summaryInMonthReports(@Nonnull Map<String, Map<String, Set<Project>>> map) {
+        Map<String, Map<String, ReportDTO>> monthReports = new HashMap<>();
+
+        // Group reports to project name and year-month key
+        for (Map.Entry<String, Map<String, Set<Project>>> e : map.entrySet()) {
+            // Map of a specific month with named set of projects
+            Map<String, Set<Project>> namedProjects = e.getValue();
+
+            namedProjects.forEach((key, value) -> {
+                Map<String, ReportDTO> namedReport = monthReports.getOrDefault(e.getKey(), new HashMap<>());
+                monthReports.put(e.getKey(), namedReport);
+
+                ReportDTO dto = namedReport.get(key);
+
+                if (dto == null) {
+                    // Map ZonedDateTime to month pattern
+                    String month = TimeUtil.toMonthPattern(value
+                            .stream()
+                            .findFirst()
+                            .filter((p -> p.getLastBomImport() != null))
+                            .map(p -> p.getLastBomImport().toLocalDate().withDayOfMonth(1)).orElseThrow());
+
+                    dto = new ReportDTO(
+                            month,
+                            key,
+                            ZonedDateTime.now(),
+                            getAverage(value, p -> p.getMetrics().getInheritedRiskScore()),
+                            getAverage(value, p -> p.getMetrics().getCritical()),
+                            getAverage(value, p -> p.getMetrics().getHigh()),
+                            getAverage(value, p -> p.getMetrics().getMedium()),
+                            getAverage(value, p -> p.getMetrics().getLow()),
+                            getAverage(value, p -> p.getMetrics().getUnassigned())
+                    );
+                }
+
+                namedReport.put(key, dto);
+            });
+        }
+        return monthReports;
+    }
+
+    @Nonnull
+    private Map<String, Map<String, Set<Project>>> getMonthMap() {
+        // Key = X month in the past. 0 = This month, 1 = Last month, 2 = The month before the last month and so on
+        Map<String, Map<String, Set<Project>>> monthMap = new HashMap<>();
+
+        // Get projects and put it into a map with project name key and put it into a map with year-month key
+        fetchProjects(
+                getNotBeforeInZonedTime(365 * 12),
+                getNotAfterInZonedTime(0),
+                versionMatch)
+                .stream()
+                .filter(p -> p.getLastBomImport() != null)
+                .forEach(p -> {
+                    String key = "%s-%02d".formatted(p.getLastBomImport().getYear(), p.getLastBomImport().getMonthValue());
+
+                    // Group by project name
+                    Map<String, Set<Project>> projectsMap = monthMap.getOrDefault(key, new HashMap<>());
+                    monthMap.put(key, projectsMap);
+
+                    Set<Project> projects = projectsMap.getOrDefault(p.getName(), new HashSet<>());
+                    projects.add(p);
+                    projectsMap.put(p.getName(), projects);
+                });
+        return monthMap;
     }
 
     private double getAverage(@Nonnull Set<Project> projects, @Nonnull ToDoubleFunction<Project> mapper) {
