@@ -14,7 +14,7 @@ class DeleteProjectsCommandTest extends AbstractMockedServer {
     void testDeleteProject() throws Throwable {
         MockTool.mockServer(getPort(), () -> {
             App app = new App();
-            int exitCode = app.execute(new String[] { "delete-projects", "--notAfterDays=30", "-b" });
+            int exitCode = app.execute(new String[] { "delete-projects", "--notAfterDays=999", "-b" });
 
             assertEquals(0, exitCode);
         });
