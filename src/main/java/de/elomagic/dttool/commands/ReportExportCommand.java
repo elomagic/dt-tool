@@ -54,6 +54,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "report", description = "Report export")
@@ -139,12 +140,6 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
             Map<String, Set<Project>> namedProjects = e.getValue();
 
             namedProjects.forEach((key, value) -> {
-                double averageRiskScore = value
-                        .stream()
-                        .mapToDouble(p -> p.getMetrics().getInheritedRiskScore())
-                        .average()
-                        .orElse(0);
-
                 Map<String, ReportDTO> namedReport = monthReports.getOrDefault(e.getKey(), new HashMap<>());
                 monthReports.put(e.getKey(), namedReport);
 
@@ -158,7 +153,12 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
                         .findFirst()
                         .filter((p -> p.getLastBomImport() != null))
                         .map(p -> p.getLastBomImport().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0)).orElse(null));
-                dto.setAverageInheritedRiskScore(averageRiskScore);
+                dto.setAverageInheritedRiskScore(getAverage(value, p -> p.getMetrics().getInheritedRiskScore()));
+                dto.setAverageCritical(getAverage(value, p -> p.getMetrics().getCritical()));
+                dto.setAverageHigh(getAverage(value, p -> p.getMetrics().getHigh()));
+                dto.setAverageMedium(getAverage(value, p -> p.getMetrics().getMedium()));
+                dto.setAverageLow(getAverage(value, p -> p.getMetrics().getLow()));
+                dto.setAverageUnassigned(getAverage(value, p -> p.getMetrics().getUnassigned()));
             });
         }
 
@@ -213,6 +213,15 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
 
         return null;
     }
+
+    private double getAverage(@Nonnull Set<Project> projects, @Nonnull ToDoubleFunction<Project> mapper) {
+        return projects
+                .stream()
+                .mapToDouble(mapper)
+                .average()
+                .orElse(0);
+    }
+
 
     @Nonnull
     private ReportDTO getPreviousReport(@Nonnull Map<String, Map<String, ReportDTO>> map, @Nonnull String currentFlooredDate, @Nonnull String projectName) {

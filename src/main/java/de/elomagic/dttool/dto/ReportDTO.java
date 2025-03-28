@@ -32,6 +32,16 @@ public class ReportDTO {
     private ZonedDateTime reportDate;
     @JsonProperty
     private double averageInheritedRiskScore;
+    @JsonProperty
+    private double averageCritical;
+    @JsonProperty
+    private double averageHigh;
+    @JsonProperty
+    private double averageMedium;
+    @JsonProperty
+    private double averageLow;
+    @JsonProperty
+    private double averageUnassigned;
 
     public String getProjectName() {
         return projectName;
@@ -79,6 +89,46 @@ public class ReportDTO {
         this.averageInheritedRiskScore = averageInheritedRiskScore;
     }
 
+    public double getAverageCritical() {
+        return averageCritical;
+    }
+
+    public void setAverageCritical(double averageCritical) {
+        this.averageCritical = averageCritical;
+    }
+
+    public double getAverageHigh() {
+        return averageHigh;
+    }
+
+    public void setAverageHigh(double averageHigh) {
+        this.averageHigh = averageHigh;
+    }
+
+    public double getAverageMedium() {
+        return averageMedium;
+    }
+
+    public void setAverageMedium(double averageMedium) {
+        this.averageMedium = averageMedium;
+    }
+
+    public double getAverageLow() {
+        return averageLow;
+    }
+
+    public void setAverageLow(double averageLow) {
+        this.averageLow = averageLow;
+    }
+
+    public double getAverageUnassigned() {
+        return averageUnassigned;
+    }
+
+    public void setAverageUnassigned(double averageUnassigned) {
+        this.averageUnassigned = averageUnassigned;
+    }
+
     @Override
     public String toString() {
         return "ReportDTO{" +
@@ -86,6 +136,11 @@ public class ReportDTO {
                 ", projectName='" + projectName + '\'' +
                 ", reportDate=" + reportDate +
                 ", averageInheritedRiskScore=" + averageInheritedRiskScore +
+                ", averageCritical=" + averageCritical +
+                ", averageHigh=" + averageHigh +
+                ", averageMedium=" + averageMedium +
+                ", averageLow=" + averageLow +
+                ", averageUnassigned=" + averageUnassigned +
                 '}';
     }
 
