@@ -17,68 +17,24 @@
  */
 package de.elomagic.dttool.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nonnull;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
-public class ReportDTO {
-
-    @JsonProperty
-    private String flooredBomDate;
-    @JsonProperty
-    private String projectName;
-    @JsonProperty
-    private ZonedDateTime reportDate;
-    @JsonProperty
-    private double averageInheritedRiskScore;
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    /**
-     * Returns the month and year as string.
-     *
-     * @return Returns date in pattern "yyyy-MM"
-     */
-    public String getFlooredBomDate() {
-        return flooredBomDate;
-    }
-
-    public void setFlooredBomDate(String flooredBomDate) {
-        this.flooredBomDate = flooredBomDate;
-    }
-
-    /**
-     * Set bom date and will be floored to "yyyy-MM".
-     *
-     * @param flooredBomDate ZonedDateTime
-     */
-    public void setFlooredBomDate(ZonedDateTime flooredBomDate) {
-        this.flooredBomDate = flooredBomDate == null ? null : flooredBomDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
-    }
-
-    public ZonedDateTime getReportDate() {
-        return reportDate;
-    }
-
-    public void setReportDate(ZonedDateTime reportDate) {
-        this.reportDate = reportDate;
-    }
-
-    public double getAverageInheritedRiskScore() {
-        return averageInheritedRiskScore;
-    }
-
-    public void setAverageInheritedRiskScore(double averageInheritedRiskScore) {
-        this.averageInheritedRiskScore = averageInheritedRiskScore;
-    }
-
+public record ReportDTO(
+        @Nonnull
+        String flooredBomDate,
+        @Nonnull
+        String projectName,
+        @Nonnull
+        ZonedDateTime reportDate,
+        double averageInheritedRiskScore,
+        double averageCritical,
+        double averageHigh,
+        double averageMedium,
+        double averageLow,
+        double averageUnassigned
+) {
     @Override
     public String toString() {
         return "ReportDTO{" +
@@ -86,6 +42,11 @@ public class ReportDTO {
                 ", projectName='" + projectName + '\'' +
                 ", reportDate=" + reportDate +
                 ", averageInheritedRiskScore=" + averageInheritedRiskScore +
+                ", averageCritical=" + averageCritical +
+                ", averageHigh=" + averageHigh +
+                ", averageMedium=" + averageMedium +
+                ", averageLow=" + averageLow +
+                ", averageUnassigned=" + averageUnassigned +
                 '}';
     }
 

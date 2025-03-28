@@ -43,8 +43,8 @@ public final class ComparatorFactory {
 
     @Nonnull
     public static Comparator<ReportDTO> reportComparator() {
-        return Comparator.comparing(ReportDTO::getFlooredBomDate)
-                .thenComparing(ReportDTO::getProjectName);
+        return Comparator.comparing(ReportDTO::flooredBomDate)
+                .thenComparing(ReportDTO::projectName);
     }
 
 }
