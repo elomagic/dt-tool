@@ -44,7 +44,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -52,6 +51,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.function.ToDoubleFunction;
@@ -162,7 +162,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         }
 
         if (format == ExportFormat.CSV) {
-            writeReportAsCsv(reports);
+            writeCsvReport(reports);
         } else {
             writeReportAsJson(reports);
         }
@@ -182,36 +182,28 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         // Group reports to project name and year-month key
         for (Map.Entry<String, Map<String, Set<Project>>> e : map.entrySet()) {
             // Map of a specific month with named set of projects
+            String month = e.getKey();
             Map<String, Set<Project>> namedProjects = e.getValue();
 
-            namedProjects.forEach((key, value) -> {
-                Map<String, ReportDTO> namedReport = monthReports.getOrDefault(e.getKey(), new HashMap<>());
-                monthReports.put(e.getKey(), namedReport);
+            namedProjects.forEach((projectName, projects) -> {
+                Map<String, ReportDTO> namedReport = monthReports.getOrDefault(month, new HashMap<>());
+                monthReports.put(month, namedReport);
 
-                ReportDTO dto = namedReport.get(key);
+                ReportDTO dto = Optional
+                        .ofNullable(namedReport.get(projectName))
+                        .orElse(new ReportDTO(
+                                month,
+                                projectName,
+                                ZonedDateTime.now(),
+                                getAverage(projects, p -> p.getMetrics().getInheritedRiskScore()),
+                                getAverage(projects, p -> p.getMetrics().getCritical()),
+                                getAverage(projects, p -> p.getMetrics().getHigh()),
+                                getAverage(projects, p -> p.getMetrics().getMedium()),
+                                getAverage(projects, p -> p.getMetrics().getLow()),
+                                getAverage(projects, p -> p.getMetrics().getUnassigned())
+                        ));
 
-                if (dto == null) {
-                    // Map ZonedDateTime to month pattern
-                    String month = TimeUtil.toMonthPattern(value
-                            .stream()
-                            .findFirst()
-                            .filter((p -> p.getLastBomImport() != null))
-                            .map(p -> p.getLastBomImport().toLocalDate().withDayOfMonth(1)).orElseThrow());
-
-                    dto = new ReportDTO(
-                            month,
-                            key,
-                            ZonedDateTime.now(),
-                            getAverage(value, p -> p.getMetrics().getInheritedRiskScore()),
-                            getAverage(value, p -> p.getMetrics().getCritical()),
-                            getAverage(value, p -> p.getMetrics().getHigh()),
-                            getAverage(value, p -> p.getMetrics().getMedium()),
-                            getAverage(value, p -> p.getMetrics().getLow()),
-                            getAverage(value, p -> p.getMetrics().getUnassigned())
-                    );
-                }
-
-                namedReport.put(key, dto);
+                namedReport.put(projectName, dto);
             });
         }
         return monthReports;
@@ -251,29 +243,42 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
                 .orElse(0);
     }
 
-
-    @Nonnull
-    private ReportDTO getPreviousReport(@Nonnull Map<String, Map<String, ReportDTO>> map, @Nonnull String currentFlooredDate, @Nonnull String projectName) {
-        int year = Integer.parseInt(currentFlooredDate.substring(0, 4));
-        int month = Integer.parseInt(currentFlooredDate.substring(5, 7));
-
-        String previousFlooredDate = LocalDate
-                .of(year, month, 1)
-                .minusMonths(1)
-                .format(DateTimeFormatter.ofPattern("yyyy-MM"));
-
-        return map.get(previousFlooredDate).get(projectName);
+    private void writeCsvReport(@Nonnull List<ReportDTO> reports) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(file)) {
+            writeReportFull(reports, writer);
+            //writeCsvReportOnlyRiskScore(reports, writer);
+        }
     }
 
-    private void writeReportAsCsv(@Nonnull List<ReportDTO> reports) throws IOException {
+    private void writeReportFull(@Nonnull List<ReportDTO> reports, @Nonnull Writer writer) throws IOException {
+        // Write header
         Field[] fields = ReportDTO.class.getDeclaredFields();
+        writer.write(Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(delimiterChar)));
+        writer.write("\n");
 
-        try (BufferedWriter writer = Files.newBufferedWriter(file)) {
-            // Write header
-            writer.write(Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(delimiterChar)));
+        reports.forEach(r -> writeCsvRecord(r, writer));
+    }
+
+    private void writeCsvReportOnlyRiskScore(@Nonnull List<ReportDTO> reports, @Nonnull Writer writer) throws IOException {
+        List<String> months = reports.stream().map(ReportDTO::flooredBomDate).distinct().sorted().toList();
+        List<String> projectNames = reports.stream().map(ReportDTO::projectName).distinct().sorted().toList();
+
+        writer.write("Project names" + delimiterChar);
+        writer.write(String.join(delimiterChar, months));
+        writer.write("\n");
+
+        for (String projectName : projectNames) {
+            String[] values = new String[months.size()];
+            reports.stream()
+                    .filter(r -> r.projectName().equals(projectName))
+                    .forEach(r ->
+                            values[months.indexOf(r.flooredBomDate())] = decimalFormat.format(r.averageInheritedRiskScore())
+            );
+
+            writer.write(projectName);
+            writer.write(delimiterChar);
+            writer.write(Arrays.stream(values).collect(Collectors.joining(delimiterChar)));
             writer.write("\n");
-
-            reports.forEach(r -> writeCsvRecord(r, writer));
         }
     }
 
