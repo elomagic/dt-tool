@@ -66,6 +66,12 @@ dt-tool.cmd report -v --file dt-report.csv --decimalSymbol=, --fillGaps=true
 dt-tool.sh check-licenses -v --projectFilter="dt-tool"
 ```
 
+#### Example - Tag projects
+
+```shell
+dt-tool.sh tag-projects --tag "sampleTag"
+```
+
 ## Contributing
 
 Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](../../issues/new).

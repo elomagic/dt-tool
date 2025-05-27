@@ -282,4 +282,22 @@ public class DTrackClient extends AbstractRestClient implements StringFormatter 
 
     }
 
+    public void tagProject(@Nonnull Project project, @Nonnull String tag) {
+        try {
+            LOGGER.info("Tag project {} {} {} {}", project.getUuid(), t2s(project.getLastBomImport()), project.getName(), project.getVersion());
+            URI uri = URI.create("%s/api/v1/tag/%s/project".formatted(baseURL, tag));
+            String payload = "[ \"%s\" ]".formatted(project.getUuid());
+            HttpRequest request = createDefaultPOST(
+                    uri,
+                    HttpRequest.BodyPublishers.ofString(payload)
+            );
+
+            executeRequest(request);
+        } catch (IOException | InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new DtToolException(ex);
+        }
+
+    }
+
 }

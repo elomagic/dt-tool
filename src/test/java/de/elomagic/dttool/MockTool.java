@@ -8,6 +8,7 @@ import org.junit.jupiter.api.function.Executable;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+import static com.github.jknack.handlebars.helper.ConditionalHelpers.or;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
@@ -38,6 +39,12 @@ public class MockTool {
         // When delete project
         stubFor(delete(urlPathMatching("/api/v1/project/.*"))
                 .withHeader("X-Api-Key", equalTo(apiKey))
+                .willReturn(noContent()));
+
+        // When tag project
+        stubFor(post(urlPathEqualTo("/api/v1/tag/testTag/project"))
+                .withHeader("X-Api-Key", equalTo(apiKey))
+                //.withRequestBody(or(equalToJson("[\"01d558ae-5075-4cbb-94ea-73ce6ae23532\"]"), equalToJson("[\"01d558ae-5075-4cbb-94ea-73ce6ae23999\"]")))
                 .willReturn(noContent()));
 
         // When download projects
