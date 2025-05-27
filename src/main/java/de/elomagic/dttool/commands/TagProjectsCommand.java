@@ -44,7 +44,7 @@ public class TagProjectsCommand extends AbstractProjectFilterCommand implements 
 
         List<Project> projects = fetchProjects(
                 getNotBeforeInZonedTime(40 * 365),
-                getNotAfterInZonedTime(30),
+                getNotAfterInZonedTime(0),
                 ".*");
 
         if (projects.isEmpty()) {
