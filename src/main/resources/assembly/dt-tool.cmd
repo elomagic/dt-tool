@@ -30,4 +30,5 @@ goto end
 set ERROR_CODE=1
 
 :end
-@endlocal & set ERROR_CODE=%ERROR_CODE%
+if not defined ERROR_CODE set ERROR_CODE=0
+@endlocal & exit /b %ERROR_CODE%
