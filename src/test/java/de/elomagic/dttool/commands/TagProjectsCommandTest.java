@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TagProjectsCommandTest extends AbstractMockedServer {
+class TagProjectsCommandTest extends AbstractMockedServer {
 
     @Test
     void testSetTagProjects() throws Throwable {

@@ -24,6 +24,8 @@ import jakarta.annotation.Nullable;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class Project {
@@ -40,6 +42,8 @@ public class Project {
     private String lastBomImport;
     @JsonProperty
     private Metrics metrics = new Metrics();
+    @JsonProperty
+    private Set<Tag> tags = new HashSet<>();
 
     public String getName() {
         return name;
@@ -75,6 +79,14 @@ public class Project {
 
     public void setMetrics(Metrics metrics) {
         this.metrics = metrics;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 
     @JsonIgnore

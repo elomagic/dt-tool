@@ -54,7 +54,10 @@ public class TagProjectsCommand extends AbstractProjectFilterCommand implements 
         boolean confirm = batchMode || ConsoleUtils.confirmByUser("Set tag of projects, enter YES", "YES");
 
         if (confirm) {
-            projects.forEach(p -> client.tagProject(p, tag));
+            projects
+                    .stream()
+                    .filter(p -> p.getTags().stream().noneMatch(t -> tag.equals(t.getName())))
+                    .forEach(p -> client.tagProject(p, tag));
         }
 
         return null;
