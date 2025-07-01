@@ -43,6 +43,8 @@ public class MockTool {
         // When update project
         stubFor(post(urlPathMatching("/api/v1/project"))
                 .withHeader("X-Api-Key", equalTo(apiKey))
+                .withRequestBody(matchingJsonPath("$.active", equalTo("true")))
+                .withRequestBody(matchingJsonPath("$.isLatest", equalTo("false")))
                 .willReturn(noContent()));
 
         // When tag project

@@ -14,7 +14,7 @@ class UpdateProjectsCommandTest extends AbstractMockedServer {
     void testUpdateProject() throws Throwable {
         MockTool.mockServer(getPort(), () -> {
             App app = new App();
-            int exitCode = app.execute(new String[]{"update-projects", "--notAfterDays=999", "-b", "--active=false"});
+            int exitCode = app.execute(new String[]{"update-projects", "--notAfterDays=999", "-b", "--active=true"});
 
             assertEquals(0, exitCode);
         });

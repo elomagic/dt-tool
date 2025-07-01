@@ -46,8 +46,8 @@ public class Project {
     private Set<Tag> tags = new HashSet<>();
     @JsonProperty
     private boolean active;
-    @JsonProperty
-    private boolean isLatest;
+    @JsonProperty("isLatest")
+    private boolean latest;
 
     public String getName() {
         return name;
@@ -102,11 +102,11 @@ public class Project {
     }
 
     public boolean isLatest() {
-        return isLatest;
+        return latest;
     }
 
     public void setLatest(boolean latest) {
-        isLatest = latest;
+        this.latest = latest;
     }
 
     @JsonIgnore

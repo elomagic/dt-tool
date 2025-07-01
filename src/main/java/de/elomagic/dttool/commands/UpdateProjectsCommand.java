@@ -49,7 +49,7 @@ public class UpdateProjectsCommand extends AbstractProjectFilterCommand implemen
     @CommandLine.Option(
             names = { OptionsParams.VERSION_MATCH, OptionsParams.VERSION_MATCH_SHORT },
             description = "Regular expression to match version",
-            defaultValue = "^\\d+(\\.\\d+)*(\\-Final)?$")
+            defaultValue = ".*")
     private String versionMatch;
 
     @Override
