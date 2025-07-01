@@ -55,7 +55,7 @@ public class DTrackClient extends AbstractRestClient implements StringFormatter 
     private static final ConsolePrinter LOGGER = ConsolePrinter.INSTANCE;
     private final ObjectMapper mapper = JsonMapperFactory.create();
 
-    @CommandLine.Option(names = { "--baseUrl", "-u" }, description = "DTrack base URL")
+    @CommandLine.Option(names = {"--baseUrl", "-u"}, description = "DTrack base URL")
     private String baseURL = Configuration.INSTANCE.getBaseUrl();
 
     // https://[HOSTNAME]/api/swagger.json
@@ -77,7 +77,7 @@ public class DTrackClient extends AbstractRestClient implements StringFormatter 
      * Fetch all active projects.
      *
      * @param limit Limit count of projects in the response
-     * @param page Starts from 1
+     * @param page  Starts from 1
      * @return List of projects
      */
     @Nonnull
@@ -118,9 +118,9 @@ public class DTrackClient extends AbstractRestClient implements StringFormatter 
     /**
      * Fetch all active projects by name.
      *
-     * @param name Name of the project to fetch
+     * @param name  Name of the project to fetch
      * @param limit Limit count of projects in the response
-     * @param page Starts from 1
+     * @param page  Starts from 1
      * @return List of projects
      */
     @Nonnull
@@ -279,7 +279,6 @@ public class DTrackClient extends AbstractRestClient implements StringFormatter 
             Thread.currentThread().interrupt();
             throw new DtToolException(ex);
         }
-
     }
 
     public void tagProject(@Nonnull Project project, @Nonnull String tag) {
@@ -297,7 +296,25 @@ public class DTrackClient extends AbstractRestClient implements StringFormatter 
             Thread.currentThread().interrupt();
             throw new DtToolException(ex);
         }
-
     }
 
+    public void updateProject(@Nonnull Project project) {
+        try {
+            LOGGER.info("Update project {} {} {} {}", project.getUuid(), t2s(project.getLastBomImport()), project.getName(), project.getVersion());
+            URI uri = URI.create("%s/api/v1/project".formatted(baseURL));
+
+            ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
+            String payload = writer.writeValueAsString(project);
+
+            HttpRequest request = createDefaultPOST(
+                    uri,
+                    HttpRequest.BodyPublishers.ofString(payload)
+            );
+
+            executeRequest(request);
+        } catch (IOException | InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new DtToolException(ex);
+        }
+    }
 }
