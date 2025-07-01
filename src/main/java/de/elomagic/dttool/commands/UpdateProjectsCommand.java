@@ -80,7 +80,7 @@ public class UpdateProjectsCommand extends AbstractProjectFilterCommand implemen
             return null;
         }
 
-        boolean confirm = batchMode || ConsoleUtils.confirmByUser("Delete projects, enter YES", "YES");
+        boolean confirm = batchMode || ConsoleUtils.confirmByUser("Update projects, enter YES", "YES");
 
         if (confirm) {
             modifiedProjects.forEach(project -> client.updateProject(project));
