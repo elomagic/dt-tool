@@ -44,6 +44,10 @@ public class Project {
     private Metrics metrics = new Metrics();
     @JsonProperty
     private Set<Tag> tags = new HashSet<>();
+    @JsonProperty
+    private boolean active;
+    @JsonProperty
+    private boolean isLatest;
 
     public String getName() {
         return name;
@@ -87,6 +91,22 @@ public class Project {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isLatest() {
+        return isLatest;
+    }
+
+    public void setLatest(boolean latest) {
+        isLatest = latest;
     }
 
     @JsonIgnore
