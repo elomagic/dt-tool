@@ -24,7 +24,6 @@ import picocli.CommandLine;
 import de.elomagic.dttool.ComparatorFactory;
 import de.elomagic.dttool.ConsoleOptions;
 import de.elomagic.dttool.ConsolePrinter;
-import de.elomagic.dttool.DtToolException;
 import de.elomagic.dttool.dt.DTrackClient;
 import de.elomagic.dttool.ProjectFilterOptions;
 import de.elomagic.dttool.StringFormatter;
