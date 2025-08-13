@@ -70,7 +70,7 @@ public class AbstractProjectFilterCommand implements StringFormatter {
                 .filter(p -> projectFilterOptions.getProjectFilter().isEmpty() || projectFilterOptions.getProjectFilter().contains(p.getName()) || projectFilterOptions.getProjectFilter().contains(p.getUuid().toString()))
                 .filter(p -> p.getLastBomImport() == null || notBefore.isBefore(p.getLastBomImport()))
                 .filter(p -> p.getLastBomImport() == null || notAfter.isAfter(p.getLastBomImport()))
-                .filter(p -> StringUtils.isBlank(versionMatchRegEx) || p.getVersion().matches(versionMatchRegEx))
+                .filter(p -> matchVersion(p, versionMatchRegEx))
                 .toList();
 
         int minimumNameWidth = projects
@@ -98,6 +98,15 @@ public class AbstractProjectFilterCommand implements StringFormatter {
 
         return projects;
 
+    }
+
+    private boolean matchVersion(@Nonnull Project project, @Nullable String versionMatchRegEx) {
+        try {
+            return StringUtils.isBlank(versionMatchRegEx) || project.getVersion().matches(versionMatchRegEx);
+        } catch (Exception e) {
+            LOGGER.error("Error matching version '{}' for project {}: {}", versionMatchRegEx, project, e.getMessage(), e);
+            return false;
+        }
     }
 
 }
