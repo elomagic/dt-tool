@@ -17,10 +17,9 @@
  */
 package de.elomagic.dttool;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,7 +28,7 @@ public interface StringFormatter {
 
     DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss XXX");
 
-    @Nonnull
+    @NonNull
     default String t2s(@Nullable ZonedDateTime time) {
         return time == null ? "<unset>" : time.format(FORMATTER);
     }

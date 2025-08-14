@@ -23,13 +23,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.annotation.Nonnull;
+
+import org.jspecify.annotations.NonNull;
 
 public final class JsonMapperFactory {
 
     private JsonMapperFactory() {}
 
-    @Nonnull
+    @NonNull
     public static ObjectMapper create() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper

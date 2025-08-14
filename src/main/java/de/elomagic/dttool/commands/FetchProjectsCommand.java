@@ -18,7 +18,6 @@
 package de.elomagic.dttool.commands;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.annotation.Nonnull;
 import picocli.CommandLine;
 
 import de.elomagic.dttool.ConsolePrinter;
@@ -27,6 +26,8 @@ import de.elomagic.dttool.JsonMapperFactory;
 import de.elomagic.dttool.OptionsParams;
 import de.elomagic.dttool.configuration.model.ProjectResult;
 import de.elomagic.dttool.dt.model.Project;
+
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -63,8 +64,8 @@ public class FetchProjectsCommand extends AbstractProjectFilterCommand implement
         return null;
     }
 
-    @Nonnull
-    private String mapToString(@Nonnull Project project, @Nonnull ProjectResult result) {
+    @NonNull
+    private String mapToString(@NonNull Project project, @NonNull ProjectResult result) {
         try {
             return switch (result) {
                 case JSON -> JsonMapperFactory.create().writeValueAsString(project);

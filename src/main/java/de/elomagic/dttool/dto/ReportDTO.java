@@ -17,16 +17,16 @@
  */
 package de.elomagic.dttool.dto;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 import java.time.ZonedDateTime;
 
 public record ReportDTO(
-        @Nonnull
+        @NonNull
         String flooredBomDate,
-        @Nonnull
+        @NonNull
         String projectName,
-        @Nonnull
+        @NonNull
         ZonedDateTime reportDate,
         double averageInheritedRiskScore,
         double averageCritical,

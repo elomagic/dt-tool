@@ -17,7 +17,7 @@
  */
 package de.elomagic.dttool.configuration.model;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 public class PatchRule {
 
@@ -27,7 +27,7 @@ public class PatchRule {
     public PatchRule() {
     }
 
-    public PatchRule(@Nonnull String matchPurl, @Nonnull String licenseId) {
+    public PatchRule(@NonNull String matchPurl, @NonNull String licenseId) {
         this.matchPurl = matchPurl;
         this.licenseId = licenseId;
     }

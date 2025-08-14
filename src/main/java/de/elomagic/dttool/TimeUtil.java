@@ -17,7 +17,7 @@
  */
 package de.elomagic.dttool;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,16 +26,16 @@ public final class TimeUtil {
 
     private TimeUtil() {}
 
-    @Nonnull
-    public static LocalDate parseMonthPattern(@Nonnull String monthPattern) {
+    @NonNull
+    public static LocalDate parseMonthPattern(@NonNull String monthPattern) {
         int year = Integer.parseInt(monthPattern.substring(0, 4));
         int month = Integer.parseInt(monthPattern.substring(5, 7));
 
         return LocalDate.of(year, month, 1);
     }
 
-    @Nonnull
-    public static String toMonthPattern(@Nonnull LocalDate localDate) {
+    @NonNull
+    public static String toMonthPattern(@NonNull LocalDate localDate) {
         return localDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
     }
 
