@@ -18,7 +18,6 @@
 package de.elomagic.dttool.commands;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import jakarta.annotation.Nonnull;
 import picocli.CommandLine;
 
 import de.elomagic.dttool.ConsolePrinter;
@@ -30,6 +29,8 @@ import de.elomagic.dttool.configuration.model.PatchRule;
 import de.elomagic.dttool.dt.model.Component;
 import de.elomagic.dttool.dt.model.Project;
 import de.elomagic.dttool.spdx.SpdxLicenseManager;
+
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashSet;
 import java.util.List;
@@ -83,8 +84,8 @@ public class CheckLicensesCommand extends AbstractProjectFilterCommand implement
 
     }
 
-    @Nonnull
-    private Optional<PatchRule> containsRule(@Nonnull String purl) {
+    @NonNull
+    private Optional<PatchRule> containsRule(@NonNull String purl) {
         return Configuration
                 .getPatchRules()
                 .stream()
@@ -92,7 +93,7 @@ public class CheckLicensesCommand extends AbstractProjectFilterCommand implement
                 .findFirst();
     }
 
-    private void patchComponent(@Nonnull Component component, @Nonnull String licenseId) {
+    private void patchComponent(@NonNull Component component, @NonNull String licenseId) {
 
         LOGGER.always("Patching component '{}' with license ID '{}'", component.getPurl(), licenseId);
         try {
@@ -114,7 +115,7 @@ public class CheckLicensesCommand extends AbstractProjectFilterCommand implement
 
     }
 
-    private void patchComponents(@Nonnull Set<Component> components) {
+    private void patchComponents(@NonNull Set<Component> components) {
         LOGGER.info("Validating license IDs in {} patch rules", Configuration.getPatchRules().size());
         Configuration
                 .getPatchRules()

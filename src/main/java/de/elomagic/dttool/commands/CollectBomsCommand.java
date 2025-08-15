@@ -17,7 +17,6 @@
  */
 package de.elomagic.dttool.commands;
 
-import jakarta.annotation.Nonnull;
 import picocli.CommandLine;
 
 import de.elomagic.dttool.DtToolException;
@@ -27,6 +26,7 @@ import org.cyclonedx.Version;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.model.Bom;
+import org.jspecify.annotations.NonNull;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -118,8 +118,8 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
 
     }
 
-    @Nonnull
-    private String getBomAsJson(@Nonnull Bom bom) throws GeneratorException {
+    @NonNull
+    private String getBomAsJson(@NonNull Bom bom) throws GeneratorException {
         Version version = Arrays
                 .stream(Version.values())
                 .filter(v -> v.getVersionString().equals(bom.getSpecVersion()))
@@ -129,8 +129,8 @@ public class CollectBomsCommand extends AbstractProjectFilterCommand implements 
         return BomGeneratorFactory.createJson(version, bom).toJsonString();
     }
 
-    @Nonnull
-    private String createFilename(@Nonnull Bom bom) {
+    @NonNull
+    private String createFilename(@NonNull Bom bom) {
         return pattern.formatted(
                 bom.getMetadata().getComponent().getName(),
                 bom.getMetadata().getComponent().getVersion()

@@ -17,12 +17,11 @@
  */
 package de.elomagic.dttool;
 
-import jakarta.annotation.Nonnull;
-
 import de.elomagic.dttool.dt.model.Project;
 import de.elomagic.dttool.dto.ReportDTO;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Comparator;
 
@@ -35,13 +34,13 @@ public final class ComparatorFactory {
      *
      * @return Returns the {@link Comparator<Project>}
      */
-    @Nonnull
+    @NonNull
     public static Comparator<Project> defaultComparator() {
         return Comparator.comparing(Project::getName)
                 .thenComparing((Project o) -> new ComparableVersion(o.getVersion())).reversed();
     }
 
-    @Nonnull
+    @NonNull
     public static Comparator<ReportDTO> reportComparator() {
         return Comparator.comparing(ReportDTO::flooredBomDate)
                 .thenComparing(ReportDTO::projectName);

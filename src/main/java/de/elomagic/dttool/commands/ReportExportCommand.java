@@ -18,8 +18,6 @@
 package de.elomagic.dttool.commands;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import picocli.CommandLine;
 
 import de.elomagic.dttool.ComparatorFactory;
@@ -33,6 +31,8 @@ import de.elomagic.dttool.dto.ReportDTO;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.core.util.ReflectionUtil;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -175,8 +175,8 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
      *
      * @return A map but never null
      */
-    @Nonnull
-    private Map<String, Map<String, ReportDTO>> summaryInMonthReports(@Nonnull Map<String, Map<String, Set<Project>>> map) {
+    @NonNull
+    private Map<String, Map<String, ReportDTO>> summaryInMonthReports(@NonNull Map<String, Map<String, Set<Project>>> map) {
         Map<String, Map<String, ReportDTO>> monthReports = new HashMap<>();
 
         // Group reports to project name and year-month key
@@ -217,7 +217,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         return monthReports;
     }
 
-    @Nonnull
+    @NonNull
     private Map<String, Map<String, Set<Project>>> getMonthMap() {
         // Key = X month in the past. 0 = This month, 1 = Last month, 2 = The month before the last month and so on
         Map<String, Map<String, Set<Project>>> monthMap = new HashMap<>();
@@ -243,7 +243,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         return monthMap;
     }
 
-    private double getAverage(@Nonnull Set<Project> projects, @Nonnull ToDoubleFunction<Project> mapper) {
+    private double getAverage(@NonNull Set<Project> projects, @NonNull ToDoubleFunction<Project> mapper) {
         return projects
                 .stream()
                 .mapToDouble(mapper)
@@ -252,8 +252,8 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
     }
 
 
-    @Nonnull
-    private ReportDTO getPreviousReport(@Nonnull Map<String, Map<String, ReportDTO>> map, @Nonnull String currentFlooredDate, @Nonnull String projectName) {
+    @NonNull
+    private ReportDTO getPreviousReport(@NonNull Map<String, Map<String, ReportDTO>> map, @NonNull String currentFlooredDate, @NonNull String projectName) {
         int year = Integer.parseInt(currentFlooredDate.substring(0, 4));
         int month = Integer.parseInt(currentFlooredDate.substring(5, 7));
 
@@ -265,7 +265,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         return map.get(previousFlooredDate).get(projectName);
     }
 
-    private void writeReportAsCsv(@Nonnull List<ReportDTO> reports) throws IOException {
+    private void writeReportAsCsv(@NonNull List<ReportDTO> reports) throws IOException {
         Field[] fields = ReportDTO.class.getDeclaredFields();
 
         try (BufferedWriter writer = Files.newBufferedWriter(file)) {
@@ -277,7 +277,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         }
     }
 
-    private void writeCsvRecord(@Nonnull ReportDTO dto, @Nonnull Writer writer) {
+    private void writeCsvRecord(@NonNull ReportDTO dto, @NonNull Writer writer) {
         try {
             Field[] fields = ReportDTO.class.getDeclaredFields();
 
@@ -293,7 +293,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
     }
 
     @Nullable
-    private String getCsvCell(@Nonnull Field field, @Nonnull ReportDTO dto) {
+    private String getCsvCell(@NonNull Field field, @NonNull ReportDTO dto) {
         Object o = ReflectionUtil.getFieldValue(field, dto);
 
         if (o instanceof Double d) {
@@ -305,7 +305,7 @@ public class ReportExportCommand extends AbstractProjectFilterCommand implements
         return String.valueOf(o);
     }
 
-    private void writeReportAsJson(@Nonnull List<ReportDTO> reports) throws IOException {
+    private void writeReportAsJson(@NonNull List<ReportDTO> reports) throws IOException {
         ObjectMapper mapper = JsonMapperFactory.create();
 
         try (BufferedWriter writer = Files.newBufferedWriter(file)) {

@@ -17,14 +17,14 @@
  */
 package de.elomagic.dttool;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Common base class for all exceptions in DT-Tool.
  */
 public class DtToolException extends RuntimeException {
 
-    public DtToolException(@Nonnull Throwable cause) {
+    public DtToolException(@NonNull Throwable cause) {
         super(cause.getMessage(), cause);
     }
 

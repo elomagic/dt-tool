@@ -18,7 +18,6 @@
 package de.elomagic.dttool.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Nonnull;
 
 import de.elomagic.dttool.ConsolePrinter;
 import de.elomagic.dttool.JsonMapperFactory;
@@ -26,6 +25,7 @@ import de.elomagic.dttool.configuration.model.PatchRule;
 import de.elomagic.dttool.configuration.model.Root;
 
 import org.apache.commons.io.IOUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -88,7 +88,7 @@ public final class Configuration {
         }
     }
 
-    public void loadAlternative(@Nonnull Path file) {
+    public void loadAlternative(@NonNull Path file) {
         LOGGER.info("Loading alternative configuration from '{}'.", file);
         ObjectMapper objectMapper = JsonMapperFactory.create();
         try {
@@ -116,7 +116,7 @@ public final class Configuration {
 
     public Set<String> getIgnorePurl() { return conf.getIgnorePurl(); }
 
-    @Nonnull
+    @NonNull
     public static Set<PatchRule> getPatchRules() {
             return INSTANCE.conf.getPatchRules() == null ? Set.of() : INSTANCE.conf.getPatchRules();
     }

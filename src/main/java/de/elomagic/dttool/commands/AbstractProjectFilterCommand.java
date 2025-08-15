@@ -17,8 +17,6 @@
  */
 package de.elomagic.dttool.commands;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import picocli.CommandLine;
 
 import de.elomagic.dttool.ComparatorFactory;
@@ -30,6 +28,8 @@ import de.elomagic.dttool.StringFormatter;
 import de.elomagic.dttool.dt.model.Project;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -45,18 +45,18 @@ public class AbstractProjectFilterCommand implements StringFormatter {
     @CommandLine.Mixin
     ConsoleOptions consoleOptions;
 
-    @Nonnull
+    @NonNull
     protected ZonedDateTime getNotAfterInZonedTime(int defaultDays) {
         return ZonedDateTime.now().minusDays(projectFilterOptions.getNotAfterDays() == null ? defaultDays : projectFilterOptions.getNotAfterDays());
     }
 
-    @Nonnull
+    @NonNull
     protected ZonedDateTime getNotBeforeInZonedTime(int defaultDays) {
         return ZonedDateTime.now().minusDays(projectFilterOptions.getNotBeforeDays() == null ? defaultDays : projectFilterOptions.getNotBeforeDays());
     }
 
-    @Nonnull
-    protected List<Project> fetchProjects(@Nonnull ZonedDateTime notBefore, @Nonnull ZonedDateTime notAfter, @Nullable String versionMatchRegEx) {
+    @NonNull
+    protected List<Project> fetchProjects(@NonNull ZonedDateTime notBefore, @NonNull ZonedDateTime notAfter, @Nullable String versionMatchRegEx) {
 
         LOGGER.info("Matching version with pattern: {}", versionMatchRegEx == null ? "<unset>" : versionMatchRegEx);
         LOGGER.info("Matching projects with name/uid: {}", projectFilterOptions.getProjectFilter().isEmpty() ? "<unset>" : projectFilterOptions.getProjectFilter());
@@ -100,7 +100,7 @@ public class AbstractProjectFilterCommand implements StringFormatter {
 
     }
 
-    private boolean matchVersion(@Nonnull Project project, @Nullable String versionMatchRegEx) {
+    private boolean matchVersion(@NonNull Project project, @Nullable String versionMatchRegEx) {
         try {
             return StringUtils.isBlank(versionMatchRegEx) || project.getVersion().matches(versionMatchRegEx);
         } catch (Exception e) {

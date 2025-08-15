@@ -18,11 +18,11 @@
 package de.elomagic.dttool;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import picocli.CommandLine;
 
 import de.elomagic.dttool.configuration.Configuration;
+
+import org.jspecify.annotations.NonNull;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -96,16 +96,15 @@ public abstract class AbstractRestClient {
         return httpClient;
     }
 
-    @Nonnull
-    private HttpRequest.Builder createDefaultRequest(@Nonnull URI uri) {
+    private HttpRequest.@NonNull Builder createDefaultRequest(@NonNull URI uri) {
         return HttpRequest
                 .newBuilder(uri)
                 .setHeader("X-Api-Key", apiKey)
                 .timeout(Duration.ofSeconds(60));
     }
 
-    @Nonnull
-    protected HttpRequest createDefaultGET(@Nonnull URI uri, @Nonnull String... headers) {
+    @NonNull
+    protected HttpRequest createDefaultGET(@NonNull URI uri, @NonNull String... headers) {
         HttpRequest.Builder builder = createDefaultRequest(uri);
 
         if (headers.length != 0) {
@@ -117,8 +116,8 @@ public abstract class AbstractRestClient {
                 .build();
     }
 
-    @Nonnull
-    protected HttpRequest createDefaultDELETE(@Nonnull URI uri, @Nonnull String... headers) {
+    @NonNull
+    protected HttpRequest createDefaultDELETE(@NonNull URI uri, @NonNull String... headers) {
         HttpRequest.Builder builder = createDefaultRequest(uri);
 
         if (headers.length != 0) {
@@ -130,8 +129,8 @@ public abstract class AbstractRestClient {
                 .build();
     }
 
-    @Nonnull
-    protected HttpRequest createDefaultPUT(@Nonnull URI uri, @Nonnull HttpRequest.BodyPublisher publisher, @Nonnull String... headers) {
+    @NonNull
+    protected HttpRequest createDefaultPUT(@NonNull URI uri, HttpRequest.@NonNull BodyPublisher publisher, @NonNull String... headers) {
         HttpRequest.Builder builder = createDefaultRequest(uri).header("Content-Type", APPLICATION_JSON);
 
         if (headers.length != 0) {
@@ -143,8 +142,8 @@ public abstract class AbstractRestClient {
                 .build();
     }
 
-    @Nonnull
-    protected HttpRequest createDefaultPOST(@Nonnull URI uri, @Nonnull HttpRequest.BodyPublisher publisher, @Nonnull String... headers) {
+    @NonNull
+    protected HttpRequest createDefaultPOST(@NonNull URI uri, HttpRequest.@NonNull BodyPublisher publisher, @NonNull String... headers) {
         HttpRequest.Builder builder = createDefaultRequest(uri)
                 .header("Content-Type", APPLICATION_JSON)
                 .header("Accept",APPLICATION_JSON);
@@ -158,8 +157,8 @@ public abstract class AbstractRestClient {
                 .build();
     }
 
-    @Nullable
-    protected String executeRequest(@Nonnull HttpRequest request) throws IOException, InterruptedException {
+    @NonNull
+    protected String executeRequest(@NonNull HttpRequest request) throws IOException, InterruptedException {
         HttpClient client = getHttpClient();
         try {
             LOGGER.debug("Executing HTTP {} to {}", request.method(), request.uri());
@@ -185,8 +184,8 @@ public abstract class AbstractRestClient {
      * @throws IOException Thrown if an I/ O error occurs when sending or receiving, or the client has shut down
      * @throws InterruptedException Thrown if the operation is interrupted
      */
-    @Nonnull
-    protected <T> T executeRequest(@Nonnull HttpRequest request, @Nonnull Class<? extends T> classType) throws IOException, InterruptedException {
+    @NonNull
+    protected <T> T executeRequest(@NonNull HttpRequest request, @NonNull Class<? extends T> classType) throws IOException, InterruptedException {
         try {
             String content = executeRequest(request);
 
