@@ -84,7 +84,7 @@ jobs:
         shell: bash
 
       - name: Upload released assets
-        uses: softprops/action-gh-release@6cbd405e2c4e67a21c47fa9e383d020e4e28b836 # v2
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
         with:
           name: v${{ env.VERSION }}
           tag_name: v${{ env.VERSION }}
@@ -127,7 +127,7 @@ jobs:
         run: mvn -B package -DskipTests --file pom.xml
 
       - name: Upload released assets
-        uses: softprops/action-gh-release@6cbd405e2c4e67a21c47fa9e383d020e4e28b836 # v2
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
         with:
           name: v${{ needs.build.outputs.version }}
           tag_name: v${{ needs.build.outputs.version }}
