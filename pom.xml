@@ -93,7 +93,7 @@
         <dependency>
             <groupId>org.cyclonedx</groupId>
             <artifactId>cyclonedx-core-java</artifactId>
-            <version>10.2.1</version>
+            <version>11.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -384,14 +384,14 @@
                         <configuration>
                             <target>
                                 <link includeHeaders="false" modulepath="${java.home}/jmods" includeManPages="false" debug="false" destDir="target/distribution/jre">
-                                    <module name="java.base" />
-                                    <module name="java.net.http" />
-                                    <module name="java.xml" />
-                                    <module name="java.sql" />
-                                    <module name="java.logging" />
-                                    <module name="java.desktop" />
-                                    <module name="java.naming" />
-                                    <module name="java.management" />
+                                    <module name="java.base"/>
+                                    <module name="java.net.http"/>
+                                    <module name="java.xml"/>
+                                    <module name="java.sql"/>
+                                    <module name="java.logging"/>
+                                    <module name="java.desktop"/>
+                                    <module name="java.naming"/>
+                                    <module name="java.management"/>
                                 </link>
                             </target>
                         </configuration>
